@@ -309,8 +309,8 @@ def run_check(dry_run: bool = False) -> int:
     chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
 
     if not dry_run and (not bot_token or not chat_id):
-        logger.error("TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID must be set. Use --dry-run to test without Telegram.")
-        return 0
+        logger.warning("TELEGRAM_BOT_TOKEN/CHAT_ID not set — running without Telegram alerts.")
+        dry_run = True  # Fallback to dry-run mode (still saves to DB)
 
     seen = load_seen_projects()
     all_projects: dict[str, dict] = {}
