@@ -1,0 +1,276 @@
+{
+  "_comment": "Routes rapides pour navigation automatisée. Chaque route = URL + sélecteurs + actions. Mis à jour automatiquement par cdp.py au fil des navigations.",
+  "codeur.com": {
+    "login": {
+      "url": "https://www.codeur.com/users/sign_in",
+      "fields": {
+        "email": "input[name='user[email]']",
+        "password": "input[name='user[password]']",
+        "remember": "input[name='user[remember_me]']"
+      },
+      "submit": "input[name='commit']",
+      "success_indicator": "a[href*='sign_out']"
+    },
+    "profile_view": {
+      "url": "https://www.codeur.com/-6666zlkh",
+      "verify": "document.title.includes('Franck')"
+    },
+    "profile_edit": {
+      "url": "https://www.codeur.com/users/733953/profile/edit",
+      "fields": {
+        "biography": "#user_profile_biography",
+        "presentation": "#user_profile_presentation"
+      },
+      "submit": "input[name='commit'][value='Mettre à jour']"
+    },
+    "projects_list": {
+      "url": "https://www.codeur.com/projects",
+      "selectors": {
+        "project_card": "div[id^='project-']",
+        "project_link": "a[href*='/projects/']",
+        "budget_regex": "(Moins de \\d[\\d\\s]*€|\\d[\\d\\s]*€[^€]*€|\\d[\\d\\s]*€ et plus|Sur devis)"
+      }
+    },
+    "make_offer": {
+      "url_template": "https://www.codeur.com/projects/{project_id}/offers/new",
+      "fields": {
+        "message": "textarea[name*='message'], textarea[name*='body'], textarea#offer_body",
+        "budget": "input[name*='budget'], input[name*='amount']",
+        "delay": "input[name*='delay'], input[name*='duration'], select[name*='delay']"
+      },
+      "submit": "input[type='submit'], button[type='submit']"
+    }
+  },
+  "linkedin.com": {
+    "login": {
+      "url": "https://www.linkedin.com/login",
+      "fields": {
+        "email": "#username",
+        "password": "#password"
+      },
+      "submit": "button[type='submit']",
+      "success_indicator": ".feed-identity-module"
+    },
+    "profile_edit": {
+      "url": "https://www.linkedin.com/in/franck-hlb-80bb231b1/edit/",
+      "sections": {
+        "headline": ".pv-text-details__left-panel h2",
+        "about": "#about"
+      }
+    },
+    "feed": {
+      "url": "https://www.linkedin.com/feed/",
+      "selectors": {
+        "post_button": ".share-box-feed-entry__trigger",
+        "comment_box": ".comments-comment-box__form textarea"
+      }
+    },
+    "notifications": {
+      "url": "https://www.linkedin.com/notifications/",
+      "selectors": {
+        "notification_card": ".nt-card",
+        "unread": "textContent.includes('non lue')",
+        "post_link": "a[href*='activity']"
+      },
+      "learned_at": "2026-03-27"
+    },
+    "post_comment": {
+      "url_template": "https://www.linkedin.com/feed/update/urn:li:activity:{activity_id}/",
+      "selectors": {
+        "comment_box": "div[contenteditable]",
+        "submit_button": "button with text 'Commenter' or 'Publier'"
+      },
+      "learned_at": "2026-03-27"
+    }
+  },
+  "github.com": {
+    "profile": {
+      "url": "https://github.com/Turbo31150",
+      "verify": "document.title.includes('Turbo31150')"
+    },
+    "repos": {
+      "url": "https://github.com/Turbo31150?tab=repositories",
+      "selectors": {
+        "repo_list": "#user-repositories-list li",
+        "repo_name": "a[itemprop='name codeRepository']"
+      }
+    },
+    "Turbo31150": {
+      "url": "https://github.com/Turbo31150",
+      "fields": {
+        "type": "[name=\"type\"]",
+        "query-builder-test": "#query-builder-test",
+        "authenticity_token": "[name=\"authenticity_token\"]",
+        "feedback": "#feedback",
+        "include_email": "#include_email",
+        "custom_scope_id": "#custom_scope_id",
+        "custom_scope_name": "#custom_scope_name",
+        "custom_scope_query": "#custom_scope_query",
+        "login": "[name=\"login\"]",
+        "return_to": "[name=\"return_to\"]",
+        "note": "#new-block-note-from-sidebar"
+      },
+      "buttons": {
+        "Toggle navigation": "HeaderMktg-backdrop d-lg-none border-0 p",
+        "Platform": "NavDropdown-module__button__PEHWX js-det",
+        "Solutions": "NavDropdown-module__button__PEHWX js-det",
+        "Resources": "NavDropdown-module__button__PEHWX js-det",
+        "Open Source": "NavDropdown-module__button__PEHWX js-det",
+        "Enterprise": "NavDropdown-module__button__PEHWX js-det",
+        "Search or jump to...": "header-search-button placeholder input-b",
+        "Cancel": "btn",
+        "Submit feedback": "btn-primary btn",
+        "Create saved search": "btn-primary btn",
+        "Resetting focus": "sr-only js-header-menu-focus-trap d-bloc",
+        "Follow": "btn btn-block",
+        "Block or Report": "Button--link Button--medium Button color",
+        "Block user": "btn btn-danger",
+        "Report abuse": "btn btn-danger",
+        "Show more activity": "ajax-pagination-btn btn width-full f6 mt",
+        "Manage cookies": "Link--secondary underline-on-hover borde",
+        "Do not share my personal information": "Link--secondary underline-on-hover borde"
+      },
+      "learned_at": "2026-03-27T12:36:45.708622"
+    }
+  },
+  "perplexity.ai": {
+    "search": {
+      "url": "https://www.perplexity.ai/",
+      "fields": {
+        "query": "textarea[placeholder*='Ask']"
+      },
+      "submit": "button[aria-label='Submit']"
+    }
+  },
+  "turbo31150.github.io": {
+    "franckdelmas.dev": {
+      "url": "https://turbo31150.github.io/franckdelmas.dev/",
+      "fields": {},
+      "buttons": {
+        "Contactez-moi": "btn btn-primary",
+        "Voir mes projets": "btn btn-secondary"
+      },
+      "learned_at": "2026-03-27T12:36:45.665642"
+    }
+  },
+  "www.codeur.com": {
+    "-6666zlkh": {
+      "url": "https://www.codeur.com/-6666zlkh",
+      "fields": {
+        "email": "#email",
+        "list": "[name=\"list\"]",
+        "subform": "[name=\"subform\"]"
+      },
+      "buttons": {
+        "Publier un projet": "btn text-primary bg-white w-fit",
+        "Recevoir un devis": "btn btn-primary block",
+        "x": "new-close border-0 rounded-full font-bol",
+        "Demander un devis": "btn btn-success max-md:grow",
+        "S'inscrire": "w-full tw-bg-primary text-white py-3 rou",
+        "×": "text-white absolute top-0 right-0 mt-1 m"
+      },
+      "learned_at": "2026-03-27T12:36:45.716729"
+    }
+  },
+  "www.linkedin.com": {
+    "login": {
+      "url": "https://www.linkedin.com/login",
+      "fields": {
+        "csrfToken": "[name=\"csrfToken\"]",
+        "resendUrl": "#input-resend-otp-url",
+        "midToken": "[name=\"midToken\"]",
+        "session_redirect": "[name=\"session_redirect\"]",
+        "parentPageKey": "[name=\"parentPageKey\"]",
+        "pageInstance": "[name=\"pageInstance\"]",
+        "controlId": "[name=\"controlId\"]",
+        "trk": "[name=\"trk\"]",
+        "authUUID": "[name=\"authUUID\"]",
+        "encrypted_session_key": "[name=\"encrypted_session_key\"]",
+        "session_key": "#username",
+        "ac": "[name=\"ac\"]",
+        "loginFailureCount": "[name=\"loginFailureCount\"]",
+        "sIdString": "[name=\"sIdString\"]",
+        "pkSupported": "#pkSupported",
+        "loginCsrfParam": "[name=\"loginCsrfParam\"]",
+        "fp_data": "#fp_data_login",
+        "apfc": "#apfc-login",
+        "_d": "[name=\"_d\"]",
+        "showGoogleOneTapLogin": "[name=\"showGoogleOneTapLogin\"]",
+        "showAppleLogin": "[name=\"showAppleLogin\"]",
+        "showMicrosoftLogin": "[name=\"showMicrosoftLogin\"]",
+        "session_password": "#password",
+        "rememberMeOptIn": "#rememberMeOptIn-checkbox",
+        "g-recaptcha-response": "#g-recaptcha-response-100000"
+      },
+      "buttons": {
+        "Accepter": "artdeco-global-alert-action artdeco-butt",
+        "Refuser": "artdeco-global-alert-action artdeco-butt",
+        "S’identifier avec Apple": "sign-in-with-apple-button",
+        "S’identifier": "btn__primary--large from__button--floati",
+        "Renvoyer l’e-mail": "resend-button margin-top-12",
+        "Retour": "otp-back-button",
+        "Langue": "language-selector__button",
+        "العربية (Arabic)": "language-selector__link ",
+        "বাংলা (Bangla)": "language-selector__link ",
+        "Čeština (Czech)": "language-selector__link ",
+        "Dansk (Danish)": "language-selector__link ",
+        "Deutsch (German)": "language-selector__link ",
+        "Ελληνικά (Greek)": "language-selector__link ",
+        "English (English)": "language-selector__link ",
+        "Español (Spanish)": "language-selector__link ",
+        "فارسی (Persian)": "language-selector__link ",
+        "Suomi (Finnish)": "language-selector__link ",
+        "Français (French)": "language-selector__link language-selecto",
+        "हिंदी (Hindi)": "language-selector__link ",
+        "Magyar (Hungarian)": "language-selector__link ",
+        "Bahasa Indonesia (Indonesian)": "language-selector__link ",
+        "Italiano (Italian)": "language-selector__link ",
+        "עברית (Hebrew)": "language-selector__link ",
+        "日本語 (Japanese)": "language-selector__link ",
+        "한국어 (Korean)": "language-selector__link ",
+        "मराठी (Marathi)": "language-selector__link ",
+        "Bahasa Malaysia (Malay)": "language-selector__link ",
+        "Nederlands (Dutch)": "language-selector__link ",
+        "Norsk (Norwegian)": "language-selector__link ",
+        "ਪੰਜਾਬੀ (Punjabi)": "language-selector__link ",
+        "Polski (Polish)": "language-selector__link ",
+        "Português (Portuguese)": "language-selector__link ",
+        "Română (Romanian)": "language-selector__link ",
+        "Русский (Russian)": "language-selector__link ",
+        "Svenska (Swedish)": "language-selector__link ",
+        "తెలుగు (Telugu)": "language-selector__link ",
+        "ภาษาไทย (Thai)": "language-selector__link ",
+        "Tagalog (Tagalog)": "language-selector__link ",
+        "Türkçe (Turkish)": "language-selector__link ",
+        "Українська (Ukrainian)": "language-selector__link ",
+        "Tiếng Việt (Vietnamese)": "language-selector__link ",
+        "简体中文 (Chinese (Simplified))": "language-selector__link ",
+        "正體中文 (Chinese (Traditional))": "language-selector__link "
+      },
+      "learned_at": "2026-03-27T12:36:45.727169"
+    },
+    "in": {
+      "url": "https://www.linkedin.com/in/franck-hlb-80bb231b1/",
+      "fields": {
+        ":r2:": "#:r2:",
+        "reason": "#:R9mj9qcq6aecapj6:",
+        ":Rteq6aecapj6:": "#:Rteq6aecapj6:"
+      },
+      "buttons": {
+        "Passer au contenu principal": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+        "Accueil": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+        "Emplois": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+        "Vous": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+        "Pour les entreprises": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+        "Ressources": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+        "Améliorer le profil": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+        "Mes objectifs": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+        "Pourquoi est-ce que je vois cette public": "ecb6f901 f6ba0e2b _3ec60ff4 db05c77a _5b",
+        "Masquer ou signaler cette publicitéJe ne": "ecb6f901 f6ba0e2b _3ec60ff4 db05c77a _5b",
+        "Signaler cette publicité": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+        "Envoyer": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+      },
+      "learned_at": "2026-03-27T13:02:18.566351"
+    }
+  }
+}

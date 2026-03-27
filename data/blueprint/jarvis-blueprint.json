@@ -1,0 +1,244 @@
+{
+  "version": "JARVIS-COMET v10.1-final",
+  "saved_at": "2026-03-28T00:13:59",
+  "db_stats": {
+    "codeur_offers": 6,
+    "codeur_projects": 0,
+    "linkedin_stats": 1,
+    "linkedin_actions": 4,
+    "sqlite_sequence": 2,
+    "workflow_runs": 9,
+    "cluster_health": 3,
+    "browseros_state": 1,
+    "nav_cache": 7,
+    "daily_reports": 1
+  },
+  "db_total_rows": 34,
+  "manifest": {
+    "scripts": {
+      "post-login-actions.py": {
+        "size": 3559,
+        "type": "py"
+      },
+      "jarvis-freelance-run.sh": {
+        "size": 963,
+        "type": "sh"
+      },
+      "comet_cluster.py": {
+        "size": 4615,
+        "type": "py"
+      },
+      "browser-agent.py": {
+        "size": 19129,
+        "type": "py"
+      },
+      "page_learner.py": {
+        "size": 16425,
+        "type": "py"
+      },
+      "codeur-veille.py": {
+        "size": 13526,
+        "type": "py"
+      },
+      "daily-workflow.sh": {
+        "size": 1688,
+        "type": "sh"
+      },
+      "tmp-monitor.sh": {
+        "size": 544,
+        "type": "sh"
+      },
+      "health_check.sh": {
+        "size": 6371,
+        "type": "sh"
+      },
+      "publish.py": {
+        "size": 3549,
+        "type": "py"
+      },
+      "browseros-persistent.sh": {
+        "size": 772,
+        "type": "sh"
+      },
+      "cdp.py": {
+        "size": 15096,
+        "type": "py"
+      },
+      "clipboard.sh": {
+        "size": 1280,
+        "type": "sh"
+      },
+      "browser_agent.py": {
+        "size": 19208,
+        "type": "py"
+      },
+      "open.sh": {
+        "size": 3042,
+        "type": "sh"
+      },
+      "browser_agent.py.bak": {
+        "size": 13238,
+        "type": "bak"
+      },
+      "browseros-ensure-tabs.sh": {
+        "size": 1105,
+        "type": "sh"
+      },
+      "distributed-query.sh": {
+        "size": 1826,
+        "type": "sh"
+      },
+      "browseros-ensure-groups.sh": {
+        "size": 1676,
+        "type": "sh"
+      },
+      "db_sync.py": {
+        "size": 4502,
+        "type": "py"
+      }
+    },
+    "config": {
+      "browseros-tab-groups.json": {
+        "size": 667,
+        "type": "json"
+      },
+      "browser-automation.env": {
+        "size": 501,
+        "type": "env"
+      },
+      "comet-orchestrator.json": {
+        "size": 2095,
+        "type": "json"
+      },
+      "comet-mode.md": {
+        "size": 1094,
+        "type": "md"
+      },
+      "comet-v10.1-final.json": {
+        "size": 899,
+        "type": "json"
+      },
+      "mcp-browser.json": {
+        "size": 1551,
+        "type": "json"
+      },
+      "gemini-cli-browser.json": {
+        "size": 490,
+        "type": "json"
+      },
+      "comet-system-prompt.md": {
+        "size": 2707,
+        "type": "md"
+      },
+      "comet-cluster-optimized.json": {
+        "size": 794,
+        "type": "json"
+      }
+    },
+    "data": {},
+    "skills": {
+      "manage-bookmarks": 3837,
+      "fill-form": 2270,
+      "deep-research": 6158,
+      "save-page": 1617,
+      "extract-data": 7611,
+      "codeur-scanner": 1221,
+      "summarize-page": 1405,
+      "monitor-page": 2123,
+      "ai-consensus": 1076,
+      "organize-tabs": 2041,
+      "screenshot-walkthrough": 1973,
+      "distributed-workflow": 1475,
+      "compare-prices": 5739,
+      "prospect-clients": 1099,
+      "linkedin-engage": 1133,
+      "read-later": 1890,
+      "find-alternatives": 7882
+    },
+    "memory": {
+      "CORE.md": 7131,
+      "SOUL.md": 1263
+    },
+    "crons": [
+      "0 3 * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/backup_auto.js >> /home/turbo/jarvis-linux/logs/backup_auto.log 2>&1",
+      "0 */4 * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/linkedin_growth.js >> /home/turbo/jarvis-linux/logs/cron.log 2>&1",
+      "0 4 * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/rag_reindex.js >> /home/turbo/jarvis-linux/logs/rag_reindex.log 2>&1",
+      "0 */6 * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/log_digest.js >> /home/turbo/jarvis-linux/logs/log_digest.log 2>&1",
+      "0 7 * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/daily_research.js >> /home/turbo/jarvis-linux/logs/daily_research.log 2>&1",
+      "0 8 * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/daily_briefing.js >> /home/turbo/jarvis-linux/logs/cron.log 2>&1",
+      "0 * * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/trading_monitor.js >> /home/turbo/jarvis-linux/logs/trading_monitor.log 2>&1",
+      "*/15 * * * * /home/turbo/IA/Core/jarvis/scripts/tmp-monitor.sh",
+      "*/30 * * * * python3 scripts/codeur-veille.py --once >> logs/codeur-veille-cron.log 2>&1",
+      "*/30 * * * * /usr/bin/node /home/turbo/jarvis-linux/automation/browser_runner.js /home/turbo/jarvis-linux/automation/tasks/metrics_snapshot.js >> /home/turbo/jarvis-linux/logs/metrics_snapshot.log 2>&1",
+      "@reboot sleep 20 && /home/turbo/IA/Core/jarvis/scripts/browseros-ensure-tabs.sh 9108 >> /home/turbo/IA/Core/jarvis/logs/browseros-tabs.log 2>&1",
+      "0 9 * * * /home/turbo/IA/Core/jarvis/scripts/daily-workflow.sh",
+      "0 */2 * * * python3 scripts/db_sync.py >> logs/db-sync.log 2>&1"
+    ],
+    "mcp": {
+      "mcpServers": {
+        "browseros": {
+          "url": "http://127.0.0.1:9001/mcp"
+        },
+        "playwright": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@playwright/mcp@latest",
+            "--cdp-endpoint",
+            "http://127.0.0.1:9222"
+          ]
+        },
+        "chrome-devtools": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "chrome-devtools-mcp@latest",
+            "--cdp-endpoint",
+            "http://127.0.0.1:9222"
+          ]
+        }
+      }
+    }
+  },
+  "cluster": {
+    "M2": {
+      "host": "192.168.1.26:1234",
+      "model": "qwen/qwen3-8b",
+      "role": "FAST",
+      "speed": "1-5s"
+    },
+    "M3": {
+      "host": "192.168.1.113:1234",
+      "model": "deepseek-r1",
+      "role": "DEEP",
+      "speed": "7-12s"
+    },
+    "anti_think": "Reponds directement en francais, sans reflechir. "
+  },
+  "browseros": {
+    "cdp": 9108,
+    "server": 9200,
+    "cli": "~/.browseros/bin/browseros-cli"
+  },
+  "codeur": {
+    "id": 733953,
+    "slug": "-6666zlkh",
+    "siret": "83900975000036",
+    "pids": [
+      "480357",
+      "480360",
+      "480333",
+      "480392",
+      "480404",
+      "480383"
+    ]
+  },
+  "linkedin": {
+    "profile": "franck-hlb-80bb231b1",
+    "followers": 624
+  },
+  "github": {
+    "user": "Turbo31150",
+    "pages": "turbo31150.github.io/franckdelmas.dev/"
+  }
+}

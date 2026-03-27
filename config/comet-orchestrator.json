@@ -1,0 +1,65 @@
+{
+  "version": "10.0",
+  "name": "COMET Orchestrateur IA",
+  "description": "Orchestrateur intelligent distribué — 3 machines + 6 GPUs + BrowserOS",
+
+  "cluster": {
+    "M1": {
+      "role": "MASTER — analyse profonde",
+      "host": "127.0.0.1",
+      "port": 1234,
+      "models": ["deepseek-r1-0528-qwen3-8b", "qwen3.5-9b", "gemma-3-4b"],
+      "gpu": ["RTX 2060 12GB", "GTX 1660S x4"],
+      "tasks": ["complex_analysis", "consensus_lead", "deep_reasoning"]
+    },
+    "M2": {
+      "role": "DETECTOR — rapide",
+      "host": "192.168.1.26",
+      "port": 1234,
+      "models": ["qwen3-8b", "deepseek-coder-v2", "nemotron-3-nano", "gpt-oss-20b"],
+      "tasks": ["pre_analysis", "quick_scan", "code_generation"]
+    },
+    "M3": {
+      "role": "ORCHESTRATEUR — validation",
+      "host": "192.168.1.113",
+      "port": 1234,
+      "models": ["deepseek-r1-0528-qwen3-8b", "phi-3.1-mini", "mistral-7b", "gpt-oss-20b"],
+      "tasks": ["validation", "consensus_vote", "cross_check"]
+    },
+    "OL1": {
+      "role": "FALLBACK — léger",
+      "host": "127.0.0.1",
+      "port": 11434,
+      "tasks": ["embedding", "light_tasks", "fallback"]
+    }
+  },
+
+  "routing": {
+    "simple": {"target": "M2", "model": "gemma-3-4b", "timeout": 10},
+    "complex": {"target": ["M1", "M3"], "model": "deepseek-r1-0528-qwen3-8b", "timeout": 60},
+    "critical": {"target": ["M1", "M2", "M3"], "consensus": true, "min_agreement": 2, "timeout": 90},
+    "code": {"target": "M2", "model": "deepseek-coder-v2-lite-instruct", "timeout": 30},
+    "fast": {"target": "M1", "model": "gemma-3-4b", "timeout": 5}
+  },
+
+  "browser": {
+    "cdp_port": 9108,
+    "mcp_port": 9001,
+    "tab_strategy": {
+      "tab1": "analysis",
+      "tab2": "validation",
+      "tab3": "actions"
+    }
+  },
+
+  "tabs_assignment": {
+    "codeur.com": "freelance_monitoring",
+    "linkedin.com": "social_engagement",
+    "chatgpt.com": "ai_tool_1",
+    "claude.ai": "ai_tool_2",
+    "gemini.google.com": "ai_tool_3",
+    "aistudio.google.com": "ai_tool_4",
+    "perplexity.ai": "research",
+    "github.com": "portfolio"
+  }
+}

@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.bak
+data/core
+data/*.db
+data/screenshots/
+data/workflow-runs/
+data/blueprint/jarvis-master.sql
+logs/
+node_modules/
+.claude/
+backups/
+*.png
+*.pdf

@@ -1,0 +1,67 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "chrome-devtools-mcp@latest",
+        "--cdp-endpoint",
+        "http://127.0.0.1:9222"
+      ],
+      "env": {
+        "CDP_TARGET_URL": "http://127.0.0.1:9222"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "list_pages",
+        "navigate_page",
+        "click_element",
+        "fill_input",
+        "take_screenshot",
+        "get_page_snapshot",
+        "evaluate_javascript",
+        "new_page",
+        "close_page",
+        "get_console_logs",
+        "get_network_requests",
+        "scroll_page",
+        "hover_element",
+        "select_option",
+        "get_page_content",
+        "wait_for_selector"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--cdp-endpoint",
+        "http://127.0.0.1:9222"
+      ],
+      "env": {
+        "DISPLAY": ":0"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "browser_navigate",
+        "browser_click",
+        "browser_fill",
+        "browser_type",
+        "browser_screenshot",
+        "browser_snapshot",
+        "browser_evaluate",
+        "browser_tab_list",
+        "browser_tab_new",
+        "browser_tab_select",
+        "browser_tab_close",
+        "browser_wait_for_selector",
+        "browser_scroll",
+        "browser_hover",
+        "browser_select_option",
+        "browser_press_key",
+        "browser_drag",
+        "browser_get_text",
+        "browser_get_attribute"
+      ]
+    }
+  }
+}

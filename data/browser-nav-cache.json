@@ -1,0 +1,1504 @@
+{
+  "version": 1,
+  "sites": {
+    "www.codeur.com": {
+      "last_scan": "2026-03-27T12:36:45.715332",
+      "page": "https://www.codeur.com/-6666zlkh",
+      "title": "Franck Delmas, développeur IA",
+      "forms": [
+        {
+          "id": "",
+          "action": "https://newsletter.codeur.com/sendy/subscribe",
+          "method": "post"
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "INPUT",
+          "type": "email",
+          "name": "email",
+          "id": "email",
+          "placeholder": "Votre adresse email",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "list",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "subform",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        }
+      ],
+      "buttons": [
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Publier un projet",
+          "id": "",
+          "class": "btn btn-warning leading-7 px-3 py-1 mr-4",
+          "href": "https://www.codeur.com/fonctionnement-codeur"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Recevoir un devis",
+          "id": "",
+          "class": "btn btn-primary block",
+          "href": "https://www.codeur.com/fonctionnement-codeur"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Publier un projet",
+          "id": "",
+          "class": "btn text-primary bg-white w-fit",
+          "href": "https://www.codeur.com/fonctionnement-codeur"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "x",
+          "id": "",
+          "class": "new-close border-0 rounded-full font-bol"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Demander un devis",
+          "id": "",
+          "class": "btn btn-success max-md:grow",
+          "href": "https://www.codeur.com/fonctionnement-codeur"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "S'inscrire",
+          "id": "",
+          "class": "w-full tw-bg-primary text-white py-3 rou"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "×",
+          "id": "",
+          "class": "text-white absolute top-0 right-0 mt-1 m"
+        }
+      ],
+      "links": [
+        {
+          "text": "Voir les 18 autres réalisations",
+          "href": "https://www.codeur.com/-6666zlkh#cta-guest-profile"
+        }
+      ]
+    },
+    "codeur.com/projects": {
+      "last_scan": "2026-03-27T09:11:48",
+      "total_projects": 35,
+      "matches": 4,
+      "match_details": [
+        {
+          "title": "Video courte montage réseau sociaux",
+          "link": "https://www.codeur.com/projects/480363-video-courte-montage-reseau-sociaux",
+          "budget": "Moins de 500 €",
+          "offers": "3 offres",
+          "keywords": [
+            "ia"
+          ]
+        },
+        {
+          "title": "Expert IA & Automatisation : Génération de fiches produits W",
+          "link": "https://www.codeur.com/projects/480360-expert-ia-automatisation-generation-de-fiches-produits-woocommerce",
+          "budget": "Moins de 500 €",
+          "offers": "20 offres",
+          "keywords": [
+            "ia",
+            "automatisation"
+          ]
+        },
+        {
+          "title": "Recherche vidéaste & photographe - mariage",
+          "link": "https://www.codeur.com/projects/480343-recherche-videaste-photographe-mariage",
+          "budget": "500 € à 1 000 €",
+          "offers": "3 offres",
+          "keywords": [
+            "ia"
+          ]
+        },
+        {
+          "title": "Programmation, ia",
+          "link": "https://www.codeur.com/projects/480333-programmation-ia",
+          "budget": "500 € à 1 000 €",
+          "offers": "35 offres",
+          "keywords": [
+            "ia"
+          ]
+        }
+      ]
+    },
+    "codeur.com/project-480360": {
+      "scanned": "2026-03-27T09:12:09",
+      "title": "Expert IA & Automatisation : Génération de fiches produits WooCommerce",
+      "budget": "Moins de 500 €",
+      "skills": [],
+      "desc_preview": "Je crée un site e-commerce sous WooCommerce spécialisé dans la seconde main et le déstockage. Mon catalogue comprend plus de 1000 références de pièces uniques (stock = 1). La saisie manuelle des fiches produits est aujourd'hui un frein à notre croissance.\nObjectif :\nJe recherche un expert en automat"
+    },
+    "turbo31150.github.io": {
+      "last_scan": "2026-03-27T12:36:45.664121",
+      "page": "https://turbo31150.github.io/franckdelmas.dev/",
+      "title": "Franck Delmas — Développeur IA Freelance",
+      "forms": [],
+      "inputs": [],
+      "buttons": [
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Contactez-moi",
+          "id": "",
+          "class": "btn btn-primary",
+          "href": "mailto:franck@franckdelmas.dev"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Voir mes projets",
+          "id": "",
+          "class": "btn btn-secondary",
+          "href": "https://turbo31150.github.io/franckdelmas.dev/#projects"
+        }
+      ],
+      "links": []
+    },
+    "github.com": {
+      "last_scan": "2026-03-27T12:36:45.706644",
+      "page": "https://github.com/Turbo31150",
+      "title": "Turbo31150 (Franck Delmas) · GitHub",
+      "forms": [
+        {
+          "id": "query-builder-test-form",
+          "action": "https://github.com/Turbo31150",
+          "method": "get"
+        },
+        {
+          "id": "code-search-feedback-form",
+          "action": "https://github.com/search/feedback",
+          "method": "post"
+        },
+        {
+          "id": "custom-scopes-dialog-form",
+          "action": "https://github.com/search/custom_scopes",
+          "method": "post"
+        },
+        {
+          "id": "",
+          "action": "https://github.com/settings/blocked_users",
+          "method": "post"
+        },
+        {
+          "id": "",
+          "action": "https://github.com/Turbo31150?tab=overview&from=2026-02-01&to=2026-02-28&include",
+          "method": "get"
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "type",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "name": "query-builder-test",
+          "id": "query-builder-test",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "authenticity_token",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "name": "feedback",
+          "id": "feedback",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "name": "include_email",
+          "id": "include_email",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "authenticity_token",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "custom_scope_id",
+          "id": "custom_scope_id",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "name": "custom_scope_name",
+          "id": "custom_scope_name",
+          "placeholder": "github-ruby",
+          "label": "Name"
+        },
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "name": "custom_scope_query",
+          "id": "custom_scope_query",
+          "placeholder": "(repo:mona/a OR repo:mona/b) AND lang:py",
+          "label": "Query"
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "authenticity_token",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "login",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "hidden",
+          "name": "return_to",
+          "id": "",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "name": "note",
+          "id": "new-block-note-from-sidebar",
+          "placeholder": "",
+          "label": ""
+        }
+      ],
+      "buttons": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Toggle navigation",
+          "id": "",
+          "class": "HeaderMktg-backdrop d-lg-none border-0 p"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Platform",
+          "id": "",
+          "class": "NavDropdown-module__button__PEHWX js-det"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Solutions",
+          "id": "",
+          "class": "NavDropdown-module__button__PEHWX js-det"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Resources",
+          "id": "",
+          "class": "NavDropdown-module__button__PEHWX js-det"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Open Source",
+          "id": "",
+          "class": "NavDropdown-module__button__PEHWX js-det"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Enterprise",
+          "id": "",
+          "class": "NavDropdown-module__button__PEHWX js-det"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Search or jump to...",
+          "id": "",
+          "class": "header-search-button placeholder input-b"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Cancel",
+          "id": "",
+          "class": "btn"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Submit feedback",
+          "id": "",
+          "class": "btn-primary btn"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Cancel",
+          "id": "",
+          "class": "btn"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Create saved search",
+          "id": "",
+          "class": "btn-primary btn"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Resetting focus",
+          "id": "",
+          "class": "sr-only js-header-menu-focus-trap d-bloc"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Follow",
+          "id": "",
+          "class": "btn btn-sm mini-follow-button",
+          "href": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FTurbo31150"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Follow",
+          "id": "",
+          "class": "btn mini-follow-button",
+          "href": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FTurbo31150"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Follow",
+          "id": "",
+          "class": "btn btn-block",
+          "href": "https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2FTurbo31150"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Block or Report",
+          "id": "dialog-show-dialog-4ccb2cc8-ec9d-4099-a437-82bca7996548",
+          "class": "Button--link Button--medium Button color"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Block user",
+          "id": "",
+          "class": "btn btn-danger"
+        },
+        {
+          "tag": "A",
+          "type": "",
+          "text": "Report abuse",
+          "id": "",
+          "class": "btn btn-danger",
+          "href": "https://github.com/contact/report-abuse?report=Turbo31150+%28user%29"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Show more activity",
+          "id": "",
+          "class": "ajax-pagination-btn btn width-full f6 mt"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Manage cookies",
+          "id": "",
+          "class": "Link--secondary underline-on-hover borde"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Do not share my personal information",
+          "id": "",
+          "class": "Link--secondary underline-on-hover borde"
+        }
+      ],
+      "links": [
+        {
+          "text": "blocking users",
+          "href": "https://docs.github.com/articles/blocking-a-user-from-your-personal-account"
+        },
+        {
+          "text": "Learn how we count contributions",
+          "href": "https://docs.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile"
+        }
+      ]
+    },
+    "www.linkedin.com": {
+      "last_scan": "2026-03-27T13:02:18.563691",
+      "page": "https://www.linkedin.com/in/franck-hlb-80bb231b1/",
+      "title": "franck Hlb | LinkedIn",
+      "forms": [
+        {
+          "id": "",
+          "action": "https://www.linkedin.com/in/franck-hlb-80bb231b1/",
+          "method": "get"
+        }
+      ],
+      "inputs": [
+        {
+          "tag": "INPUT",
+          "type": "text",
+          "name": "",
+          "id": ":r2:",
+          "placeholder": "Rechercher",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "name": "reason",
+          "id": ":R5mj9qcq6aecapj6:",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "INPUT",
+          "type": "radio",
+          "name": "reason",
+          "id": ":R9mj9qcq6aecapj6:",
+          "placeholder": "",
+          "label": ""
+        },
+        {
+          "tag": "SELECT",
+          "type": "select-one",
+          "name": "",
+          "id": ":Rteq6aecapj6:",
+          "placeholder": "",
+          "label": ""
+        }
+      ],
+      "buttons": [
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Passer au contenu principal",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Accueil",
+          "id": "",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Emplois",
+          "id": "",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Vous",
+          "id": "",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Pour les entreprises",
+          "id": "",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Ressources",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Améliorer le profil",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Mes objectifs",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Mes objectifs",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Améliorer le profil",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Ressources",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Pourquoi est-ce que je vois cette public",
+          "id": "",
+          "class": "ecb6f901 f6ba0e2b _3ec60ff4 db05c77a _5b"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Masquer ou signaler cette publicitéJe ne",
+          "id": "",
+          "class": "ecb6f901 f6ba0e2b _3ec60ff4 db05c77a _5b"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "button",
+          "text": "Signaler cette publicité",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        },
+        {
+          "tag": "BUTTON",
+          "type": "submit",
+          "text": "Envoyer",
+          "id": "",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7"
+        }
+      ],
+      "links": [
+        {
+          "text": "Faire de la publicité",
+          "href": "https://www.linkedin.com/campaignmanager/accounts/"
+        },
+        {
+          "text": "",
+          "href": "https://www.linkedin.com/in/franck-hlb-80bb231b1/edit/intro/"
+        },
+        {
+          "text": "À l’écoute de nouvelles opportunitésPost",
+          "href": "https://www.linkedin.com/in/franck-hlb-80bb231b1/opportunities/job-opportunities/details/?profileUrn"
+        },
+        {
+          "text": "",
+          "href": "https://www.linkedin.com/in/franck-hlb-80bb231b1/opportunities/job-opportunities/edit/?origin=PROFIL"
+        },
+        {
+          "text": "",
+          "href": "https://www.linkedin.com/in/franck-hlb-80bb231b1/edit/secondary-language/"
+        },
+        {
+          "text": "",
+          "href": "https://www.linkedin.com/public-profile/settings/?trk=d_flagship3_profile_self_view_public_profile"
+        }
+      ]
+    },
+    "linkedin.com": {
+      "authenticated": true,
+      "auth_time": "2026-03-27T13:01:49",
+      "last_reply": {
+        "to": "Fabrice MICHEL",
+        "time": "2026-03-27T13:06:01",
+        "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7443187338945474560/"
+      },
+      "replies": [
+        {
+          "to": "Marceau Anizon",
+          "time": "2026-03-27T13:06:44"
+        }
+      ]
+    }
+  },
+  "selectors": {
+    "codeur.com/projects": {
+      "project_card": "div[id^=\"project-\"]",
+      "project_link": "a[href*=\"/projects/\"]",
+      "budget_regex": "(Moins de \\d[\\d\\s]*€|\\d[\\d\\s]*€[^€]*€|\\d[\\d\\s]*€ et plus|Sur devis)"
+    },
+    "codeur.com/login": {
+      "email": "user_email",
+      "password": "user_password",
+      "submit": "input[type=submit], button[type=submit]"
+    },
+    "turbo31150.github.io/franckdelmas.dev/": {
+      "forms": [],
+      "inputs": {},
+      "buttons": {
+        "Contactez-moi": {
+          "tag": "A",
+          "class": "btn btn-primary",
+          "id": ""
+        },
+        "Voir mes projets": {
+          "tag": "A",
+          "class": "btn btn-secondary",
+          "id": ""
+        }
+      },
+      "edit_links": {},
+      "scanned_at": "2026-03-27T12:36:45.664498"
+    },
+    "github.com/Turbo31150": {
+      "forms": [
+        "query-builder-test-form",
+        "code-search-feedback-form",
+        "custom-scopes-dialog-form"
+      ],
+      "inputs": {
+        "type": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "query-builder-test": {
+          "tag": "INPUT",
+          "type": "text",
+          "label": ""
+        },
+        "authenticity_token": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "feedback": {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "label": ""
+        },
+        "include_email": {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "label": ""
+        },
+        "custom_scope_id": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "custom_scope_name": {
+          "tag": "INPUT",
+          "type": "text",
+          "label": "Name"
+        },
+        "custom_scope_query": {
+          "tag": "INPUT",
+          "type": "text",
+          "label": "Query"
+        },
+        "login": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "return_to": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "note": {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "label": ""
+        }
+      },
+      "buttons": {
+        "Toggle navigation": {
+          "tag": "BUTTON",
+          "class": "HeaderMktg-backdrop d-lg-none border-0 p",
+          "id": ""
+        },
+        "Platform": {
+          "tag": "BUTTON",
+          "class": "NavDropdown-module__button__PEHWX js-det",
+          "id": ""
+        },
+        "Solutions": {
+          "tag": "BUTTON",
+          "class": "NavDropdown-module__button__PEHWX js-det",
+          "id": ""
+        },
+        "Resources": {
+          "tag": "BUTTON",
+          "class": "NavDropdown-module__button__PEHWX js-det",
+          "id": ""
+        },
+        "Open Source": {
+          "tag": "BUTTON",
+          "class": "NavDropdown-module__button__PEHWX js-det",
+          "id": ""
+        },
+        "Enterprise": {
+          "tag": "BUTTON",
+          "class": "NavDropdown-module__button__PEHWX js-det",
+          "id": ""
+        },
+        "Search or jump to...": {
+          "tag": "BUTTON",
+          "class": "header-search-button placeholder input-b",
+          "id": ""
+        },
+        "Cancel": {
+          "tag": "BUTTON",
+          "class": "btn",
+          "id": ""
+        },
+        "Submit feedback": {
+          "tag": "BUTTON",
+          "class": "btn-primary btn",
+          "id": ""
+        },
+        "Create saved search": {
+          "tag": "BUTTON",
+          "class": "btn-primary btn",
+          "id": ""
+        },
+        "Resetting focus": {
+          "tag": "BUTTON",
+          "class": "sr-only js-header-menu-focus-trap d-bloc",
+          "id": ""
+        },
+        "Follow": {
+          "tag": "A",
+          "class": "btn btn-block",
+          "id": ""
+        },
+        "Block or Report": {
+          "tag": "BUTTON",
+          "class": "Button--link Button--medium Button color",
+          "id": "dialog-show-dialog-4ccb2cc8-ec9d-4099-a437-82bca7996548"
+        },
+        "Block user": {
+          "tag": "BUTTON",
+          "class": "btn btn-danger",
+          "id": ""
+        },
+        "Report abuse": {
+          "tag": "A",
+          "class": "btn btn-danger",
+          "id": ""
+        },
+        "Show more activity": {
+          "tag": "BUTTON",
+          "class": "ajax-pagination-btn btn width-full f6 mt",
+          "id": ""
+        },
+        "Manage cookies": {
+          "tag": "BUTTON",
+          "class": "Link--secondary underline-on-hover borde",
+          "id": ""
+        },
+        "Do not share my personal information": {
+          "tag": "BUTTON",
+          "class": "Link--secondary underline-on-hover borde",
+          "id": ""
+        }
+      },
+      "edit_links": {
+        "blocking users": "https://docs.github.com/articles/blocking-a-user-from-your-personal-account",
+        "Learn how we count contributions": "https://docs.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile"
+      },
+      "scanned_at": "2026-03-27T12:36:45.707645"
+    },
+    "www.codeur.com/-6666zlkh": {
+      "forms": [],
+      "inputs": {
+        "email": {
+          "tag": "INPUT",
+          "type": "email",
+          "label": ""
+        },
+        "list": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "subform": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        }
+      },
+      "buttons": {
+        "Publier un projet": {
+          "tag": "A",
+          "class": "btn text-primary bg-white w-fit",
+          "id": ""
+        },
+        "Recevoir un devis": {
+          "tag": "A",
+          "class": "btn btn-primary block",
+          "id": ""
+        },
+        "x": {
+          "tag": "BUTTON",
+          "class": "new-close border-0 rounded-full font-bol",
+          "id": ""
+        },
+        "Demander un devis": {
+          "tag": "A",
+          "class": "btn btn-success max-md:grow",
+          "id": ""
+        },
+        "S'inscrire": {
+          "tag": "BUTTON",
+          "class": "w-full tw-bg-primary text-white py-3 rou",
+          "id": ""
+        },
+        "×": {
+          "tag": "BUTTON",
+          "class": "text-white absolute top-0 right-0 mt-1 m",
+          "id": ""
+        }
+      },
+      "edit_links": {
+        "Voir les 18 autres réalisations": "https://www.codeur.com/-6666zlkh#cta-guest-profile"
+      },
+      "scanned_at": "2026-03-27T12:36:45.716105"
+    },
+    "www.linkedin.com/login": {
+      "forms": [
+        "otp-generation"
+      ],
+      "inputs": {
+        "csrfToken": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "resendUrl": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "midToken": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "session_redirect": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "parentPageKey": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "pageInstance": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "controlId": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "trk": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "authUUID": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "encrypted_session_key": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "session_key": {
+          "tag": "INPUT",
+          "type": "email",
+          "label": ""
+        },
+        "ac": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "loginFailureCount": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "sIdString": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "pkSupported": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "loginCsrfParam": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "fp_data": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "apfc": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "_d": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "showGoogleOneTapLogin": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "showAppleLogin": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "showMicrosoftLogin": {
+          "tag": "INPUT",
+          "type": "hidden",
+          "label": ""
+        },
+        "session_password": {
+          "tag": "INPUT",
+          "type": "password",
+          "label": ""
+        },
+        "rememberMeOptIn": {
+          "tag": "INPUT",
+          "type": "checkbox",
+          "label": ""
+        },
+        "g-recaptcha-response": {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "label": ""
+        }
+      },
+      "buttons": {
+        "Accepter": {
+          "tag": "BUTTON",
+          "class": "artdeco-global-alert-action artdeco-butt",
+          "id": ""
+        },
+        "Refuser": {
+          "tag": "BUTTON",
+          "class": "artdeco-global-alert-action artdeco-butt",
+          "id": ""
+        },
+        "S’identifier avec Apple": {
+          "tag": "BUTTON",
+          "class": "sign-in-with-apple-button",
+          "id": ""
+        },
+        "S’identifier": {
+          "tag": "BUTTON",
+          "class": "btn__primary--large from__button--floati",
+          "id": ""
+        },
+        "Renvoyer l’e-mail": {
+          "tag": "BUTTON",
+          "class": "resend-button margin-top-12",
+          "id": "btn-resend-otp"
+        },
+        "Retour": {
+          "tag": "BUTTON",
+          "class": "otp-back-button",
+          "id": "otp-cancel-button"
+        },
+        "Langue": {
+          "tag": "BUTTON",
+          "class": "language-selector__button",
+          "id": ""
+        },
+        "العربية (Arabic)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "বাংলা (Bangla)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Čeština (Czech)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Dansk (Danish)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Deutsch (German)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Ελληνικά (Greek)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "English (English)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Español (Spanish)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "فارسی (Persian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Suomi (Finnish)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Français (French)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link language-selecto",
+          "id": ""
+        },
+        "हिंदी (Hindi)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Magyar (Hungarian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Bahasa Indonesia (Indonesian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Italiano (Italian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "עברית (Hebrew)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "日本語 (Japanese)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "한국어 (Korean)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "मराठी (Marathi)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Bahasa Malaysia (Malay)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Nederlands (Dutch)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Norsk (Norwegian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "ਪੰਜਾਬੀ (Punjabi)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Polski (Polish)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Português (Portuguese)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Română (Romanian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Русский (Russian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Svenska (Swedish)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "తెలుగు (Telugu)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "ภาษาไทย (Thai)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Tagalog (Tagalog)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Türkçe (Turkish)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Українська (Ukrainian)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "Tiếng Việt (Vietnamese)": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "简体中文 (Chinese (Simplified))": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        },
+        "正體中文 (Chinese (Traditional))": {
+          "tag": "BUTTON",
+          "class": "language-selector__link ",
+          "id": ""
+        }
+      },
+      "edit_links": {},
+      "scanned_at": "2026-03-27T12:36:45.726083"
+    },
+    "www.linkedin.com/notifications/": {
+      "forms": [],
+      "inputs": {},
+      "buttons": {
+        "Accéder à la recherche": {
+          "tag": "BUTTON",
+          "class": "mr4 artdeco-button artdeco-button--muted",
+          "id": "ember12"
+        },
+        "Passer au contenu principal": {
+          "tag": "BUTTON",
+          "class": "artdeco-button artdeco-button--muted art",
+          "id": "ember13"
+        },
+        "Raccourcis clavier": {
+          "tag": "BUTTON",
+          "class": "artdeco-button artdeco-button--muted art",
+          "id": "ember15"
+        },
+        "Fermer le menu de navigation": {
+          "tag": "BUTTON",
+          "class": "global-nav__a11y-menu-close artdeco-butt",
+          "id": "ember16"
+        },
+        "Recherche": {
+          "tag": "BUTTON",
+          "class": "search-global-typeahead__collapsed-searc",
+          "id": ""
+        },
+        "Vous": {
+          "tag": "BUTTON",
+          "class": "global-nav__primary-link global-nav__pri",
+          "id": "ember22"
+        },
+        "Pour les entreprises": {
+          "tag": "BUTTON",
+          "class": "global-nav__primary-link global-nav__pri",
+          "id": "ember26"
+        },
+        "Toutes": {
+          "tag": "BUTTON",
+          "class": "artdeco-pill artdeco-pill--slate artdeco",
+          "id": "ember31"
+        },
+        "Offres d’emploi": {
+          "tag": "BUTTON",
+          "class": "artdeco-pill artdeco-pill--slate artdeco",
+          "id": "ember32"
+        },
+        "Mes posts": {
+          "tag": "BUTTON",
+          "class": "artdeco-pill artdeco-pill--slate artdeco",
+          "id": "ember33"
+        },
+        "Mentions": {
+          "tag": "BUTTON",
+          "class": "artdeco-pill artdeco-pill--slate artdeco",
+          "id": "ember34"
+        },
+        "Exactement. Le vrai gap aujourd’hui n’es": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "Modifier les préférences de notification": {
+          "tag": "BUTTON",
+          "class": "nt-card-settings-dropdown-item__button",
+          "id": ""
+        },
+        "Supprimer la notification": {
+          "tag": "BUTTON",
+          "class": "nt-card-settings-dropdown-item__button",
+          "id": ""
+        },
+        "Voir moins de notifications comme celles": {
+          "tag": "BUTTON",
+          "class": "nt-card-settings-dropdown-item__button",
+          "id": ""
+        },
+        "Ce qui me frappe dans les conversations ": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "FéliciterFéliciter Grégoire": {
+          "tag": "BUTTON",
+          "class": "artdeco-button artdeco-button--2 artdeco",
+          "id": "ember54"
+        },
+        "Ton JARVIS avec Elasticsearch et GitHub ": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "MCP change vraiment la donne Marceau. J'": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "En direct\n      \n\n\n\n        \n          A": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "franck Hlb exactement les mêmes probléma": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "franck Hlb merci beaucoup 😉\nOui la traç": {
+          "tag": "BUTTON",
+          "class": "artdeco-card overflow-hidden mt2",
+          "id": ""
+        },
+        "Afficher plus de résultats": {
+          "tag": "BUTTON",
+          "class": "artdeco-button artdeco-button--muted art",
+          "id": "ember128"
+        }
+      },
+      "edit_links": {
+        "Faire de la publicité": "https://www.linkedin.com/campaignmanager/accounts?"
+      },
+      "scanned_at": "2026-03-27T13:01:49.789358"
+    },
+    "www.linkedin.com/in/franck-hlb-80bb231b1": {
+      "forms": [],
+      "inputs": {
+        ":r2:": {
+          "tag": "INPUT",
+          "type": "text",
+          "label": ""
+        },
+        "reason": {
+          "tag": "INPUT",
+          "type": "radio",
+          "label": ""
+        },
+        ":Rteq6aecapj6:": {
+          "tag": "SELECT",
+          "type": "select-one",
+          "label": ""
+        }
+      },
+      "buttons": {
+        "Passer au contenu principal": {
+          "tag": "BUTTON",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+          "id": ""
+        },
+        "Accueil": {
+          "tag": "BUTTON",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+          "id": ""
+        },
+        "Emplois": {
+          "tag": "BUTTON",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+          "id": ""
+        },
+        "Vous": {
+          "tag": "BUTTON",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+          "id": ""
+        },
+        "Pour les entreprises": {
+          "tag": "BUTTON",
+          "class": "ddc4ed9e b2e14cf0 _4ed85bb3 db05c77a _82",
+          "id": ""
+        },
+        "Ressources": {
+          "tag": "BUTTON",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+          "id": ""
+        },
+        "Améliorer le profil": {
+          "tag": "BUTTON",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+          "id": ""
+        },
+        "Mes objectifs": {
+          "tag": "BUTTON",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+          "id": ""
+        },
+        "Pourquoi est-ce que je vois cette public": {
+          "tag": "BUTTON",
+          "class": "ecb6f901 f6ba0e2b _3ec60ff4 db05c77a _5b",
+          "id": ""
+        },
+        "Masquer ou signaler cette publicitéJe ne": {
+          "tag": "BUTTON",
+          "class": "ecb6f901 f6ba0e2b _3ec60ff4 db05c77a _5b",
+          "id": ""
+        },
+        "Signaler cette publicité": {
+          "tag": "BUTTON",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+          "id": ""
+        },
+        "Envoyer": {
+          "tag": "BUTTON",
+          "class": "e20b7354 _587c1173 db05c77a _8228d8cf _7",
+          "id": ""
+        }
+      },
+      "edit_links": {
+        "Faire de la publicité": "https://www.linkedin.com/campaignmanager/accounts/",
+        "À l’écoute de nouvelles opportunitésPost": "https://www.linkedin.com/in/franck-hlb-80bb231b1/opportunities/job-opportunities/details/?profileUrn"
+      },
+      "scanned_at": "2026-03-27T13:02:18.565217"
+    },
+    "codeur.com/offer-form": {
+      "textareas": {},
+      "inputs": {
+        "email": "#email",
+        "user_contact[company_number]": "#user_contact_company_number",
+        "user_contact[vat_registered]": "#user_contact_vat_registered_false",
+        "user_contact[vat_number]": "#user_contact_vat_number",
+        "commit": "input[name='commit']"
+      },
+      "selects": {}
+    }
+  },
+  "last_updated": "2026-03-27T14:09:35.581861",
+  "config": {
+    "active_cdp_port": 9108,
+    "visible_browseros": true
+  },
+  "last_full_run": "2026-03-27T13:39:42",
+  "runs": 2
+}

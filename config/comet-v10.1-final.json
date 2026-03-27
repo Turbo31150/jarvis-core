@@ -1,0 +1,33 @@
+{
+  "version": "10.1-optimized",
+  "routing": {
+    "fast": {
+      "node": "M2",
+      "model": "qwen/qwen3-8b",
+      "timeout": 10,
+      "note": "1-5s, pas de think, r\u00e9ponses directes"
+    },
+    "deep": {
+      "node": "M3",
+      "model": "deepseek/deepseek-r1-0528-qwen3-8b",
+      "timeout": 25,
+      "note": "7-12s, think mode, analyses profondes"
+    },
+    "prompt_prefix": "Reponds directement en francais, sans reflechir, sans balise think. "
+  },
+  "browseros": {
+    "cli": "~/.browseros/bin/browseros-cli",
+    "skills": 17,
+    "tab_groups": 3,
+    "scheduled_tasks": 4,
+    "api": "http://127.0.0.1:9200"
+  },
+  "benchmarks": {
+    "M2_qwen3_fast": "1.3-4.7s, direct, concret",
+    "M3_deepseek_deep": "7-12s, think+analyse, d\u00e9taill\u00e9",
+    "M3_mistral": "6-8s, think consomme tokens",
+    "M2_reliable": true,
+    "M3_reliable": true,
+    "M1_saturated": true
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "groups": [
+    {"title": "FREELANCE", "color": "blue", "urls": [
+      "https://www.linkedin.com/feed/",
+      "https://www.codeur.com/-6666zlkh",
+      "https://www.codeur.com/projects",
+      "https://www.codeur.com/users/733953/dashboard"
+    ]},
+    {"title": "IA WEB", "color": "green", "urls": [
+      "https://chatgpt.com/",
+      "https://gemini.google.com/app",
+      "https://claude.ai/new",
+      "https://www.perplexity.ai/",
+      "https://aistudio.google.com/prompts/new_chat"
+    ]},
+    {"title": "PORTFOLIO", "color": "yellow", "urls": [
+      "https://github.com/Turbo31150",
+      "https://turbo31150.github.io/franckdelmas.dev/"
+    ]}
+  ]
+}

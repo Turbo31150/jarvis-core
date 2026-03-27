@@ -1,0 +1,33 @@
+{
+  "cluster_routing": {
+    "primary": {
+      "node": "M3",
+      "host": "192.168.1.113",
+      "port": 1234,
+      "fast_model": "mistral/mistral-7b-instruct-v0.3",
+      "deep_model": "deepseek/deepseek-r1-0528-qwen3-8b",
+      "avg_time": 2.5
+    },
+    "secondary": {
+      "node": "M2",
+      "host": "192.168.1.26",
+      "port": 1234,
+      "model": "qwen/qwen3-8b",
+      "status": "UNSTABLE \u2014 empty responses frequent"
+    },
+    "fallback": {
+      "node": "M1",
+      "host": "127.0.0.1",
+      "port": 1234,
+      "model": "google/gemma-3-4b",
+      "status": "VRAM saturated"
+    }
+  },
+  "workflow_defaults": {
+    "timeout": 20,
+    "max_retries": 2,
+    "consensus_min": 2,
+    "save_dir": "~/IA/Core/jarvis/data/workflow-runs/"
+  },
+  "updated": "2026-03-27T23:30:00"
+}

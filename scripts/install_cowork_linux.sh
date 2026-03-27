@@ -1,0 +1,1 @@
+/home/turbo/jarvis-linux/scripts/install_cowork_linux.sh
