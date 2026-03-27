@@ -1,0 +1,10 @@
+{
+  "fabrice_michel": {
+    "context": "Post sur orchestration IA",
+    "response": "Merci Fabrice, c'est exactement ma conviction. L'IA sans orchestration, c'est comme un moteur sans châssis. JARVIS me l'a prouvé : 600+ handlers qui tournent H24, c'est pas le modèle qui fait la différence, c'est le système autour."
+  },
+  "marceau_anizon": {
+    "context": "Commentaire sur MCP + JARVIS",
+    "response": "Merci Marceau ! Le routing se fait par complexité de la requête — les modèles légers pour le rapide, deepseek-r1 pour le raisonnement, et un consensus multi-modèles pour les décisions critiques. L'avantage MCP c'est que chaque outil est un service indépendant, facile à remplacer ou upgrader."
+  }
+}

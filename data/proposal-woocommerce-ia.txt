@@ -1,0 +1,18 @@
+Bonjour,
+
+Générer automatiquement des fiches produits WooCommerce à partir de photos, c'est exactement le type de workflow IA que je construis au quotidien. J'ai déployé 65 workflows n8n en production et mon système JARVIS orchestre 600+ opérations IA en continu.
+
+Mon approche pour votre projet :
+- Workflow n8n ou Python qui prend une photo en entrée
+- Envoi à un modèle de vision IA (GPT-4 Vision ou Claude) pour identifier l'article, générer titre, description, catégorie et prix estimé
+- Création automatique de la fiche WooCommerce via l'API REST (titre, description, images, catégories, attributs, stock=1)
+- Interface simple : vous déposez la photo, la fiche se crée toute seule
+
+Livrable : Workflow complet + documentation + 2 semaines de support.
+Délai estimé : 5-7 jours pour un POC fonctionnel, 2 semaines pour la version finale.
+
+Portfolio : github.com/Turbo31150 (75 repos, 320k lignes de code)
+
+Disponible pour un appel découverte de 15 min cette semaine.
+
+Franck Delmas — Développeur IA & Automatisation

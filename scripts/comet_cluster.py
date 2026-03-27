@@ -25,24 +25,54 @@ DEEP_MODELS = {
 
 def clean_response(text):
     """Strip <think> tags from deepseek-r1 responses."""
-    return re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+    cleaned = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
+    # If response is only unclosed think tags, strip those too
+    cleaned = re.sub(r'<think>.*', '', cleaned, flags=re.DOTALL).strip()
+    return cleaned
 
-def query_node(name, prompt, model=None, temperature=0.3, max_tokens=500, timeout=None):
+def _is_deepseek_model(model):
+    """Check if model is a deepseek-r1 variant that uses think tags."""
+    return model and "deepseek" in model.lower() and "r1" in model.lower()
+
+ANTI_THINK_PREFIX = "You must respond directly without using <think> tags. Do not wrap your response in <think> tags. Give your answer immediately."
+
+def query_node(name, prompt, model=None, temperature=0.3, max_tokens=500, timeout=None, _retry=False):
     """Query a single cluster node."""
     config = CLUSTER[name]
     model = model or config["model"]
     timeout = timeout or config["timeout"]
-    
+    is_deepseek = _is_deepseek_model(model)
+
+    # Build messages — add anti-think system message for deepseek-r1 models
+    messages = []
+    if is_deepseek:
+        messages.append({"role": "system", "content": ANTI_THINK_PREFIX})
+    messages.append({"role": "user", "content": prompt})
+
+    # Build request payload
+    payload = {
+        "model": model,
+        "messages": messages,
+        "temperature": temperature,
+        "max_tokens": max_tokens
+    }
+    # Disable thinking mode via chat_template_kwargs if supported
+    if is_deepseek:
+        payload["chat_template_kwargs"] = {"enable_thinking": False}
+
     try:
         start = time.time()
-        resp = requests.post(config["url"], headers={"Content-Type": "application/json"}, json={
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "temperature": temperature,
-            "max_tokens": max_tokens
-        }, timeout=timeout)
+        resp = requests.post(config["url"], headers={"Content-Type": "application/json"},
+                             json=payload, timeout=timeout)
         elapsed = time.time() - start
         content = clean_response(resp.json()["choices"][0]["message"]["content"])
+
+        # Retry once if response after stripping think tags is too short
+        if not _retry and len(content) < 20 and is_deepseek:
+            retry_prompt = f"{ANTI_THINK_PREFIX}\n\n{prompt}"
+            return query_node(name, retry_prompt, model=model, temperature=temperature,
+                              max_tokens=max_tokens, timeout=timeout, _retry=True)
+
         return {"node": name, "response": content, "time": round(elapsed, 1), "model": model, "ok": True}
     except Exception as e:
         return {"node": name, "response": str(e)[:100], "time": 0, "model": model, "ok": False}
@@ -53,7 +83,7 @@ def query_fast(prompt, node="M1"):
 
 def query_deep(prompt, node="M1"):
     """Deep reasoning query."""
-    return query_node(node, prompt, model=DEEP_MODELS.get(node), timeout=60)
+    return query_node(node, prompt, model=DEEP_MODELS.get(node), max_tokens=800, timeout=60)
 
 def query_parallel(prompts_dict, timeout=30):
     """Query multiple nodes in parallel. prompts_dict = {node_name: prompt}"""

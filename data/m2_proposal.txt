@@ -1,0 +1,10 @@
+**Proposition Codeur.com – Projet Application Mobile Réseau Social MusicLinks**
+
+Bonjour,
+
+Je suis développeur full-stack orienté client, spécialisé en IA, Python, React et intégration d’APIs. Avec mes 6 GPU, je peux optimiser les algorithmes de recommandation et l’IA pour un meilleur engagement utilisateur. Mon expertise en React me permettra de concevoir une interface intuitive et performante pour votre application mobile MusicLinks. Je suis également capable de développer des fonctionnalités clés comme la gestion des playlists, le partage de musique et l’intégration d’un système de recommandation personnalisé.
+
+Je propose un développement complet en respectant les contraintes budgétaires (1000-10000 EUR). Mon objectif est de créer une application engageante et facile à utiliser, adaptée aux utilisateurs. Je suis disponible pour des discussions techniques et pour accompagner le projet de bout en bout.
+
+Cordialement,  
+[Votre nom]

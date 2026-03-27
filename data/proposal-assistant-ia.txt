@@ -1,0 +1,22 @@
+Bonjour,
+
+Centraliser et automatiser la gestion de demandes, CRM, veille et réseaux sociaux via un assistant IA — c'est le type exact de système que je construis et opère au quotidien.
+
+Mon système JARVIS orchestre 600+ opérations IA en continu sur 6 GPUs, avec 65 workflows n8n en production et des intégrations Telegram, email, API, et bases de données.
+
+Mon approche pour votre projet :
+- Workflow n8n central qui reçoit les demandes (email, formulaire, courrier scanné) et les classe automatiquement par sujet
+- Module IA (Claude/GPT) pour générer des réponses structurées en quelques secondes, adaptées au contexte de chaque demande
+- CRM léger intégré (Notion, Airtable ou solution sur mesure) avec suivi automatique des contacts et historique
+- Veille automatisée : surveillance de sources web/RSS avec alertes et synthèses quotidiennes
+- Gestion réseaux sociaux : planification de posts, réponses automatiques aux messages, reporting engagement
+- Dashboard de suivi pour visualiser toutes les demandes en un coup d'œil
+
+Livrable : Système opérationnel + documentation + formation utilisateur + 1 mois de support.
+Délai : POC fonctionnel en 5 jours, version complète en 2-3 semaines.
+
+Portfolio : github.com/Turbo31150 (75 repos, 320k lignes de code)
+
+Disponible pour un appel découverte de 15 min cette semaine.
+
+Franck Delmas — Développeur IA & Automatisation

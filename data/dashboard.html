@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JARVIS-COMET Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e2e8f0;font-family:system-ui,-apple-system,sans-serif;padding:1.5rem}
+a{color:#3b82f6}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.header h1{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .status{font-size:.75rem;color:#64748b}
+.header .status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;margin-right:4px;vertical-align:middle}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.card{background:#12121a;border:1px solid #1e293b;border-radius:.75rem;padding:1.25rem}
+.card .label{font-size:.75rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem}
+.card .value{font-size:1.75rem;font-weight:700;color:#f1f5f9}
+.card .value.blue{color:#3b82f6}
+.card .value.green{color:#22c55e}
+.card .value.amber{color:#f59e0b}
+.card .sub{font-size:.7rem;color:#475569;margin-top:.25rem}
+section{margin-bottom:1.5rem}
+section h2{font-size:1rem;font-weight:600;color:#94a3b8;margin-bottom:.75rem;border-left:3px solid #3b82f6;padding-left:.5rem}
+table{width:100%;border-collapse:collapse;font-size:.8rem}
+th{text-align:left;padding:.5rem .75rem;background:#12121a;color:#64748b;font-weight:500;border-bottom:1px solid #1e293b;position:sticky;top:0}
+td{padding:.5rem .75rem;border-bottom:1px solid #111118}
+tr:hover td{background:#14141e}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.65rem;font-weight:600}
+.badge.deposee{background:#1e3a5f;color:#60a5fa}
+.badge.acceptee{background:#14532d;color:#4ade80}
+.badge.refusee{background:#7f1d1d;color:#fca5a5}
+.badge.online{background:#14532d;color:#4ade80}
+.badge.offline{background:#7f1d1d;color:#fca5a5}
+.empty{text-align:center;color:#475569;padding:2rem;font-style:italic}
+@media(max-width:640px){body{padding:.75rem}.card .value{font-size:1.25rem}table{font-size:.7rem}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>JARVIS-COMET Dashboard</h1>
+  <div class="status"><span class="dot" id="pulse"></span> <span id="lastUpdate">loading...</span></div>
+</div>
+
+<div class="cards">
+  <div class="card"><div class="label">Offres Codeur</div><div class="value blue" id="sOffers">-</div><div class="sub" id="sOffersEur">-</div></div>
+  <div class="card"><div class="label">Workflow Runs</div><div class="value" id="sRuns">-</div><div class="sub">Recherches Comet</div></div>
+  <div class="card"><div class="label">Actions LinkedIn</div><div class="value" id="sActions">-</div><div class="sub">Replies &amp; posts</div></div>
+  <div class="card"><div class="label">Cluster</div><div class="value green" id="sCluster">-</div><div class="sub" id="sClusterSub">M1 / M2 / M3 / OL1</div></div>
+</div>
+
+<section>
+  <h2>Offres Codeur actives</h2>
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>PID</th><th>Titre</th><th>Montant</th><th>Statut</th><th>Date</th></tr></thead>
+    <tbody id="tOffers"><tr><td colspan="5" class="empty">Chargement...</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Workflow Runs recents</h2>
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>#</th><th>Type</th><th>Question</th><th>Sources</th><th>Conf.</th><th>Date</th></tr></thead>
+    <tbody id="tRuns"><tr><td colspan="6" class="empty">Chargement...</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2>Actions LinkedIn</h2>
+  <div style="overflow-x:auto"><table>
+    <thead><tr><th>#</th><th>Action</th><th>Cible</th><th>Contenu</th><th>Date</th></tr></thead>
+    <tbody id="tActions"><tr><td colspan="5" class="empty">Chargement...</td></tr></tbody>
+  </table></div>
+</section>
+
+<script>
+const API = location.origin;
+const $ = id => document.getElementById(id);
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.textContent;
+}
+
+function createBadge(text) {
+  const span = document.createElement('span');
+  span.className = 'badge ' + (text || '').toLowerCase().replace(/[^a-z]/g, '');
+  span.textContent = text || '-';
+  return span;
+}
+
+function trunc(s, n) { return s && s.length > n ? s.slice(0, n) + '...' : s || '-'; }
+function fmtDate(d) { return d ? d.replace('T', ' ').slice(0, 16) : '-'; }
+
+function clearChildren(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+
+function addRow(tbody, cells, badgeIndices) {
+  const tr = document.createElement('tr');
+  cells.forEach((text, i) => {
+    const td = document.createElement('td');
+    if (badgeIndices && badgeIndices.includes(i)) {
+      td.appendChild(createBadge(text));
+    } else {
+      td.textContent = text;
+    }
+    tr.appendChild(td);
+  });
+  tbody.appendChild(tr);
+}
+
+function showEmpty(tbody, cols, msg) {
+  const tr = document.createElement('tr');
+  const td = document.createElement('td');
+  td.colSpan = cols;
+  td.className = 'empty';
+  td.textContent = msg;
+  tr.appendChild(td);
+  tbody.appendChild(tr);
+}
+
+async function load() {
+  try {
+    const [stats, offers, runs, actions] = await Promise.all([
+      fetch(API + '/api/stats').then(r => r.json()),
+      fetch(API + '/api/offers').then(r => r.json()),
+      fetch(API + '/api/runs').then(r => r.json()),
+      fetch(API + '/api/actions').then(r => r.json()),
+    ]);
+
+    $('sOffers').textContent = stats.offers;
+    $('sOffersEur').textContent = (stats.total_eur || 0).toLocaleString('fr-FR') + ' EUR total';
+    $('sRuns').textContent = stats.runs;
+    $('sActions').textContent = stats.actions;
+    $('sCluster').textContent = stats.nodes_up + '/' + stats.nodes_total;
+    $('sCluster').className = 'value ' + (stats.nodes_up >= 3 ? 'green' : 'amber');
+
+    const tOffers = $('tOffers');
+    clearChildren(tOffers);
+    if (offers.length) {
+      offers.forEach(o => addRow(tOffers, [
+        o.pid, trunc(o.title, 50),
+        o.amount ? o.amount.toLocaleString('fr-FR') + ' \u20AC' : '-',
+        o.status, fmtDate(o.created_at)
+      ], [3]));
+    } else { showEmpty(tOffers, 5, 'Aucune offre'); }
+
+    const tRuns = $('tRuns');
+    clearChildren(tRuns);
+    if (runs.length) {
+      runs.forEach(r => addRow(tRuns, [
+        String(r.id), r.run_type || '-', trunc(r.question, 60),
+        String(r.valid_count ?? '-'), (r.confidence ?? '-') + '%', fmtDate(r.timestamp)
+      ]));
+    } else { showEmpty(tRuns, 6, 'Aucun run'); }
+
+    const tActions = $('tActions');
+    clearChildren(tActions);
+    if (actions.length) {
+      actions.forEach(a => addRow(tActions, [
+        String(a.id), a.action_type, trunc(a.target_person, 30),
+        trunc(a.content, 50), fmtDate(a.timestamp)
+      ], [1]));
+    } else { showEmpty(tActions, 5, 'Aucune action'); }
+
+    $('lastUpdate').textContent = 'MAJ ' + new Date().toLocaleTimeString('fr-FR');
+    $('pulse').style.background = '#22c55e';
+  } catch (e) {
+    $('lastUpdate').textContent = 'Erreur: ' + e.message;
+    $('pulse').style.background = '#ef4444';
+  }
+}
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; }
+  .banner {
+    width: 800px; margin: 0 auto; background: linear-gradient(135deg, #0f172a, #1e1b4b, #312e81);
+    border-radius: 16px; overflow: hidden; border: 1px solid #4338ca;
+  }
+  .top { padding: 32px 40px 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .top h1 { font-size: 22px; color: #a5b4fc; font-weight: 600; }
+  .badge { background: #22c55e; color: #000; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+  .main { padding: 0 40px 28px; }
+  .main h2 { font-size: 30px; color: #fff; font-weight: 700; line-height: 1.3; margin-bottom: 20px; }
+  .flow { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .step { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 10px 16px; text-align: center; min-width: 120px; }
+  .step .icon { font-size: 24px; }
+  .step .label { font-size: 11px; color: #94a3b8; margin-top: 4px; }
+  .arrow { color: #6366f1; font-size: 20px; font-weight: bold; }
+  .metrics { display: flex; gap: 16px; margin-bottom: 24px; }
+  .metric { background: rgba(99,102,241,0.15); border: 1px solid #4338ca; border-radius: 8px; padding: 12px 18px; flex: 1; text-align: center; }
+  .metric .val { font-size: 22px; font-weight: 700; color: #818cf8; }
+  .metric .lbl { font-size: 11px; color: #a5b4fc; margin-top: 2px; }
+  .footer { padding: 16px 40px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; }
+  .footer .name { color: #c7d2fe; font-size: 14px; }
+  .footer .price { color: #22c55e; font-size: 22px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="top">
+    <h1>Proposition n°1</h1>
+    <span class="badge">750 EUR FORFAIT</span>
+  </div>
+  <div class="main">
+    <h2>Assistant IA complet<br>Zero abonnement mensuel</h2>
+    <div class="flow">
+      <div class="step"><div class="icon">📧</div><div class="label">E-mails<br>Formulaires</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">🤖</div><div class="label">IA classe<br>et repond</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">📋</div><div class="label">CRM<br>tickets</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">📱</div><div class="label">Reseaux<br>sociaux</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="icon">🔔</div><div class="label">Alertes<br>rapports</div></div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">7 j</div><div class="lbl">Livraison</div></div>
+      <div class="metric"><div class="val">0 EUR/mois</div><div class="lbl">Aucun abonnement</div></div>
+      <div class="metric"><div class="val">100 %</div><div class="lbl">Open source</div></div>
+      <div class="metric"><div class="val">n8n + CRM</div><div class="lbl">Stack eprouve</div></div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="name">Franck Delmas — github.com/Turbo31150</div>
+    <div class="price">750 EUR tout compris</div>
+  </div>
+</div>
+</body>
+</html>

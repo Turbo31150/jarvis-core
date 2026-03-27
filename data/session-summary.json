@@ -1,0 +1,49 @@
+{
+  "timestamp": "2026-03-27T22:27:18",
+  "offers": [
+    {
+      "pid": "480357",
+      "project": "Assistant IA gestion demandes",
+      "amount": 750,
+      "status": "deposee+negociation_guillaume"
+    },
+    {
+      "pid": "480360",
+      "project": "WooCommerce photo→fiche produit",
+      "amount": 500,
+      "status": "deposee"
+    },
+    {
+      "pid": "480333",
+      "project": "Programmation IA",
+      "amount": 550,
+      "status": "deposee"
+    },
+    {
+      "pid": "480392",
+      "project": "Application IA energies renouvelables",
+      "amount": 5000,
+      "status": "deposee"
+    },
+    {
+      "pid": "480404",
+      "project": "Assistante administrative",
+      "amount": 600,
+      "status": "deposee"
+    },
+    {
+      "pid": "480383",
+      "project": "E-learning Maths batiment",
+      "amount": 2500,
+      "status": "deposee"
+    }
+  ],
+  "total_value": 9900,
+  "linkedin_replies": 3,
+  "linkedin_followers": 624,
+  "github_readme": "live",
+  "landing_page": "live",
+  "canva_designs": 3,
+  "scripts_created": 10,
+  "files_created": 28
+}

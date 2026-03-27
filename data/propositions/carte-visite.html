@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0d1117; color: #e6edf3; }
+
+  .card {
+    width: 800px; margin: 20px auto; border-radius: 16px; overflow: hidden;
+    background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #1a1f2b 100%);
+    border: 1px solid #30363d; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .header {
+    padding: 40px 48px 24px;
+    background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+    position: relative;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; color: white; }
+  .header p { font-size: 16px; color: rgba(255,255,255,0.85); margin-top: 6px; }
+
+  .body { padding: 32px 48px; }
+
+  .stats {
+    display: flex; gap: 24px; margin-bottom: 28px;
+  }
+  .stat {
+    flex: 1; background: #21262d; border-radius: 10px; padding: 16px 20px;
+    border: 1px solid #30363d; text-align: center;
+  }
+  .stat .number { font-size: 28px; font-weight: 700; color: #6366f1; }
+  .stat .label { font-size: 12px; color: #8b949e; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .skills {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+  }
+  .skill {
+    background: #21262d; border: 1px solid #6366f1; border-radius: 20px;
+    padding: 6px 14px; font-size: 13px; color: #a5b4fc;
+  }
+
+  .services { margin-bottom: 28px; }
+  .service {
+    display: flex; align-items: center; gap: 12px; padding: 10px 0;
+    border-bottom: 1px solid #21262d;
+  }
+  .service:last-child { border-bottom: none; }
+  .service .icon { font-size: 20px; width: 32px; text-align: center; }
+  .service .text { font-size: 14px; color: #c9d1d9; }
+  .service .price { margin-left: auto; font-weight: 600; color: #6366f1; font-size: 14px; }
+
+  .footer {
+    padding: 20px 48px; background: #161b22; border-top: 1px solid #30363d;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer a { color: #6366f1; text-decoration: none; font-size: 14px; }
+  .footer .cta {
+    background: #6366f1; color: white; padding: 10px 24px; border-radius: 8px;
+    font-weight: 600; font-size: 14px; text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="header">
+    <h1>Franck Delmas</h1>
+    <p>Developpeur IA & Automatisation — Toulouse, France</p>
+  </div>
+
+  <div class="body">
+    <div class="stats">
+      <div class="stat"><div class="number">600+</div><div class="label">Agents IA en production</div></div>
+      <div class="stat"><div class="number">65</div><div class="label">Workflows automatises</div></div>
+      <div class="stat"><div class="number">6</div><div class="label">GPU NVIDIA</div></div>
+      <div class="stat"><div class="number">320K</div><div class="label">Lignes de code</div></div>
+    </div>
+
+    <div class="skills">
+      <span class="skill">Python</span>
+      <span class="skill">IA / LLM</span>
+      <span class="skill">Docker</span>
+      <span class="skill">CUDA</span>
+      <span class="skill">FastAPI</span>
+      <span class="skill">n8n</span>
+      <span class="skill">React</span>
+      <span class="skill">Linux</span>
+      <span class="skill">OCR</span>
+      <span class="skill">Voice AI</span>
+    </div>
+
+    <div class="services">
+      <div class="service">
+        <div class="icon">🤖</div>
+        <div class="text">Assistant IA & automatisation des flux metier</div>
+        <div class="price">a partir de 750 EUR</div>
+      </div>
+      <div class="service">
+        <div class="icon">🛒</div>
+        <div class="text">Generation de fiches produit par IA (photo vers description)</div>
+        <div class="price">a partir de 390 EUR</div>
+      </div>
+      <div class="service">
+        <div class="icon">📄</div>
+        <div class="text">Deploiement OCR en production (PaddleOCR, Docker)</div>
+        <div class="price">a partir de 690 EUR</div>
+      </div>
+      <div class="service">
+        <div class="icon">🎙️</div>
+        <div class="text">Assistant vocal IA (Whisper CUDA, temps reel)</div>
+        <div class="price">sur devis</div>
+      </div>
+      <div class="service">
+        <div class="icon">📊</div>
+        <div class="text">Tableau de bord et monitoring IA en temps reel</div>
+        <div class="price">sur devis</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <a href="https://github.com/Turbo31150">github.com/Turbo31150</a> &nbsp;|&nbsp;
+      <a href="https://www.codeur.com/-6666zlkh">codeur.com/-6666zlkh</a>
+    </div>
+    <a href="mailto:franckdelmas00@gmail.com" class="cta">Me contacter</a>
+  </div>
+</div>
+
+</body>
+</html>

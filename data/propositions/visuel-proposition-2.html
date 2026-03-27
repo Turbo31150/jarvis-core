@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; }
+  .banner {
+    width: 800px; margin: 0 auto; background: linear-gradient(135deg, #0f172a, #1a2e05, #14532d);
+    border-radius: 16px; overflow: hidden; border: 1px solid #16a34a;
+  }
+  .top { padding: 32px 40px 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .top h1 { font-size: 22px; color: #86efac; font-weight: 600; }
+  .badge { background: #f59e0b; color: #000; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+  .main { padding: 0 40px 28px; }
+  .main h2 { font-size: 28px; color: #fff; font-weight: 700; line-height: 1.3; margin-bottom: 20px; }
+  .pipeline { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; }
+  .pstep { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 14px 18px; text-align: center; flex: 1; }
+  .pstep .icon { font-size: 28px; }
+  .pstep .title { font-size: 13px; font-weight: 600; color: #fff; margin-top: 6px; }
+  .pstep .desc { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+  .arr { color: #22c55e; font-size: 22px; font-weight: bold; }
+  .metrics { display: flex; gap: 16px; margin-bottom: 24px; }
+  .metric { background: rgba(34,197,94,0.12); border: 1px solid #16a34a; border-radius: 8px; padding: 12px 16px; flex: 1; text-align: center; }
+  .metric .val { font-size: 22px; font-weight: 700; color: #4ade80; }
+  .metric .lbl { font-size: 11px; color: #86efac; margin-top: 2px; }
+  .demo { background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+  .demo .bulb { font-size: 24px; }
+  .demo .text { color: #fde68a; font-size: 14px; font-weight: 500; }
+  .footer { padding: 16px 40px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; }
+  .footer .name { color: #bbf7d0; font-size: 14px; }
+  .footer .price { color: #4ade80; font-size: 22px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="top">
+    <h1>Proposition n°2</h1>
+    <span class="badge">390 EUR FORFAIT</span>
+  </div>
+  <div class="main">
+    <h2>1 000 fiches produit generees<br>Photo vers fiche en 30 secondes</h2>
+    <div class="pipeline">
+      <div class="pstep"><div class="icon">📸</div><div class="title">Photo</div><div class="desc">Vous prenez la photo</div></div>
+      <div class="arr">→</div>
+      <div class="pstep"><div class="icon">👁️</div><div class="title">Vision IA</div><div class="desc">GPT-4o analyse</div></div>
+      <div class="arr">→</div>
+      <div class="pstep"><div class="icon">✍️</div><div class="title">Description</div><div class="desc">SEO optimisee</div></div>
+      <div class="arr">→</div>
+      <div class="pstep"><div class="icon">🛒</div><div class="title">WooCommerce</div><div class="desc">Import direct</div></div>
+    </div>
+    <div class="metrics">
+      <div class="metric"><div class="val">30 s</div><div class="lbl">Par article</div></div>
+      <div class="metric"><div class="val">15-25 EUR</div><div class="lbl">Cout IA / 1 000</div></div>
+      <div class="metric"><div class="val">6 jours</div><div class="lbl">Livraison</div></div>
+      <div class="metric"><div class="val">10 fiches</div><div class="lbl">Validation avant</div></div>
+    </div>
+    <div class="demo">
+      <div class="bulb">💡</div>
+      <div class="text">Envoyez-moi une photo d'article, je vous renvoie la fiche en 5 minutes. Demonstration gratuite.</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="name">Franck Delmas — github.com/Turbo31150</div>
+    <div class="price">390 EUR tout compris</div>
+  </div>
+</div>
+</body>
+</html>

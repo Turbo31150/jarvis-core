@@ -1,0 +1,17 @@
+[Unit]
+Description=JARVIS GPU Initialization
+After=nvidia-persistenced.service
+Requires=nvidia-persistenced.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# GPU 1-5: exclusive compute for inference
+ExecStart=/usr/bin/nvidia-smi -i 1 --compute-mode=EXCLUSIVE_PROCESS
+ExecStart=/usr/bin/nvidia-smi -i 2 --compute-mode=EXCLUSIVE_PROCESS
+ExecStart=/usr/bin/nvidia-smi -i 3 --compute-mode=EXCLUSIVE_PROCESS
+ExecStart=/usr/bin/nvidia-smi -i 4 --compute-mode=EXCLUSIVE_PROCESS
+ExecStart=/usr/bin/nvidia-smi -i 5 --compute-mode=EXCLUSIVE_PROCESS
+
+[Install]
+WantedBy=multi-user.target

@@ -362,6 +362,8 @@ def run_check(dry_run: bool = False) -> int:
 
         # We have a match
         logger.info("NEW MATCH: [%s] %s (budget: %s, keywords: %s)", pid, project["title"], project["budget"], ", ".join(matched_kw))
+        project["matched_kw"] = matched_kw
+        matched_projects.append(project)
         new_matches += 1
 
         msg = format_telegram_message(project)
@@ -378,6 +380,10 @@ def run_check(dry_run: bool = False) -> int:
             "notified": True,
             "seen_at": datetime.now().isoformat(),
         }
+
+    # Save matched projects to SQLite
+    applied_pids: set[str] = set()  # TODO: populate from codeur_offers table if needed
+    save_to_db(matched_projects, applied_pids)
 
     save_seen_projects(seen)
     logger.info("Check complete. New matches: %d", new_matches)

@@ -1,0 +1,80 @@
+name: jarvis-orchestrator
+version: "1.0.0"
+description: "Orchestrateur autonome JARVIS — Freelance + LinkedIn + Contenu"
+author: Franck Delmas
+trigger: scheduled
+schedule:
+  codeur_scan: "*/5 * * * *"      # Toutes les 5 minutes
+  linkedin_check: "*/15 * * * *"  # Toutes les 15 minutes
+  content_publish: "0 8,12,18 * * *"  # 8h, 12h, 18h
+  daily_digest: "0 7 * * *"       # 7h chaque matin
+
+modules:
+  - codeur-watcher
+  - linkedin-watcher
+  - content-generator
+  - notification-router
+  - pdf-generator
+  - image-generator
+
+notifications:
+  telegram:
+    enabled: true
+    bot: "@turboSSebot"
+    priority: ["urgent", "client_message", "high_value_project"]
+  email:
+    enabled: true
+    to: "franckdelmas00@gmail.com"
+    priority: ["daily_digest", "weekly_report"]
+  dashboard:
+    enabled: true
+    port: 8082
+    priority: ["all"]
+  terminal:
+    enabled: true
+    priority: ["info", "low"]
+
+auto_actions:
+  # Ces actions s'exécutent sans validation
+  - like_linkedin_reactions
+  - reply_simple_comments
+  - scan_new_projects
+  - generate_pdf_proposals
+  - generate_images
+  - update_content_calendar
+  - track_project_stats
+
+approval_required:
+  # Ces actions attendent validation Telegram/Dashboard
+  - post_codeur_offer
+  - reply_client_message
+  - publish_linkedin_post
+  - publish_article
+  - send_email_campaign
+
+filters:
+  codeur_keywords:
+    - ia
+    - intelligence artificielle
+    - python
+    - automatisation
+    - chatbot
+    - agent
+    - api
+    - docker
+    - linux
+    - machine learning
+    - ocr
+    - data
+    - scraping
+    - claude
+    - gpt
+    - llm
+    - n8n
+    - workflow
+    - voice
+    - whisper
+  codeur_min_budget: 500
+  codeur_max_proposals: 60
+  linkedin_auto_like: true
+  linkedin_auto_comment_simple: true

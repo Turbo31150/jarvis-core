@@ -1,0 +1,257 @@
+{
+  "general": {
+    "preferredEditor": "code",
+    "checkpointing": {
+      "enabled": true
+    },
+    "enableAutoUpdateNotification": false
+  },
+  "ui": {
+    "theme": "GitHub",
+    "hideBanner": false,
+    "hideTips": false,
+    "showMemoryUsage": true,
+    "showLineNumbers": true,
+    "showCitations": true
+  },
+  "privacy": {
+    "usageStatisticsEnabled": false
+  },
+  "model": {
+    "name": "${GEMINI_MODEL:-gemini-2.5-pro}",
+    "maxSessionTurns": -1,
+    "summarizeToolOutput": {
+      "run_shell_command": {
+        "tokenBudget": 4000
+      }
+    },
+    "chatCompression": {
+      "contextPercentageThreshold": 0.85
+    }
+  },
+  "context": {
+    "fileName": [
+      "GEMINI.md",
+      "CLAUDE.md",
+      "AGENTS.md",
+      "STATE.md",
+      "WORKLOG.md"
+    ],
+    "discoveryMaxDirs": 1000,
+    "includeDirectories": [
+      "/home/turbo",
+      "/home/turbo/Workspaces/jarvis-linux",
+      "/home/turbo/.openclaw",
+      "/home/turbo/.claude"
+    ],
+    "loadFromIncludeDirectories": true,
+    "fileFiltering": {
+      "respectGitIgnore": true,
+      "respectGeminiIgnore": true,
+      "enableRecursiveFileSearch": true
+    }
+  },
+  "tools": {
+    "sandbox": false,
+    "shell": {
+      "enableInteractiveShell": true
+    },
+    "allowed": [
+      "run_shell_command(rg *)",
+      "run_shell_command(ls *)",
+      "run_shell_command(cat *)",
+      "run_shell_command(sed *)",
+      "run_shell_command(jq *)",
+      "run_shell_command(find *)",
+      "run_shell_command(curl http://127.0.0.1:*)",
+      "run_shell_command(systemctl --user *)",
+      "run_shell_command(git status)",
+      "run_shell_command(git diff *)",
+      "run_shell_command(git log *)",
+      "run_shell_command(git show *)",
+      "run_shell_command(claude *)",
+      "run_shell_command(gemini *)",
+      "run_shell_command(openclaw *)",
+      "run_shell_command(node *)",
+      "run_shell_command(npx *)",
+      "run_shell_command(python3 *)",
+      "run_shell_command(pip *)",
+      "run_shell_command(docker *)",
+      "run_shell_command(nvidia-smi *)",
+      "run_shell_command(xdotool *)",
+      "run_shell_command(xclip *)",
+      "run_shell_command(xsel *)",
+      "run_shell_command(wmctrl *)",
+      "run_shell_command(systemctl *)",
+      "run_shell_command(journalctl *)",
+      "run_shell_command(gh *)",
+      "run_shell_command(apt *)",
+      "run_shell_command(sudo *)",
+      "run_shell_command(lm-studio *)",
+      "run_shell_command(ollama *)",
+      "run_shell_command(mkdir *)",
+      "run_shell_command(cp *)",
+      "run_shell_command(mv *)",
+      "run_shell_command(rm *)",
+      "run_shell_command(chmod *)",
+      "run_shell_command(head *)",
+      "run_shell_command(tail *)",
+      "run_shell_command(wc *)",
+      "run_shell_command(grep *)",
+      "run_shell_command(awk *)",
+      "run_shell_command(sort *)",
+      "run_shell_command(uniq *)",
+      "run_shell_command(tee *)"
+    ]
+  },
+  "mcp": {
+    "allowed": [
+      "jarvis-mcp",
+      "browseros",
+      "chrome-devtools",
+      "playwright",
+      "comet",
+      "filesystem",
+      "jarvis-m1",
+      "jarvis-ol1"
+    ]
+  },
+  "mcpServers": {
+    "browseros": {
+      "url": "http://127.0.0.1:9001/mcp",
+      "timeout": 30000,
+      "trust": true,
+      "description": "BrowserOS MCP — 56 tools: navigate, click, fill, screenshot, tab groups, bookmarks"
+    },
+    "jarvis-mcp": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "src.mcp_server"
+      ],
+      "cwd": "/home/turbo/Workspaces/jarvis-linux",
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONPATH": "/home/turbo/Workspaces/jarvis-linux"
+      },
+      "timeout": 30000,
+      "trust": true,
+      "description": "JARVIS local MCP"
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--headless=false",
+        "--viewport=1920x1080",
+        "--cdp-endpoint",
+        "http://127.0.0.1:9108"
+      ],
+      "env": {
+        "CHROME_DEVTOOLS_MCP_NO_USAGE_STATISTICS": "1"
+      },
+      "timeout": 30000,
+      "trust": true,
+      "description": "Chrome DevTools MCP connected to BrowserOS on port 9108"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest",
+        "--cdp-endpoint",
+        "http://127.0.0.1:9108"
+      ],
+      "timeout": 30000,
+      "trust": true,
+      "description": "Playwright MCP connected to BrowserOS for full browser automation"
+    },
+    "comet": {
+      "command": "node",
+      "args": [
+        "/home/turbo/.local/lib/node_modules/comet-mcp/dist/index.js"
+      ],
+      "env": {
+        "COMET_PATH": "/usr/bin/google-chrome-stable",
+        "COMET_PORT": "9223"
+      },
+      "timeout": 30000,
+      "trust": true,
+      "description": "Comet browser bridge for multi-tab browsing"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/home/turbo",
+        "/home/turbo/Workspaces/jarvis-linux",
+        "/tmp"
+      ],
+      "timeout": 20000,
+      "trust": true,
+      "description": "Filesystem MCP over home, workspace and tmp"
+    },
+    "jarvis-m1": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/openai-compatible-mcp-server"
+      ],
+      "env": {
+        "OPENAI_BASE_URL": "http://127.0.0.1:1234/v1",
+        "OPENAI_API_KEY": "lm-studio",
+        "OPENAI_MODEL": "${JARVIS_LMSTUDIO_MODEL:-google/gemma-3-4b}"
+      },
+      "timeout": 30000,
+      "trust": true,
+      "description": "LM Studio local MCP bridge"
+    },
+    "jarvis-ol1": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "ollama-mcp-server"
+      ],
+      "env": {
+        "OLLAMA_HOST": "http://127.0.0.1:11434",
+        "OLLAMA_MODEL": "${JARVIS_OLLAMA_MODEL:-qwen2.5:1.5b}"
+      },
+      "timeout": 30000,
+      "trust": true,
+      "description": "Ollama local MCP bridge"
+    }
+  },
+  "security": {
+    "folderTrust": {
+      "enabled": true
+    },
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "advanced": {
+    "autoConfigureMemory": true,
+    "dnsResolutionOrder": "ipv4first",
+    "excludedEnvVars": [
+      "DEBUG",
+      "DEBUG_MODE",
+      "NODE_ENV"
+    ]
+  },
+  "telemetry": {
+    "enabled": true,
+    "target": "local",
+    "logPrompts": false,
+    "outfile": "/home/turbo/.gemini/history/telemetry-local.jsonl"
+  },
+  "project": {
+    "name": "JARVIS Linux",
+    "path": "/home/turbo/Workspaces/jarvis-linux",
+    "state_file": "STATE.md",
+    "worklog": "WORKLOG.md",
+    "tasks": "TASKS.json",
+    "next_steps": "NEXT_STEPS.md"
+  }
+}

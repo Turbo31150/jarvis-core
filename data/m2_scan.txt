@@ -1,0 +1,5 @@
+1. Développement d'une application de reconnaissance faciale : budget moyen 20 000 €  
+2. Création d'un chatbot pour un site e-commerce : budget moyen 15 000 €  
+3. Implémentation d'une IA pour l'analyse de données marketing : budget moyen 25 000 €  
+4. Développement d'un système de recommandation personnalisé : budget moyen 18 000 €  
+5. Construction d'un modèle de prédiction basé sur des données historiques : budget moyen 22 000 €

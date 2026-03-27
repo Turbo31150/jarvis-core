@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Proposition — Assistant IA pour mairie et cabinet d'élu — Franck Delmas</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;line-height:1.6;color:#2c3e50;background:#fff}
+.page{max-width:850px;margin:0 auto;padding:50px 55px}
+header{border-bottom:4px solid #0052cc;padding-bottom:20px;margin-bottom:30px}
+h1{color:#0052cc;font-size:26px;margin-bottom:4px}
+.sub{color:#666;font-size:13px}
+.meta{margin-top:12px;font-size:12px;color:#888}
+.meta span{margin-right:20px}
+h2{color:#0052cc;font-size:18px;margin:30px 0 12px;border-left:4px solid #0052cc;padding-left:14px}
+h3{font-size:15px;margin:18px 0 8px;color:#333}
+p{margin-bottom:10px;text-align:justify;font-size:14px}
+.box{background:#f0f5ff;border-left:4px solid #0052cc;padding:14px 18px;margin:15px 0;border-radius:3px}
+.box p{margin:4px 0}
+ul{margin:8px 0 12px 28px;font-size:14px}
+li{margin-bottom:6px}
+.check{color:#0a0}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:13px}
+th{background:#0052cc;color:#fff;padding:10px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #e5e5e5}
+tr:nth-child(even){background:#f8f9fa}
+.total td{background:#e8f0fe;font-weight:700;border-top:2px solid #0052cc}
+.timeline{margin:12px 0}
+.tl-item{padding:10px 14px;margin:6px 0;background:#f5f8ff;border-left:3px solid #0052cc;border-radius:3px;font-size:13px}
+.tl-item strong{color:#0052cc}
+.cta{background:linear-gradient(135deg,#0052cc,#003d99);color:#fff;padding:20px;border-radius:6px;margin:25px 0;text-align:center}
+.cta p{color:#fff;margin:6px 0;font-size:14px}
+.cta .big{font-size:18px;font-weight:700}
+.diagram{background:#0f172a;color:#e2e8f0;padding:18px 20px;border-radius:8px;font:12px/1.55 'Consolas','Menlo',monospace;white-space:pre-wrap;margin:15px 0}
+.page-break{page-break-before:always}
+.signature-card{border:2px solid #0052cc;border-radius:8px;padding:18px 20px;margin:18px 0;background:#f8fbff}
+.signature-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.signature-block{border:1px solid #d6e3ff;border-radius:6px;padding:14px;background:#fff}
+.signature-block p{margin:4px 0}
+.small-note{font-size:12px;color:#666}
+footer{margin-top:40px;padding-top:15px;border-top:1px solid #ddd;font-size:11px;color:#999;text-align:center}
+@media print{.page{padding:30px 40px}h2{page-break-after:avoid}.tl-item,table{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+<h1>Proposition : Assistant IA pour mairie et cabinet d'élu</h1>
+<p class="sub">Tri intelligent des emails, lecture documentaire multi-format, réponses assistées, veille et continuité de service</p>
+<div class="meta">
+<span><strong>Pour :</strong> Guillaume Chupin</span>
+<span><strong>De :</strong> Franck Delmas</span>
+<span><strong>Date :</strong> 27 mars 2026</span>
+<span><strong>Validité :</strong> 30 jours</span>
+</div>
+</header>
+
+<div class="box">
+<p><strong>Votre besoin :</strong> structurer et professionnaliser la gestion quotidienne des sollicitations citoyennes, améliorer la réactivité et la qualité des réponses, assurer un suivi global des sujets sur votre territoire.</p>
+<p><strong>Ma réponse :</strong> un système automatisé qui trie, lit, résume, alerte, prépare les réponses et capitalise sur l'historique existant. L'humain garde la validation finale ; la machine absorbe la charge répétitive.</p>
+</div>
+
+<h2>1. Traitement automatique des demandes</h2>
+
+<p>Chaque demande reçue par la mairie ou le cabinet est traitée automatiquement, même si elle arrive sous plusieurs formes : email, courrier scanné, pièce jointe PDF, document Word, image, compte rendu ou formulaire.</p>
+
+<table>
+<tr><th>Étape</th><th>Traitement</th><th>Outil</th></tr>
+<tr><td>Réception</td><td>Email Outlook détecté automatiquement</td><td>n8n + IMAP</td></tr>
+<tr><td>Lecture documentaire</td><td>PDF, DOCX, image, scan, compte rendu, tableau CSV/XLSX</td><td>OCR + parseurs documentaires</td></tr>
+<tr><td>Extraction</td><td>Texte lisible, métadonnées, demande principale, pièces utiles</td><td>PaddleOCR + extraction structurée</td></tr>
+<tr><td>Résumé</td><td>Résumé court + points d'action + contexte</td><td>LLM de synthèse</td></tr>
+<tr><td>Catégorie</td><td>Voirie, propreté, sécurité, social, urbanisme, RH, état civil</td><td>Classification IA</td></tr>
+<tr><td>Urgence</td><td>Niveau 1 (immédiat) à 4 (information)</td><td>Analyse IA</td></tr>
+<tr><td>Sensibilité</td><td>Détection de sujets sensibles, ton agressif, risque médiatique</td><td>Analyse de sentiment</td></tr>
+<tr><td>Réponse</td><td>Proposition de réponse adaptée à partir de modèles déjà validés</td><td>LLM + bibliothèque de réponses</td></tr>
+<tr><td>Traçabilité</td><td>Journal, statut, actions futures, relances planifiées</td><td>Base de données + workflows</td></tr>
+</table>
+
+<p><strong>Résultat :</strong> l'agent municipal reçoit une fiche claire avec résumé, catégorie, urgence, pièces analysées, proposition de réponse, échéance suggérée et action suivante. Il valide, corrige ou délègue.</p>
+
+<h2>2. Bibliothèque de réponses et adaptation contextuelle</h2>
+
+<p>Le système ne repart pas de zéro à chaque email. Il apprend des réponses déjà utilisées par vos équipes et s'appuie sur une bibliothèque de formulations validées :</p>
+
+<ul>
+<li>réponses institutionnelles déjà rédigées par la mairie</li>
+<li>questions fréquentes et cas récurrents</li>
+<li>variantes par service, ton, urgence et niveau de sensibilité</li>
+<li>adaptation automatique du brouillon au contexte réel du mail reçu</li>
+</ul>
+
+<div class="box">
+<p><strong>Principe :</strong> on conserve votre manière de répondre. L'IA accélère la rédaction, mais ne remplace ni la ligne politique ni les validations internes.</p>
+</div>
+
+<h2>3. Lecture multi-format et comptes rendus</h2>
+
+<p>Le module documentaire permet de lire et exploiter plusieurs formats sans changer vos habitudes de travail :</p>
+
+<table>
+<tr><th>Format</th><th>Lecture</th><th>Usage</th></tr>
+<tr><td>PDF texte</td><td>Extraction directe</td><td>Courriers, délibérations, notes, arrêtés</td></tr>
+<tr><td>PDF scanné / image</td><td>OCR</td><td>Courriers numérisés, pièces administratives</td></tr>
+<tr><td>DOCX / ODT</td><td>Lecture structurée</td><td>Projets de réponse, comptes rendus, notes</td></tr>
+<tr><td>XLSX / CSV</td><td>Lecture tabulaire</td><td>Listes, exports, statistiques, suivis</td></tr>
+<tr><td>Email + pièces jointes</td><td>Analyse groupée</td><td>Demande complète et contexte historique</td></tr>
+</table>
+
+<p>À partir de ces contenus, le système peut produire :</p>
+<ul>
+<li>un résumé en 5 lignes</li>
+<li>un compte rendu de lecture</li>
+<li>une liste de décisions ou actions à lancer</li>
+<li>une réponse brouillon adaptée au contenu du document</li>
+<li>une alerte si un point sensible, juridique ou politique est détecté</li>
+</ul>
+
+<h2>4. Intégration Qomon</h2>
+
+<p>Qomon dispose d'une <strong>API publique REST</strong> (contacts + actions) et d'une intégration native Zapier/webhooks. La synchronisation est directe et bidirectionnelle :</p>
+
+<ul>
+<li>Chaque nouveau demandeur → contact créé automatiquement dans Qomon</li>
+<li>Chaque interaction → enregistrée sur la fiche contact</li>
+<li>Segmentation automatique par type de demande (tags)</li>
+<li>Historique complet des échanges consultable dans Qomon</li>
+</ul>
+
+<p><strong>Votre Qomon reste la référence.</strong> Le système l'enrichit sans le remplacer.</p>
+
+<h2>5. Compatibilité Outlook (mairie)</h2>
+
+<div class="box">
+<p>n8n se connecte à Outlook via <strong>IMAP/SMTP</strong>, compatible avec les boîtes Exchange / Microsoft 365 lorsque le service est activé côté messagerie. Si besoin, une variante via API Microsoft Graph peut être étudiée avec votre service informatique.</p>
+</div>
+
+<p>Concrètement, cela permet :</p>
+<ul>
+<li>de surveiller une ou plusieurs boîtes email</li>
+<li>de classer automatiquement les demandes par thème et priorité</li>
+<li>de déclencher des alertes internes ou des tâches planifiées</li>
+<li>de centraliser la réponse dans un tableau de pilotage</li>
+</ul>
+
+<h2>6. Architecture multi-agents et contrôle qualité</h2>
+
+<p>Le système repose sur plusieurs agents spécialisés qui travaillent en chaîne, avec contrôle qualité à chaque étape :</p>
+
+<table>
+<tr><th>Agent</th><th>Rôle</th><th>Sortie</th></tr>
+<tr><td>Agent 1 - Ingestion</td><td>Récupère emails, pièces jointes, formulaires, RSS</td><td>Dossier traité et horodaté</td></tr>
+<tr><td>Agent 2 - Lecture</td><td>Lit PDF, DOCX, images, tableaux et extrait l'information</td><td>Texte structuré + métadonnées</td></tr>
+<tr><td>Agent 3 - Analyse</td><td>Classe, résume, détecte les urgences et risques</td><td>Résumé, priorité, drapeaux sensibles</td></tr>
+<tr><td>Agent 4 - Réponse</td><td>Prépare un brouillon à partir des réponses existantes</td><td>Projet de réponse contextualisé</td></tr>
+<tr><td>Agent 5 - Contrôle qualité</td><td>Vérifie ton, cohérence, doublons, pièces manquantes</td><td>Validation, correction ou escalade</td></tr>
+<tr><td>Agent 6 - Routine</td><td>Lance les relances, synthèses, rapports, tableaux de bord</td><td>Actions futures et rapports</td></tr>
+</table>
+
+<p><strong>Effet pratique :</strong> le système peut travailler en continu, relancer automatiquement les dossiers, préparer les synthèses quotidiennes et enregistrer les actions futures sans immobiliser un agent sur des tâches répétitives.</p>
+
+<h2>7. Veille territoriale automatisée</h2>
+
+<table>
+<tr><th>Source</th><th>Traitement</th></tr>
+<tr><td>Flux RSS (presse locale, institutionnel)</td><td>Agrégation automatique</td></tr>
+<tr><td>Alertes et newsletters par email</td><td>Détection et extraction</td></tr>
+<tr><td>Articles transmis manuellement</td><td>Formulaire web ou email dédié</td></tr>
+<tr><td>Demandes citoyennes</td><td>Tendances et récurrences</td></tr>
+</table>
+
+<p><strong>Chaque contenu est analysé :</strong> résumé, sujet, lien avec le territoire, enjeux, angles de communication, points de vigilance.</p>
+
+<p><strong>Synthèse quotidienne</strong> envoyée par email chaque matin :</p>
+<ul>
+<li>Points clés du jour</li>
+<li>Alertes et sujets sensibles détectés</li>
+<li>Opportunités de communication</li>
+<li>Réponses en attente de validation</li>
+</ul>
+
+<h2>8. Détection des sujets sensibles et alertes</h2>
+
+<p>Le système surveille en continu :</p>
+<ul>
+<li>Ton négatif ou agressif dans les demandes</li>
+<li>Mots-clés sensibles (accident, insécurité, conflit, pétition)</li>
+<li>Montée en volume d'un même sujet sur le territoire</li>
+<li>Articles de presse négatifs ou polémiques</li>
+<li>Absence de réponse sur un dossier important au-delà du délai cible</li>
+</ul>
+
+<p><strong>Alerte immédiate</strong> avec contexte, historique et proposition d'éléments de langage adaptés au cadre institutionnel.</p>
+
+<h2>9. Interface de pilotage et chatbot interne</h2>
+
+<p>Je recommande une interface simple, visuelle et exploitable par plusieurs postes de la mairie :</p>
+
+<ul>
+<li>boîte de réception intelligente avec filtres par urgence, service et statut</li>
+<li>vue des pièces jointes et du résumé généré</li>
+<li>boutons de validation, correction, délégation ou relance</li>
+<li>tableau de bord : volume, délais, thématiques récurrentes, dossiers sensibles</li>
+<li>chatbot interne pour poser des questions sur un dossier, un document ou une tendance</li>
+<li>journal des actions pour savoir ce qui a été fait, par qui et quand</li>
+</ul>
+
+<p>Cette interface peut être ouverte sur un poste interne, un navigateur sécurisé ou un mini extranet dédié selon vos contraintes.</p>
+
+<h2>10. Génération de contenu</h2>
+
+<ul>
+<li>Réponses aux sollicitations (ton institutionnel, adaptable par contexte)</li>
+<li>Publications pour réseaux sociaux</li>
+<li>Notes de synthèse pour réunions</li>
+<li>Éléments de langage pour prises de parole</li>
+<li>Comptes rendus automatiques à partir de documents transmis</li>
+</ul>
+
+<p>Chaque contenu est une <strong>proposition</strong> que vous validez ou modifiez avant diffusion.</p>
+
+<h2>11. Déploiement, redondance et continuité de service</h2>
+
+<p>Pour une mairie, je recommande une architecture en deux emplacements afin d'éviter qu'une panne unique ne coupe tout le service :</p>
+
+<table>
+<tr><th>Option</th><th>Description</th><th>Avantage</th></tr>
+<tr><td>Site principal + secours distant</td><td>Un serveur principal et un second site prêt à reprendre en cas de panne</td><td>Bon équilibre coût / sécurité</td></tr>
+<tr><td>Deux VPS dans deux datacenters</td><td>Infrastructure louée sur deux localisations séparées</td><td>Peu de matériel sur site, reprise plus simple</td></tr>
+<tr><td>Serveur mairie + cloud de secours</td><td>Données principales sur site, secours sur infrastructure distante</td><td>Maîtrise locale avec filet de sécurité</td></tr>
+</table>
+
+<p>Je privilégie en général un mode <strong>actif / secours</strong> : plus simple à maintenir qu'un actif / actif complet, tout en assurant la continuité en cas de coupure, de maintenance ou de mise à jour.</p>
+
+<div class="box">
+<p><strong>Technologie recommandée :</strong> conteneurs Docker, supervision, sauvegardes automatiques, redémarrage des services, procédures de reprise et mises à jour planifiées. Si un site tombe, l'autre reprend la chaîne critique.</p>
+</div>
+
+<h2>12. Maintenance mensuelle et routines planifiées</h2>
+
+<p>Je propose une maintenance intégrée pour garantir que le système reste utile dans la durée, pas seulement le jour de la livraison :</p>
+
+<ul>
+<li>vérification mensuelle des workflows, agents, logs et sauvegardes</li>
+<li>mises à jour de sécurité et compatibilité</li>
+<li>amélioration des réponses types et des règles de tri</li>
+<li>ajout progressif de nouveaux services ou nouveaux postes</li>
+<li>rapport mensuel : volumes, gains de temps, incidents, pistes d'amélioration</li>
+<li>entretien mensuel pour ajuster le système aux besoins réels de la mairie</li>
+</ul>
+
+<p>Le système peut aussi tourner avec des <strong>tâches planifiées permanentes</strong> : revue matinale, relances de dossiers, synthèse de fin de journée, surveillance des boîtes de réception, mise à jour de la base de connaissance et archivage.</p>
+
+<h2>13. Évolutions prévues (branches ajoutables)</h2>
+
+<table>
+<tr><th>Fonctionnalité</th><th>Description</th></tr>
+<tr><td>Tableaux de bord</td><td>Volume de demandes, délais, thématiques récurrentes</td></tr>
+<tr><td>Rapports périodiques</td><td>Synthèse mensuelle générée automatiquement</td></tr>
+<tr><td>Cartographie</td><td>Visualisation géographique des demandes sur le territoire</td></tr>
+<tr><td>Base de connaissance</td><td>Capitalisation sur les réponses déjà apportées</td></tr>
+<tr><td>Aide aux réunions</td><td>Notes de synthèse automatiques par thématique</td></tr>
+<tr><td>Branche urbanisme</td><td>Lecture de dossiers, pièces techniques et demandes récurrentes</td></tr>
+<tr><td>Branche état civil / accueil</td><td>Réponses standardisées et orientation des usagers</td></tr>
+<tr><td>Branche RH / interne</td><td>Tri documentaire et comptes rendus internes</td></tr>
+<tr><td>Branche élus / communication</td><td>Veille, éléments de langage, préparation de réponses sensibles</td></tr>
+</table>
+
+<h2>14. Outils et coûts</h2>
+
+<h3>Stack technique recommandée</h3>
+
+<table>
+<tr><th>Composant</th><th>Outil</th><th>Coût</th></tr>
+<tr><td>Orchestration</td><td>n8n (auto-hébergé)</td><td>0 €</td></tr>
+<tr><td>Intelligence artificielle</td><td>LLM cloud ou local selon les usages</td><td>15-120 €/mois</td></tr>
+<tr><td>OCR</td><td>PaddleOCR (open source)</td><td>0 €</td></tr>
+<tr><td>Base de données</td><td>PostgreSQL</td><td>0 €</td></tr>
+<tr><td>CRM</td><td>Qomon (votre outil actuel)</td><td>Votre abonnement</td></tr>
+<tr><td>Serveur principal</td><td>VPS ou serveur dédié</td><td>10-40 €/mois</td></tr>
+<tr><td>Serveur de secours</td><td>Second site / second datacenter</td><td>10-40 €/mois</td></tr>
+<tr class="total"><td colspan="2"><strong>Total mensuel de fonctionnement</strong></td><td><strong>35-160 €/mois</strong></td></tr>
+</table>
+
+<h3>Contexte marché</h3>
+<p>Les suites spécialisées pour collectivités sont souvent plus cadrées mais aussi plus rigides et plus fortement abonnementées. Mon approche est plus modulaire : on démarre sur un noyau utile, puis on ajoute des branches par service ou par besoin sans réécrire tout le socle.</p>
+
+<h2>15. Planning de réalisation</h2>
+
+<div class="timeline">
+<div class="tl-item"><strong>Semaine 1</strong> — cadrage, architecture, connexion Outlook, sécurité, collecte des réponses types</div>
+<div class="tl-item"><strong>Semaine 2</strong> — lecture PDF/DOCX/images, premiers workflows : email → résumé → brouillon</div>
+<div class="tl-item"><strong>Semaine 3</strong> — catégorisation IA, alertes, routines planifiées, intégration Qomon</div>
+<div class="tl-item"><strong>Semaine 4</strong> — interface, tableau de bord, contrôle qualité, essais sur vrais dossiers</div>
+<div class="tl-item"><strong>Semaine 5</strong> — redondance, sauvegardes, documentation, formation</div>
+</div>
+
+<p><strong>Livraison :</strong> noyau opérationnel en 4 semaines, version avec redondance et routines complètes en 5 semaines.</p>
+
+<h2>16. Budget et scénarios recommandés</h2>
+
+<table>
+<tr><th>Scénario</th><th>Contenu</th><th>Montant</th></tr>
+<tr><td>Essentiel mairie</td><td>Tri email, lecture PDF/DOCX, résumés, brouillons de réponse, alertes simples</td><td>2 200 €</td></tr>
+<tr><td>Exploitation complète</td><td>Essentiel + interface + routines planifiées + Qomon + reporting</td><td>3 400 €</td></tr>
+<tr><td>Continuité double site</td><td>Exploitation complète + second site + reprise + supervision renforcée</td><td>4 600 €</td></tr>
+</table>
+
+<p><strong>Je recommande :</strong> le scénario <strong>Exploitation complète</strong>, qui est le bon équilibre entre utilité immédiate, qualité de service et évolutivité.</p>
+
+<h3>Maintenance et accompagnement</h3>
+
+<table>
+<tr><th>Forfait</th><th>Contenu</th><th>Prix</th></tr>
+<tr><td>Entretien léger</td><td>Supervision, mises à jour, contrôle mensuel, petites corrections</td><td>120 €/mois</td></tr>
+<tr><td>Entretien renforcé</td><td>Entretien léger + optimisation continue + nouveaux gabarits + réunion mensuelle</td><td>220 €/mois</td></tr>
+<tr><td>Évolution continue</td><td>Entretien renforcé + ajout régulier de nouvelles branches métier</td><td>Sur devis mensuel</td></tr>
+</table>
+
+<p><strong>Paiement en 3 phases possible :</strong></p>
+<ul>
+<li>30 % au démarrage</li>
+<li>40 % à la validation du noyau fonctionnel</li>
+<li>30 % à la livraison finale et formation</li>
+</ul>
+
+<h2>17. Gains attendus et différence d'approche</h2>
+
+<table>
+<tr><th>Point</th><th>Approche classique</th><th>Approche proposée</th></tr>
+<tr><td>Tri des emails</td><td>manuel ou règles limitées</td><td>catégorisation contextuelle et priorisation</td></tr>
+<tr><td>Pièces jointes</td><td>lecture humaine dossier par dossier</td><td>lecture multi-format, résumé et extraction</td></tr>
+<tr><td>Réponses</td><td>copier / coller puis réécriture</td><td>brouillon à partir de réponses validées</td></tr>
+<tr><td>Suivi</td><td>dispersé entre boîtes, fichiers et mémoire humaine</td><td>journal, statuts, relances et synthèses</td></tr>
+<tr><td>Évolutivité</td><td>chaque nouveau besoin demande un nouvel outil</td><td>on ajoute des branches au même socle</td></tr>
+</table>
+
+<p>Je ne présente pas ce système comme une magie autonome. Son intérêt réel est ailleurs : moins de temps perdu, moins d'oublis, plus de cohérence, plus de visibilité et une meilleure continuité de service. L'avantage n'est pas seulement technologique ; il est organisationnel.</p>
+
+<p><strong>Gains réalistes visés :</strong> réduction du temps de tri, réduction du temps de lecture documentaire, meilleure homogénéité des réponses, baisse du risque d'oubli sur les dossiers sensibles, préparation plus rapide des synthèses et comptes rendus.</p>
+
+<h3>Ordre de grandeur économique</h3>
+
+<table>
+<tr><th>Poste</th><th>Avant</th><th>Après système</th><th>Effet visé</th></tr>
+<tr><td>Tri des emails et demandes</td><td>manuel, diffus, chronophage</td><td>pré-trié et priorisé</td><td>fort gain de temps quotidien</td></tr>
+<tr><td>Lecture des pièces jointes</td><td>dossier par dossier</td><td>résumé et extraction automatiques</td><td>lecture beaucoup plus rapide</td></tr>
+<tr><td>Rédaction des réponses</td><td>copier / coller + réécriture</td><td>brouillon prêt à corriger</td><td>meilleure homogénéité</td></tr>
+<tr><td>Suivi des échéances</td><td>mémoire humaine ou tableau manuel</td><td>alertes et relances programmées</td><td>moins d'oublis et de retards</td></tr>
+</table>
+
+<p>Sur une petite structure, l'intérêt n'est pas forcément de supprimer un poste. Il est plus souvent de <strong>rendre absorbable une charge croissante</strong>, d'améliorer la qualité de service et de limiter les retards, sans recruter immédiatement ou sans ajouter un outil métier supplémentaire.</p>
+
+<h2>18. Workflow détaillé proposé</h2>
+
+<p>Le fonctionnement cible peut être déployé sous forme de chaîne claire, supervisée et améliorable dans le temps :</p>
+
+<table>
+<tr><th>Étape</th><th>Action</th><th>Résultat</th></tr>
+<tr><td>1. Ingestion</td><td>Surveillance continue des boîtes mail, formulaires et dépôts documentaires</td><td>Nouveau dossier créé automatiquement</td></tr>
+<tr><td>2. Pré-tri</td><td>Détection du service concerné, du niveau d'urgence et du type de demande</td><td>Classement initial fiable</td></tr>
+<tr><td>3. Lecture</td><td>Lecture des pièces jointes, OCR si nécessaire, extraction des données utiles</td><td>Dossier enrichi et exploitable</td></tr>
+<tr><td>4. Synthèse</td><td>Résumé court, compte rendu, points d'attention, pièces manquantes</td><td>Vue rapide pour l'agent</td></tr>
+<tr><td>5. Réponse</td><td>Adaptation d'une réponse type à partir du contexte et de l'historique</td><td>Brouillon prêt à valider</td></tr>
+<tr><td>6. Contrôle</td><td>Vérification qualité, ton, cohérence, conformité et validation humaine</td><td>Décision : envoyer, corriger ou escalader</td></tr>
+<tr><td>7. Archivage</td><td>Journal, tag, historique, relance et action future</td><td>Traçabilité complète</td></tr>
+</table>
+
+<p>Ce workflow peut s'appliquer à une boîte générique de mairie, à un cabinet d'élu, à un service urbanisme ou à un poste spécifique. Le socle reste le même ; seules les règles métier changent.</p>
+
+<h2>19. Orchestration web, MCP et multi-distribution</h2>
+
+<p>Quand un dossier nécessite de vérifier une source externe, d'aller chercher une information sur le web ou de consolider plusieurs sources, le système peut utiliser des agents navigateurs et des outils MCP spécialisés.</p>
+
+<ul>
+<li><strong>Agent navigateur</strong> : ouvre la page, collecte le contenu utile, extrait les tableaux ou formulaires</li>
+<li><strong>Agent de validation</strong> : compare la source trouvée avec le dossier et vérifie la cohérence</li>
+<li><strong>Agent de consensus</strong> : arbitre entre plusieurs résultats ou sources si nécessaire</li>
+<li><strong>Outils MCP</strong> : connecteurs vers bases, workflows, services métiers ou moteurs de recherche documentaires</li>
+</ul>
+
+<div class="box">
+<p><strong>Usage concret :</strong> vérifier un texte réglementaire, retrouver un dossier lié, comparer des pièces jointes, reconstituer le contexte d'un échange ou produire une synthèse à partir de plusieurs documents et pages web.</p>
+</div>
+
+<p>Cette approche permet de distribuer la charge entre plusieurs agents sans perdre le contrôle : un agent collecte, un autre vérifie, un troisième prépare le résultat final. Le tout reste tracé et validable.</p>
+
+<h2>20. Contrôle qualité et validation humaine</h2>
+
+<p>Le point clé n'est pas seulement d'automatiser, mais d'automatiser proprement. Chaque sortie importante passe par une logique de contrôle qualité :</p>
+
+<ul>
+<li>vérification du ton institutionnel</li>
+<li>détection des réponses trop vagues ou trop agressives</li>
+<li>contrôle des pièces citées ou manquantes</li>
+<li>vérification des relances déjà envoyées pour éviter les doublons</li>
+<li>escalade automatique si le sujet est sensible ou incertain</li>
+</ul>
+
+<p><strong>Règle de gouvernance :</strong> les réponses importantes ne partent pas seules. L'IA prépare, l'humain décide. Cela sécurise l'usage et rend le système acceptable dans un cadre mairie.</p>
+
+<h2>21. Routines, timers et tâches planifiées</h2>
+
+<p>Pour que le système travaille en continu, il faut des routines permanentes. Je recommande au minimum :</p>
+
+<table>
+<tr><th>Moment</th><th>Tâche planifiée</th><th>Effet</th></tr>
+<tr><td>En continu</td><td>Surveillance des boîtes et dépôts documentaires</td><td>Détection immédiate des nouveaux dossiers</td></tr>
+<tr><td>Chaque matin</td><td>Synthèse des priorités, alertes et dossiers à traiter</td><td>Vision claire de la journée</td></tr>
+<tr><td>En journée</td><td>Relances automatiques et suivi des délais</td><td>Réduction des oublis</td></tr>
+<tr><td>Chaque soir</td><td>Journal des actions et dossiers restants</td><td>Continuité entre agents et services</td></tr>
+<tr><td>Chaque semaine</td><td>Rapport de volume, tendances, sujets sensibles</td><td>Pilotage managérial</td></tr>
+<tr><td>Chaque mois</td><td>Maintenance, sauvegardes, optimisation et propositions d'évolution</td><td>Système durable</td></tr>
+</table>
+
+<p>Ces tâches peuvent être configurées sans intervention technique lourde via une interface visuelle. Le but est que la mairie garde la main sur les règles de fonctionnement, sans dépendre d'un développeur à chaque micro-ajustement.</p>
+
+<h3>Délais réglementaires et rappels configurables</h3>
+
+<p>Le système peut aussi intégrer des règles de délai par type de demande. Pour les sujets sensibles ou réglementés, on peut configurer des jalons de rappel et d'escalade.</p>
+
+<table>
+<tr><th>Jalon</th><th>Action automatique</th><th>But</th></tr>
+<tr><td>J+0</td><td>Création du dossier, accusé interne, classement</td><td>Aucun dossier perdu</td></tr>
+<tr><td>J+15</td><td>Rappel interne si le dossier reste sans traitement</td><td>Éviter l'oubli précoce</td></tr>
+<tr><td>J+30</td><td>Première alerte de retard potentiel</td><td>Remettre le dossier en visibilité</td></tr>
+<tr><td>J+45</td><td>Escalade hiérarchique ou priorisation renforcée</td><td>Limiter le risque de dépassement</td></tr>
+<tr><td>J+55</td><td>Alerte urgence</td><td>Traitement avant limite</td></tr>
+</table>
+
+<p><strong>Important :</strong> ces délais doivent être validés ou ajustés selon vos procédures internes et vos contraintes juridiques réelles. Le système sert de garde-fou opérationnel, pas de substitution à la validation réglementaire.</p>
+
+<h2>22. Déclinaisons par poste et services de mairie</h2>
+
+<p>Le même noyau peut ensuite être décliné en modules plus fins :</p>
+
+<table>
+<tr><th>Service / poste</th><th>Cas d'usage</th><th>Évolution possible</th></tr>
+<tr><td>Accueil / secrétariat</td><td>Tri initial, orientation, réponses fréquentes</td><td>Base de réponses enrichie</td></tr>
+<tr><td>Cabinet / élus</td><td>Veille, sujets sensibles, éléments de langage</td><td>Préparation de notes et dossiers</td></tr>
+<tr><td>Urbanisme</td><td>Lecture de pièces, suivi de dossiers, réponses standardisées</td><td>Règles documentaires dédiées</td></tr>
+<tr><td>État civil</td><td>Orientation et contrôle des pièces</td><td>Rappels et formulaires assistés</td></tr>
+<tr><td>Services techniques</td><td>Voirie, propreté, signalements, relances</td><td>Tableau de suivi géographique</td></tr>
+<tr><td>Direction / DGS</td><td>Synthèses, rapports et priorisation</td><td>Dashboard décisionnel</td></tr>
+</table>
+
+<p>Chaque branche ajoutée s'appuie sur l'existant. Cela réduit le coût des évolutions et évite de multiplier les outils isolés.</p>
+
+<h2>23. Schéma visuel d'architecture proposée</h2>
+
+<p>Pour rendre le fonctionnement plus concret, voici une vue simplifiée du socle recommandé :</p>
+
+<div class="diagram">[Boîtes mail mairie / cabinet / formulaires / scans]
+                    |
+                    v
+      [Agent Ingestion + Routage n8n / timers / watchers]
+                    |
+          +---------+---------+
+          |                   |
+          v                   v
+[Lecture documentaire]   [Historique / CRM / base]
+ PDF - DOCX - OCR         tags - statuts - relances
+          |                   |
+          +---------+---------+
+                    |
+                    v
+     [Agents IA : résumé / tri / urgence / sensibilité]
+                    |
+          +---------+---------+
+          |                   |
+          v                   v
+[Bibliothèque de réponses]   [Alertes / comptes rendus]
+ modèles validés             synthèses / priorités / risques
+          |                   |
+          +---------+---------+
+                    |
+                    v
+      [Interface visuelle + chatbot + validation humaine]
+                    |
+          +---------+---------+
+          |                   |
+          v                   v
+ [Envoi / archivage]     [Tableaux de bord / rapport / maintenance]
+
+            <Deuxième site Docker de secours en parallèle></div>
+
+<p>Ce schéma a un avantage concret : on peut remplacer ou améliorer un bloc sans refaire toute la chaîne. C'est la logique modulaire que j'utilise déjà sur mes systèmes multi-agents.</p>
+
+<h2>24. Exemples concrets de scénarios mairie</h2>
+
+<table>
+<tr><th>Situation</th><th>Traitement proposé</th><th>Résultat métier</th></tr>
+<tr><td>Signalement voirie avec photo</td><td>Lecture du mail, analyse de la pièce jointe, catégorisation, brouillon de réponse, relance planifiée</td><td>Dossier orienté rapidement et traçable</td></tr>
+<tr><td>Courrier scanné d'administré</td><td>OCR, résumé, détection de l'objet principal, proposition de réponse institutionnelle</td><td>Réduction du temps de lecture et de rédaction</td></tr>
+<tr><td>Demande récurrente sur état civil</td><td>Reconnaissance du cas, insertion d'une réponse type adaptée, rappel des pièces manquantes</td><td>Réponse homogène et plus rapide</td></tr>
+<tr><td>Sujet sensible relayé par presse locale</td><td>Veille, synthèse, détection du risque, éléments de langage et alerte immédiate</td><td>Meilleure réactivité politique et institutionnelle</td></tr>
+<tr><td>Préparation de réunion ou commission</td><td>Lecture de plusieurs documents, résumé multi-source, note de synthèse et points d'attention</td><td>Préparation accélérée des réunions</td></tr>
+</table>
+
+<h2>25. Cadre d'entretien, SLA et évolutivité</h2>
+
+<p>Pour qu'un tel système reste crédible en contexte mairie, je propose un cadre simple et transparent :</p>
+
+<table>
+<tr><th>Volet</th><th>Engagement proposé</th></tr>
+<tr><td>Supervision</td><td>contrôle mensuel complet, revue des erreurs, état des sauvegardes, état des workflows</td></tr>
+<tr><td>Mises à jour</td><td>correctifs de sécurité et compatibilité intégrés dans le forfait d'entretien</td></tr>
+<tr><td>Continuité de service</td><td>procédure de reprise documentée en cas de panne du site principal</td></tr>
+<tr><td>Qualité</td><td>amélioration continue des réponses types, règles de tri et alertes sensibles</td></tr>
+<tr><td>Évolution</td><td>ajout progressif de nouveaux postes, services ou modules sans casser le socle</td></tr>
+</table>
+
+<p><strong>Approche sincère :</strong> un système sur mesure demande plus de cadrage au départ qu'un SaaS générique, mais il offre plus de maîtrise, moins de rigidité et une meilleure adaptation aux pratiques réelles de la mairie. L'intérêt économique se joue dans le temps gagné, la qualité du suivi et la capacité à faire évoluer le système sans repartir de zéro.</p>
+
+<div class="cta">
+<p class="big">Prochaine étape : appel de 30 minutes</p>
+<p>Je peux montrer un email réel, un PDF et une réponse type transformés en flux complet.</p>
+<p>Nous validons ensemble la compatibilité Outlook, les modèles de réponse et l'architecture d'hébergement.</p>
+<p>Disponible cette semaine à votre convenance.</p>
+</div>
+
+<h2>Références</h2>
+
+<p><strong>JARVIS OS</strong> — Système d'IA distribué que je gère en production depuis 18 mois :</p>
+<ul>
+<li>600+ opérations IA autonomes orchestrées quotidiennement</li>
+<li>65 workflows n8n en production</li>
+<li>OCR, classification, génération de réponses, veille automatisée</li>
+<li>Intégration multi-API (email, CRM, bases de données)</li>
+<li>Architecture distribuée, supervision, multi-agents et routines planifiées</li>
+</ul>
+
+<p>Portfolio : <strong>github.com/Turbo31150</strong> — 35 dépôts publics, 320 000 lignes en production.</p>
+<p><strong>Documentation officielle utilisée pour le cadrage :</strong></p>
+<ul>
+<li>Microsoft Learn — réglages et prise en charge IMAP/POP Exchange Online : https://learn.microsoft.com/en-us/exchange/mailbox-migration/migrating-imap-mailboxes/setting-up-your-imap-server-connection</li>
+<li>n8n Docs — Schedule Trigger : https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/</li>
+<li>Docker Docs — Swarm mode overview : https://docs.docker.com/engine/swarm/</li>
+<li>PaddleOCR — dépôt officiel : https://github.com/PaddlePaddle/PaddleOCR</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>26. Validation proposée</h2>
+
+<div class="signature-card">
+<p><strong>Option recommandée :</strong> Exploitation complète</p>
+<p><strong>Montant recommandé :</strong> 3 400 €</p>
+<p><strong>Maintenance conseillée :</strong> Entretien renforcé à 220 €/mois</p>
+<p><strong>Délai cible :</strong> 5 semaines incluant mise en service, documentation et formation</p>
+</div>
+
+<p>Cette proposition peut servir de base de validation. Les paramètres exacts seront confirmés après un échange de cadrage et une vérification technique des accès Outlook, des modèles de réponse existants et de l'organisation cible côté mairie.</p>
+
+<div class="signature-grid">
+<div class="signature-block">
+<p><strong>Décision côté client</strong></p>
+<p>Option retenue : ....................................................</p>
+<p>Budget validé : ....................................................</p>
+<p>Maintenance retenue : ............................................</p>
+<p>Date de démarrage souhaitée : ................................</p>
+</div>
+<div class="signature-block">
+<p><strong>Validation</strong></p>
+<p>Nom : .................................................................</p>
+<p>Fonction : ...........................................................</p>
+<p>Date : ...............................................................</p>
+<p>Signature / accord : ............................................</p>
+</div>
+</div>
+
+<h3>Pré-requis pour lancement</h3>
+<ul>
+<li>accès à une boîte email de test ou production</li>
+<li>exemples de réponses déjà utilisées par la mairie</li>
+<li>1 à 3 exemples de dossiers réels anonymisés si possible</li>
+<li>validation du mode d'hébergement retenu : local, VPS ou double site</li>
+<li>désignation d'un référent fonctionnel côté client</li>
+</ul>
+
+<h3>Prochaines étapes</h3>
+<ol>
+<li>appel de cadrage de 30 minutes</li>
+<li>validation du scénario retenu</li>
+<li>collecte des accès et documents de référence</li>
+<li>mise en place du noyau et démonstration du premier flux</li>
+</ol>
+
+<p class="small-note">Cette page peut être utilisée comme base d'accord de principe avant devis final détaillé ou bon de commande formel.</p>
+
+<footer>
+<p>Franck Delmas — Développeur IA et Automatisation — Toulouse — franckdelmas00@gmail.com — github.com/Turbo31150</p>
+<p>Proposition confidentielle — 27 mars 2026</p>
+</footer>
+
+</div>
+</body>
+</html>

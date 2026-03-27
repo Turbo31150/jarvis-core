@@ -1,0 +1,15 @@
+Bonjour Guillaume,
+
+Merci pour votre retour ! Je suis très intéressé par votre projet d'assistant IA.
+
+J'ai bien compris votre besoin : centraliser et automatiser la gestion de vos demandes entrantes (emails, formulaires), le suivi, les réponses structurées, la veille, les réseaux sociaux et le CRM. C'est exactement le type de système que je construis au quotidien.
+
+Pour avancer efficacement, je vous propose un appel découverte de 15 minutes cette semaine. Ça nous permettra de :
+- Préciser vos priorités (quels flux automatiser en premier)
+- Valider l'approche technique (n8n + IA)
+- Définir le périmètre du POC
+
+Je suis disponible tous les jours entre 9h et 18h. Quel créneau vous arrangerait ?
+
+Au plaisir d'échanger,
+Franck Delmas

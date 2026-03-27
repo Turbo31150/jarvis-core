@@ -1,0 +1,10 @@
+
+
+**Josias TOGLO**  
+**Sujet :** Les données des utilisateurs sont volées pour entraîner les modèles d'IA (risque dès le 24 avril)  
+
+**Commentaire 1 :**  
+C’est une pratique délicate, mais très répandue. Pour protéger vos données sensibles, envisagez l’utilisation de techniques comme le *differential privacy* ou la *data anonymization* pour limiter l’exposition sans sacrifier la qualité des modèles.
+
+**Commentaire 2 :**  
+La mise en place d’un *model card* et d’une *data governance policy* est essentielle. Cela permet de clarifier les conditions d’utilisation des données, tout en respectant le RGPD et les bonnes pratiques en IA.

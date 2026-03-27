@@ -1,0 +1,19 @@
+[Unit]
+Description=JARVIS Orchestrateur Autonome v1.0
+After=network.target docker.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=turbo
+Environment=DISPLAY=:0
+Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=PYTHONPATH=/home/turbo/IA/Core/jarvis
+WorkingDirectory=/home/turbo/IA/Core/jarvis
+ExecStart=/usr/bin/python3 /home/turbo/IA/Core/jarvis/orchestrator/daemon.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

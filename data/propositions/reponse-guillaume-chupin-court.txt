@@ -1,0 +1,48 @@
+Bonjour Guillaume,
+
+Merci pour ce cahier des charges très complet. Votre projet est parfaitement dans mon domaine — voici ma réponse point par point.
+
+TRAITEMENT DES DEMANDES
+Courriers scannés → OCR automatique → résumé IA en 3 lignes → catégorisation (voirie, propreté, sécurité, social…) → niveau d'urgence → analyse du ton → détection de sujets sensibles → proposition de réponse institutionnelle. Vous recevez une notification avec tout ça, vous validez en un clic.
+
+INTÉGRATION QOMON
+J'ai vérifié : Qomon dispose d'une API publique (contacts + actions) et d'une intégration Zapier/webhooks. Création automatique de contacts, enregistrement des interactions, tags par catégorie, historique complet. Intégration directe et native.
+
+COMPATIBILITÉ OUTLOOK
+n8n se connecte à Outlook via IMAP/SMTP, même sur les versions anciennes. Pas besoin de Microsoft 365.
+
+VEILLE
+Flux RSS + alertes Google + articles par email → analyse IA (résumé, sujet, lien territoire, enjeux, angles communication) → synthèse quotidienne par email chaque matin avec points clés, vigilances et opportunités.
+
+SUJETS SENSIBLES
+Détection automatique en continu (ton négatif, récurrence, mots-clés sensibles) → alerte immédiate avec contexte et proposition d'éléments de langage.
+
+OUTILS
+- n8n (auto-hébergé, gratuit, RGPD)
+- Claude IA (meilleur pour le ton institutionnel)
+- OCR open source (données souveraines)
+- Qomon (votre CRM actuel)
+Coût mensuel : 15 à 40 euros (API IA uniquement).
+
+PLANNING
+- Semaine 1 : connexion Outlook + OCR + premiers workflows
+- Semaine 2 : intégration Qomon + catégorisation + réponses IA + veille
+- Semaine 3 : synthèse quotidienne + alertes sensibles
+- Semaine 4 : tests sur vos documents + formation + documentation
+Livraison : 3 à 4 semaines.
+
+BUDGET
+1 800 euros TTC tout compris (développement + formation 2h + documentation + 1 mois de support).
+Phase 2 (dashboards, cartographie, rapports) : sur devis, estimé 800-1200 euros.
+
+PROCHAINE ÉTAPE
+Je vous propose un appel de 30 min cette semaine pour :
+1. Vous montrer un document traité en direct par le système
+2. Préciser vos catégories de demandes
+3. Valider la compatibilité Outlook
+4. Caler le planning
+
+Disponible à votre convenance.
+
+Cordialement,
+Franck Delmas

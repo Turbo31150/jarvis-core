@@ -1,0 +1,8 @@
+1.  **Priorisation Automatique des Opportunités :** Implémenter un système de scoring (0-100) pour chaque opportunité détectée lors du scan Codeur */30min. Ce score pourrait être basé sur plusieurs critères :
+    *   Recherche de mots-clés pertinents dans le titre et la description.
+    *   Match avec les compétences/profil du freelance défini en amont.
+    *   Urgence ou deadline spécifique mentionnée.
+    *   Montant proposé (si filtrage par budget est activé).
+    *   Réputation potentielle du client/annonceur (via analyse de feedbacks, réseaux sociaux liés... si possible).
+
+2.  **Engagement LinkedIn Automatisé :** Ajouter une fonctionnalité qui automatise la recherche et le

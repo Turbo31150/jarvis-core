@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-03-27T17:16:42",
+  "projects_scanned": 35,
+  "matches": 6,
+  "new_matches": 4,
+  "m2_scoring": {
+    "ok": true,
+    "response": "",
+    "time": 8.9
+  },
+  "m3_ranking": {
+    "ok": true,
+    "response": "<think>\nHmm, l'utilisateur me demande d'évaluer et de classer des projets pour un freelance IA Python qui facture 55€/heure. Je dois trier ces projets du meilleur au pire en donnant une seule raison par position.\n\nJe vois six projets différents avec leurs plages de prix et nombres d'offres disponibles. Le freelance est spécialisé dans l'IA et le Python, donc je devrais me concentrer sur la pertinence de chaque projet à ces compétences.\n\nAnalysons chaque option : \n\nLe premier projet concerne la recherche de contenus e-learning en mathématiques pour le bâtiment avec un budget entre 500 € et 1 000 €. Bien que cela semble lié aux mathématiques, il n'est pas clairement spécifié qu'il faut utiliser l'IA ou du Python pour ce travail.\n\nLe deuxième projet est une application mobile de réseau social à un budget plus élevé (10 000 € et plus). Cela pourrait être pertinent car les applications mobiles modernes utilisent souvent des technologies d'intelligence artificielle. L'utilisateur facture 55€/heure, donc ce projet pourrait générer un revenu substantiel si la demande est réelle.\n\nLe troisième projet concerne la mise en place d'un assistant IA pour la gestion de demandes et l'automatisation avec un budget entre 500 € et 1 000 €. Cela semble directement pertinent car il s'agit clairement d'utiliser l'IA comme compétence centrale.\n\nLe quatrième projet est le montage vidéo pour les réseaux sociaux à moins de 500€. Même si cela peut être lié aux outils numériques, la demande spécifique mentionnée (vidéo courte) ne semble pas directement liée au Python ou à l'IA selon",
+    "time": 11.2
+  },
+  "already_applied": [
+    "480357",
+    "480360",
+    "480333"
+  ],
+  "match_details": [
+    {
+      "t": "Recherche de contenus e-learning \"Maths pour bâtiment\"",
+      "b": "500 € à 1 000 €",
+      "o": 4,
+      "pid": "480383",
+      "l": "https://www.codeur.com/projects/480383-recherche-de-contenus-e-learning-maths-pour-batiment",
+      "kw": [
+        "learning"
+      ]
+    },
+    {
+      "t": "Application mobile reseau social",
+      "b": "10 000 € et plus",
+      "o": 96,
+      "pid": "458216",
+      "l": "https://www.codeur.com/projects/458216-application-mobile-reseau-social",
+      "kw": [
+        "ia"
+      ]
+    },
+    {
+      "t": "Mise en place d’un assistant IA : gestion de demandes, autom",
+      "b": "500 € à 1 000 €",
+      "o": 36,
+      "pid": "480357",
+      "l": "https://www.codeur.com/projects/480357-mise-en-place-d-un-assistant-ia-gestion-de-demandes-automatisation",
+      "kw": [
+        "ia",
+        "assistant"
+      ]
+    },
+    {
+      "t": "Video courte montage réseau sociaux",
+      "b": "Moins de 500 €",
+      "o": 7,
+      "pid": "480363",
+      "l": "https://www.codeur.com/projects/480363-video-courte-montage-reseau-sociaux",
+      "kw": [
+        "ia"
+      ]
+    },
+    {
+      "t": "Expert IA & Automatisation : Génération de fiches produits W",
+      "b": "Moins de 500 €",
+      "o": 34,
+      "pid": "480360",
+      "l": "https://www.codeur.com/projects/480360-expert-ia-automatisation-generation-de-fiches-produits-woocommerce",
+      "kw": [
+        "ia",
+        "automatisation"
+      ]
+    },
+    {
+      "t": "Recherche vidéaste & photographe - mariage",
+      "b": "500 € à 1 000 €",
+      "o": 4,
+      "pid": "480343",
+      "l": "https://www.codeur.com/projects/480343-recherche-videaste-photographe-mariage",
+      "kw": [
+        "ia"
+      ]
+    }
+  ]
+}

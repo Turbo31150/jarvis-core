@@ -1,0 +1,23 @@
+{
+  "M3": {
+    "node": "M3",
+    "role": "VALIDATION CROISÉE",
+    "response": "Voici une estimation pour les trois propositions :\n\n1.  **Assistant IA gestion demandes :**  \n    Note: /7  \n    Le prix est un peu élevé si le projet n'est pas très spécifique ou technique (exigée par l'employeur), mais cela dépend du niveau de complexité et des compétences requises.\n\n2.  **WooCommerce photo→fiche produit IA :**  \n    Note: /8  \n    Le prix semble correct pour une tâche standardisée d'intégration WooCommerce avec une fonctionnalité IA relative (image-to-product). C'est un projet bien défini et moins complexe qu'une IA générique.\n\n3.  **Programmation IA générique :**  \n    Note: /6  \n    Le prix est bas pour un service aussi vague que \"IA générique\". Il faut vérifier précisément ce qui est demandé (type de modèle, données nécessaires, objectif) avant d'évaluer si c'est juste ou trop bas.",
+    "time": 12.3,
+    "model": "deepseek/deepseek-r1-0528-qwen3-8b"
+  },
+  "M2": {
+    "node": "M2",
+    "role": "PRÉ-ANALYSE RAPIDE",
+    "response": "1. **Développement de chatbots IA** : 30-50€/h (automatisation des réponses clients).  \n2. **Analyse de données avec IA** : 40-60€/h (prédiction, segmentation).  \n3. **Création de modèles génératifs (texte/images)** : 50-70€/h (contenu automatisé, design).  \n\n*Tarifs moyens en France en 2026 (selon expérience et complexité).*",
+    "time": 13.3,
+    "model": "qwen/qwen3-8b"
+  },
+  "M1": {
+    "node": "M1",
+    "role": "ANALYSE PROFONDE",
+    "response": "ERROR: HTTPConnectionPool(host='127.0.0.1', port=1234): Read timed out. (read timeout=60)",
+    "time": 0,
+    "model": "deepseek/deepseek-r1-0528-qwen3-8b"
+  }
+}

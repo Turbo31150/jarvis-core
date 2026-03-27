@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; }
+  .banner {
+    width: 800px; margin: 0 auto; background: linear-gradient(135deg, #0f172a, #2d1a0e, #7c2d12);
+    border-radius: 16px; overflow: hidden; border: 1px solid #ea580c;
+  }
+  .top { padding: 32px 40px 20px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .top h1 { font-size: 22px; color: #fdba74; font-weight: 600; }
+  .badge { background: #3b82f6; color: #fff; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px; }
+  .main { padding: 0 40px 28px; }
+  .main h2 { font-size: 28px; color: #fff; font-weight: 700; line-height: 1.3; margin-bottom: 20px; }
+  .compare { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .compare th { text-align: left; padding: 8px 12px; font-size: 12px; color: #94a3b8; border-bottom: 1px solid #334155; }
+  .compare td { padding: 8px 12px; font-size: 13px; color: #e2e8f0; border-bottom: 1px solid #1e293b; }
+  .compare .highlight { color: #4ade80; font-weight: 600; }
+  .compare .dim { color: #64748b; }
+  .metrics { display: flex; gap: 16px; margin-bottom: 24px; }
+  .metric { background: rgba(234,88,12,0.12); border: 1px solid #ea580c; border-radius: 8px; padding: 12px 16px; flex: 1; text-align: center; }
+  .metric .val { font-size: 22px; font-weight: 700; color: #fb923c; }
+  .metric .lbl { font-size: 11px; color: #fdba74; margin-top: 2px; }
+  .note { background: rgba(59,130,246,0.12); border: 1px solid #3b82f6; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; }
+  .note .text { color: #93c5fd; font-size: 13px; line-height: 1.5; }
+  .footer { padding: 16px 40px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; }
+  .footer .name { color: #fed7aa; font-size: 14px; }
+  .footer .price { color: #fb923c; font-size: 22px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="top">
+    <h1>Proposition n°3</h1>
+    <span class="badge">DOCKER + API REST</span>
+  </div>
+  <div class="main">
+    <h2>PaddleOCR en production<br>Zero euro par page, 100 % souverain</h2>
+    <table class="compare">
+      <tr><th></th><th>Mon deploiement</th><th>Azure OCR</th></tr>
+      <tr><td>Reconnaissance texte</td><td class="highlight">95 %+ documents structures</td><td class="dim">~96 %</td></tr>
+      <tr><td>Extraction tableaux</td><td class="highlight">PP-StructureV3</td><td class="dim">Oui</td></tr>
+      <tr><td>Analyse mise en page</td><td class="highlight">Oui</td><td class="dim">Oui</td></tr>
+      <tr><td>Export Markdown</td><td class="highlight">Automatique</td><td class="dim">Non</td></tr>
+      <tr><td>Cout par page</td><td class="highlight">0 EUR</td><td class="dim">0,005-0,05 EUR</td></tr>
+      <tr><td>Donnees</td><td class="highlight">Vos serveurs</td><td class="dim">Cloud Microsoft</td></tr>
+    </table>
+    <div class="metrics">
+      <div class="metric"><div class="val">5 j</div><div class="lbl">Livraison</div></div>
+      <div class="metric"><div class="val">6</div><div class="lbl">Endpoints API</div></div>
+      <div class="metric"><div class="val">&lt;100 ms</div><div class="lbl">Latence GPU</div></div>
+      <div class="metric"><div class="val">Benchmark</div><div class="lbl">Sur vos documents</div></div>
+    </div>
+    <div class="note">
+      <div class="text">Benchmark inclus : je teste PaddleOCR sur vos vrais documents et vous fournis un rapport comparatif avant livraison finale.</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="name">Franck Delmas — Cluster 6 GPU NVIDIA</div>
+    <div class="price">690 EUR tout compris</div>
+  </div>
+</div>
+</body>
+</html>

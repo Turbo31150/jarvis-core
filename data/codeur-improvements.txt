@@ -1,0 +1,24 @@
+<think>
+Hmm, l'utilisateur demande des améliorations concrètes pour trois offres de services liés à l'IA et au e-commerce. Les offres sont:
+
+1. Assistant IA : centralisation d'e-mails/CRM/veille (750€)
+
+2. WooCommerce IA : création automatique de fiches produit à partir de photos (500€)
+
+3. Prog IA : cadrage + prototype (550€)
+
+Et le profil a 0 avis, ce qui rend difficile la différenciation.
+
+Je vais analyser chaque offre pour proposer des améliorations concrètes tout en conservant les limites de prix mentionnées.
+
+Pour l'Assistant IA, au lieu d'une simple centralisation, pourquoi ne pas proposer un tableau de bord personnalisé avec une alerte intelligente? Cela ajoute une valeur ajoutée sans augmenter le prix excessivement. L'utilisateur pourrait bénéficier d'une interface claire et des notifications pertinentes.
+
+Pour WooCommerce IA, plutôt que de se limiter aux fiches produit, l'offre pourrait inclure la prédiction de prix concurrentiels via scraping automatique? Cela répond à un besoin plus profond de rentabilité pour le vendeur. Le tarif reste similaire mais couvre une fonctionnalité supplémentaire.
+
+Pour Prog IA, au-delà du cadrage et prototype, l'offre pourrait inclure la validation avec des données réelles? Cela démontre un engagement concret avec les besoins spécifiques. Le tarif est cohérent mais le service est plus tangible.
+
+Le manque d'avis pose un problème de crédibilité. L'utilisateur semble chercher à compenser ce déficit par des différenciations marketing basées sur la qualité et l'expertise plutôt que sur les témoignages clients. C'est compréhensible, mais il faut être réaliste - sans références, il est difficile d'établir une confiance.
+
+L'utilisateur a probablement besoin de faire ressortir des points forts spécifiques à chaque service pour séduire potentiellement des clients, tout en conservant les tarifs actuels. Les améliorations proposées devraient mettre en avant l'expertise technique et la valeur ajoutée tangibles.
+
+Je vais structurer ma réponse avec une

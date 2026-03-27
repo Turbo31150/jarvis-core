@@ -1,0 +1,33 @@
+Guillaume, un complément important sur les points spécifiques que vous avez mentionnés :
+
+INTÉGRATION QOMON — CONFIRMÉE
+J'ai vérifié : Qomon dispose d'une API publique REST (contacts + actions) et d'une intégration native via Zapier/webhooks. La synchronisation bidirectionnelle est directe : création automatique de contacts, enregistrement des interactions, tags par catégorie de demande, historique complet. Votre Qomon reste maître des données, notre système l'enrichit.
+
+COMPATIBILITÉ OUTLOOK MAIRIE
+n8n se connecte à Outlook via IMAP/SMTP, compatible même avec les versions anciennes. Pas besoin de Microsoft 365. Alternative : App Password si votre mairie le permet (plus sécurisé). Je validerai techniquement avec vous avant démarrage.
+
+DÉTECTION SUJETS SENSIBLES
+Le système analyse en continu : ton négatif, mots-clés sensibles (décès, accident, conflit), récurrence d'un sujet sur le territoire, montée en volume. Alerte immédiate avec contexte, historique et proposition d'éléments de langage adaptés au cadre institutionnel.
+
+COÛTS RÉCURRENTS — TRANSPARENCE TOTALE
+- Infrastructure (n8n, PostgreSQL, Docker) : 0 euros (open source)
+- API IA (Claude/Gemini, votre clé) : 75-120 euros/mois estimé pour 50 demandes/jour
+- Hébergement VPS si souhaité : 5-10 euros/mois
+- Total : 80-130 euros/mois, vous contrôlez tout
+
+BUDGET PRESTATION
+POC (5 jours) + MVP complet (2-3 semaines) + formation + documentation + 1 mois support = 1 800 euros TTC tout compris.
+
+Phase 2 ultérieure (dashboards, cartographie, rapports) : sur devis, estimé 800-1 200 euros.
+
+PROCHAINE ÉTAPE
+Je vous propose un appel de 30 minutes cette semaine pour :
+1. Vous montrer un document traité en direct par le système
+2. Valider la compatibilité avec votre version Outlook et votre instance Qomon
+3. Préciser les catégories de demandes spécifiques à votre territoire
+4. Caler le planning de démarrage
+
+Disponible à votre convenance. N'hésitez pas à me proposer un créneau.
+
+Cordialement,
+Franck Delmas

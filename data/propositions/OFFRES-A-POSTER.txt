@@ -1,0 +1,88 @@
+═══════════════════════════════════════════════════════
+  3 OFFRES PRÊTES — COPIE-COLLE SÉQUENTIEL
+═══════════════════════════════════════════════════════
+
+OFFRE 1 — IA Énergies Renouvelables (10 000€+)
+URL: https://www.codeur.com/projects/480392-recherche-developpeur-application-ia
+Montant: 8500 | Délai: 30 jours
+---MESSAGE---
+Bonjour,
+
+Application IA pour les énergies renouvelables — croisement exact de mes expertises : machine learning en production et infrastructure GPU.
+
+Ce que j'apporte :
+- Modèles prédictifs sur GPU (production solaire/éolienne, anomalies, maintenance prédictive)
+- Pipelines données temps réel : capteurs IoT, météo, SCADA
+- Dashboard interactif avec cartographie et alertes
+- API REST pour intégration systèmes existants
+- Docker scalable, monitoring intégré
+
+Mon système JARVIS orchestre 600+ opérations IA sur 6 GPU NVIDIA. TradeOracle, mon moteur prédictif multi-modèles, traite 800+ flux en parallèle — architecture transposable à la prédiction énergétique.
+
+Stack : Python, PyTorch, FastAPI, PostgreSQL, TimescaleDB, Docker, React.
+
+Appel 30 min pour cadrer : type d'énergie, données disponibles, objectif prioritaire.
+
+github.com/Turbo31150 — 35 repos, 320K lignes.
+
+Franck Delmas — Architecte IA, Toulouse
+---FIN---
+
+═══════════════════════════════════════════════════════
+
+OFFRE 2 — PaddleOCR (500-1000€)
+URL: https://www.codeur.com/projects/479498-deploiement-ocr-open-source-paddleocr
+Montant: 690 | Délai: 5 jours
+---MESSAGE---
+Bonjour,
+
+PaddleOCR en production, c'est mon quotidien. Cluster 6 GPU NVIDIA, 87 services Docker déployés depuis 18 mois.
+
+Livrable en 5 jours :
+
+1. Container Docker clé en main (docker compose up)
+   CPU : 500ms/page (MKLDNN) | GPU : <100ms/page (TensorRT)
+
+2. API REST FastAPI — 6 endpoints documentés Swagger
+   /ocr → texte | /structured → JSON | /table → CSV | /layout → analyse mise en page
+
+3. PP-StructureV3 inclus — c'est ce qui distingue ma solution d'un simple Tesseract : extraction tableaux, analyse layout, formules, export Markdown automatique.
+
+4. Benchmark comparatif sur VOS documents avant livraison finale.
+
+Précision : 95%+ sur documents structurés. 0€/page. 100% on-premise. Données souveraines.
+
+690€ forfait tout compris + 2 semaines support.
+
+Démo en visio disponible : envoyez un document, je le traite en direct.
+
+github.com/Turbo31150
+Franck Delmas — Toulouse
+---FIN---
+
+═══════════════════════════════════════════════════════
+
+OFFRE 3 — Application avec IA intégrée (<500€)
+URL: https://www.codeur.com/projects (chercher "Une application avec IA intégrée")
+Montant: 450 | Délai: 7 jours
+---MESSAGE---
+Bonjour,
+
+Développeur IA spécialisé en intégration de modèles de langage dans des applications métier.
+
+Mon approche :
+- Intégration d'IA (Claude, GPT-4, modèles locaux) dans votre application existante ou nouvelle
+- API d'inférence optimisée (FastAPI + cache Redis)
+- Interface utilisateur intuitive (React)
+- Déploiement Docker conteneurisé
+
+Mon système JARVIS intègre 87 outils IA dans une architecture unifiée : classification, génération, analyse, traduction, OCR. Chaque module est isolé, testable, remplaçable.
+
+Stack : Python, FastAPI, React, Docker, Claude/GPT-4 API.
+
+github.com/Turbo31150 — 600+ agents IA en production.
+
+Franck Delmas — Toulouse
+---FIN---
+
+═══════════════════════════════════════════════════════

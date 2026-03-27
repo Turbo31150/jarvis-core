@@ -1,0 +1,33 @@
+Objet : Proposition assistant IA mairie - tri mails, lecture documentaire et automatisation
+
+Bonjour Monsieur Chupin,
+
+Je vous envoie en pièce jointe la version consolidée de ma proposition pour la mise en place d'un assistant IA orienté mairie / cabinet d'élu.
+
+Le document couvre notamment :
+- le tri intelligent des emails et sollicitations
+- la lecture multi-format des pièces jointes (PDF, DOCX, images, tableaux)
+- la génération de résumés, comptes rendus et brouillons de réponse à partir de modèles existants
+- les alertes, routines planifiées et suivi des échéances
+- l'architecture d'hébergement, y compris l'option à double site pour la continuité de service
+- la maintenance mensuelle et les possibilités d'évolution par poste ou service
+
+J'ai volontairement structuré la proposition pour qu'elle reste concrète : workflow détaillé, scénarios mairie, coûts par scénario, cadre de maintenance et options d'évolution.
+
+Mon recommandation initiale serait le scénario "Exploitation complète", qui me semble être le meilleur équilibre entre utilité immédiate, qualité de service et évolutivité.
+
+Si vous le souhaitez, nous pouvons faire un échange de 30 minutes pour :
+- valider le périmètre prioritaire
+- vérifier la compatibilité Outlook / organisation actuelle
+- confirmer le mode d'hébergement
+- identifier les premières réponses types à réutiliser
+
+Je peux également vous montrer un exemple simple en direct : email entrant + pièce jointe + résumé + brouillon de réponse + suivi.
+
+Bien cordialement,
+
+Franck Delmas
+Développeur IA et automatisation
+Toulouse
+franckdelmas00@gmail.com
+github.com/Turbo31150

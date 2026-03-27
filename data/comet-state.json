@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-03-27T17:14:04",
+  "cluster": {
+    "M1": {
+      "status": "ONLINE",
+      "models": [
+        "deepseek-r1-0528-qwen3-8b",
+        "qwen3.5-9b",
+        "gemma-3-4b",
+        "text-embedding-nomic-embed-text-v1.5"
+      ]
+    },
+    "M2": {
+      "status": "ONLINE",
+      "models": [
+        "qwen3-8b",
+        "deepseek-r1-0528-qwen3-8b",
+        "text-embedding-nomic-embed-text-v1.5",
+        "nemotron-3-nano",
+        "glm-4.7-flash",
+        "deepseek-coder-v2-lite-instruct",
+        "gpt-oss-20b"
+      ]
+    },
+    "M3": {
+      "status": "ONLINE",
+      "models": [
+        "deepseek-r1-0528-qwen3-8b",
+        "text-embedding-nomic-embed-text-v1.5",
+        "phi-3.1-mini-128k-instruct",
+        "mistral-7b-instruct-v0.3",
+        "nemotron-3-nano",
+        "gpt-oss-20b"
+      ]
+    },
+    "OL1": {
+      "status": "ONLINE",
+      "models": [
+        "nomic-embed-text:latest",
+        "kimi-k2.5:cloud",
+        "deepseek-r1:7b",
+        "qwen2.5:1.5b"
+      ]
+    }
+  },
+  "tabs": 8,
+  "page": {
+    "title": "- Lien brisé",
+    "url": "https://www.codeur.com/projets",
+    "text_length": 2152,
+    "tables": 0,
+    "links": 68,
+    "images": 11,
+    "forms": 1
+  },
+  "m2_response": {
+    "node": "M2",
+    "ok": true,
+    "response": "1. Proposer un message générique sans adapter le contenu aux besoins spécifiques du projet.  \n2. Ne pas inclure de références ou d'exemples concrets pour prouver ses compétences.  \n3. Manquer de clarté dans la communication (ex : dates, méthodes, coûts) ou être trop vague sur les solutions proposées",
+    "time": 8.4
+  },
+  "m3_response": {
+    "node": "M3",
+    "ok": true,
+    "response": "<think>\nD'accord, l'utilisateur me demande d'évaluer trois offres freelance en fonction de trois critères : pertinence, prix et chances de gagner. Il veut juste les scores sans explication détaillée.\n\nJe vais analyser chaque offre un par un. La première est \"Assistant IA 750€ 14j\". Cela semble très pertinent car il s'agit probablement d'une assistance pour l'utilisation ou la gestion du modèle IA, ce qui correspond à une demande courante si l'utilisateur a besoin de quelqu'un pour gérer le quotidien des modèles IA. Le prix est élevé mais cela pourrait refléter un niveau professionnel ou une expérience avancée. Pour les chances de gagner, sans plus d'informations sur la concurrence ou les détails du projet, je vais supposer que c'est standard.\n\nLa deuxième offre \"WooCommerce IA 500€ 14j\" est moins pertinente si l'utilisateur cherche une assistance générale en IA. WooCommerce étant un CMS e-commerce spécifique, cette offre semble trop étroite d'échelle pour une évaluation de pertinence générale. Le prix est plus bas ce qui pourrait être attrayant mais aussi indiquer moins d'expertise ou des économies sur certains aspects.\n\nLa troisième \"Prog IA 550€ 14j\" a un score de pertinence moyen",
+    "time": 7.9
+  }
+}

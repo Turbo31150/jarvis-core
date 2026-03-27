@@ -1,0 +1,15 @@
+[Unit]
+Description=JARVIS OOM Protection for AI services
+After=multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Protect LM Studio and Ollama from OOM killer
+ExecStart=/bin/bash -c 'for pid in $(pgrep -f "lm-studio|lmstudio" 2>/dev/null); do echo -17 > /proc/$pid/oom_score_adj 2>/dev/null; done'
+ExecStart=/bin/bash -c 'for pid in $(pgrep -f "ollama serve" 2>/dev/null); do echo -17 > /proc/$pid/oom_score_adj 2>/dev/null; done'
+# Mark Chrome as expendable
+ExecStart=/bin/bash -c 'for pid in $(pgrep -f "chrome --type=browser" 2>/dev/null); do echo 500 > /proc/$pid/oom_score_adj 2>/dev/null; done'
+
+[Install]
+WantedBy=multi-user.target

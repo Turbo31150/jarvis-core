@@ -1,0 +1,22 @@
+Bonjour,
+
+Développeur IA avec une infrastructure dédiée (cluster 6 GPUs, 46 Go VRAM), je conçois des applications IA complètes — de l'architecture au déploiement en production.
+
+Ce que j'apporte à votre projet :
+- Architecture IA robuste : 600+ opérations orchestrées en continu via mon système JARVIS OS
+- Stack complet : Python, TypeScript, React, APIs REST, Docker, bases de données
+- IA embarquée : agents autonomes, NLP, computer vision, voice AI (<300ms)
+- Infrastructure GPU privée : vos données restent confidentielles, pas de cloud tiers
+- Méthodologie éprouvée : POC rapide (5-7 jours) puis itérations avec démos régulières
+
+Expérience récente :
+- JARVIS OS : orchestrateur IA distribué (600+ handlers, 87 outils)
+- TradeOracle : moteur de trading multi-modèles
+- LUMEN : transcription multilingue temps réel (50+ langues)
+- Lauréat Hackathon Airia AI Agents 2026
+
+Portfolio : github.com/Turbo31150 (75 repos, 320k lignes de code)
+
+Disponible immédiatement pour un appel technique de 15 min.
+
+Franck Delmas — Développeur IA & Architecte Systèmes

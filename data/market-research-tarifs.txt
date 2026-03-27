@@ -1,0 +1,97 @@
+error
+Failed to generate content: permission denied. Please try again.
+close
+
+Google AI Studio utilise des cookies Google afin de fournir ses services, d'en améliorer la qualité et d'analyser le trafic. En savoir plus
+
+J'ai compris
+Skip to main content
+
+We have updated our Terms of Service
+
+Dismiss
+expand_more
+chat_spark
+Playground
+chevron_right
+Personal Branding Pour Freelances Tech
+Accessing And Modifying Jarvis Linux
+Podcast professionnel : Vos Besoins
+Workflow CI Hybride Python Node.js
+Airia Sentinel: Treasury Risk Management.
+View all history
+trending_flat
+design_services
+Build
+chevron_right
+speed
+Dashboard
+chevron_right
+developer_guide
+Documentation
+arrow_outward
+notifications
+What's new
+key
+Get API key
+settings
+Settings
+franckdelmas00@gmail.com
+menu_open
+Playground
+
+share
+compare_arrows
+add
+more_vert
+edit
+more_vert
+more_vert
+info
+Google AI models may make mistakes, so double-check outputs.
+Use Arrow Up and Arrow Down to select a turn, Enter to jump to it, and Escape to return to the chat.
+key_off
+widgets
+Tools
+google
+Grounding with Google Search
+close
+mic
+add_circle
+Run
+keyboard_return
+Run settings
+code
+Get code
+reset_settings
+close
+Gemini 3 Flash Preview
+gemini-3-flash-preview
+Our most intelligent model built for speed, combining frontier intelligence with superior search and grounding.
+System instructions
+Optional tone and style instructions for the model
+No API Key
+Switch to a paid API key to unlock higher quota and more features.
+Temperature
+Media resolution
+Thinking level
+High
+expand_more
+
+Tools
+
+Structured outputs
+Edit
+Code execution
+Function calling
+Edit
+Grounding with Google Search
+Source:
+Google Search
+Grounding with Google Maps
+URL context
+expand_more
+
+Advanced settings
+
+Response ready.

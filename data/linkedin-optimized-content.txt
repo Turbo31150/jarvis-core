@@ -1,0 +1,25 @@
+HEADLINE:
+Développeur IA & Automatisations | J'automatise vos processus métiers avec des Agents IA Autonomes • Expert n8n & Python • Infrastructure GPU Privée
+
+ABOUT:
+L'IA est partout, mais combien d'entreprises ont un outil qui travaille réellement pour elles sans coûter une fortune en jetons API ?
+
+La plupart des TPE/PME se sentent dépassées ou craignent pour la confidentialité de leurs données. C'est là que j'interviens.
+
+Je suis Franck Delmas, et je construis des systèmes nerveux numériques pour les entreprises qui veulent scaler.
+
+Pourquoi travailler avec moi ?
+✅ Puissance & Confidentialité : Je possède mon propre cluster de 6 GPUs NVIDIA (46 Go VRAM). Vos prototypes sont entraînés et testés sur mon infrastructure, pas sur des serveurs tiers opaques.
+✅ JARVIS OS : J'ai développé un orchestrateur distribué capable de gérer 600+ fonctions (MCP). Ce que d'autres mettent des mois à coder, je l'assemble avec une architecture robuste.
+✅ Vitesse de réaction : Expert en Voice AI avec une latence <300ms.
+
+Mes domaines d'intervention :
+→ Automatisations n8n : +65 workflows complexes déjà déployés (CRM, veille, marketing).
+→ Agents Autonomes : Des agents qui ne se contentent pas de répondre, mais qui AGISSENT.
+→ E-commerce & SaaS : Optimisation de catalogues, fiches produits automatisées, support client intelligent.
+
+🚀 Prêt à passer à la vitesse supérieure ?
+Discutons de votre projet en MP ou réservez un créneau pour un diagnostic gratuit de vos processus.
+
+→ Portfolio : github.com/Turbo31150
+→ Freelance : codeur.com/-6666zlkh

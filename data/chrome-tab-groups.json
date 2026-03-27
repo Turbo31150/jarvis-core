@@ -1,0 +1,49 @@
+{
+  "FREELANCE": [
+    {
+      "id": "FC6F7D5FF35EDD6B53716152E860C5F3",
+      "title": "Fil d\u2019actualit\u00e9 | LinkedIn",
+      "url": "https://www.linkedin.com/feed/"
+    },
+    {
+      "id": "E008AC296EF70D09F3FF98527F20299D",
+      "title": "Franck Delmas, d\u00e9veloppeur IA",
+      "url": "https://www.codeur.com/-6666zlkh"
+    }
+  ],
+  "IA_WEB": [
+    {
+      "id": "1C2A2434858042878D1C91E6ACFE87C1",
+      "title": "Perplexity",
+      "url": "https://www.perplexity.ai/"
+    },
+    {
+      "id": "D0ACC84E02827927D82299CC37C010F2",
+      "title": "Google Gemini",
+      "url": "https://gemini.google.com/app"
+    },
+    {
+      "id": "A47ABC4F21BCA105C7E71B86270AA6A1",
+      "title": "ChatGPT",
+      "url": "https://chatgpt.com/"
+    },
+    {
+      "id": "4DC9B26EE9E37ABB9FDDE63DB8252EAD",
+      "title": "Google AI Studio",
+      "url": "https://aistudio.google.com/prompts/new_chat"
+    },
+    {
+      "id": "887128519029491C2E1C4538B85D5F3B",
+      "title": "Claude",
+      "url": "https://claude.ai/new"
+    }
+  ],
+  "PORTFOLIO": [],
+  "OTHER": [
+    {
+      "id": "0B3585D76DFA26CAF9F4A3CED380D42A",
+      "title": "about:blank",
+      "url": "about:blank"
+    }
+  ]
+}

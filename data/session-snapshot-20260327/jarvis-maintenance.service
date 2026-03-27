@@ -1,0 +1,6 @@
+[Unit]
+Description=JARVIS Weekly Maintenance
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/jarvis-maintenance.sh
