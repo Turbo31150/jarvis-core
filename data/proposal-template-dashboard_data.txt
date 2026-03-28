@@ -1,0 +1,4 @@
+**Proposition Codeur.com : Dashboard de Visualisation de Données avec IA Intégrée**
+
+Nous proposons la création d'un dashboard avancé pour visualiser vos données grâce à une intégration intelligente d'IA.  
+Le frontend sera développé en **React**, offrant une interface utilisateur intuitive et réactive, optimisée pour l'affichage dynamique de graphiques et tableaux complexes. Le backend s'appuiera sur **Python** avec des bibliothèques spécialisées (Pandas, NumPy) pour le traitement des données et la création d

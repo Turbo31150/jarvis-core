@@ -1,0 +1,12 @@
+<think>
+D'accord, l'utilisateur demande une proposition en français pour un chatbot IA d'e-commerce, avec des détails spécifiques sur le profil du développeur : expert IA, plus de 600 gestionnaires MCP, cluster GPU.
+
+Je vais créer une réponse concise mais professionnelle qui couvre tous ces points. Il faut montrer l'expertise technique tout en restant orienté client. Les clients d'e-commerce veulent généralement des solutions pratiques pour améliorer le service et les ventes.
+
+Le nombre de handlers MCP est impressionnant, je devrais mentionner comment cela permet une scalabilité et une personnalisation avancée. Le cluster GPU montre que nous pouvons gérer un volume élevé d'interactions sans ralentissement.
+
+L'utilisateur semble être soit un décideur dans une entreprise e-commerce, soit un responsable marketing cherchant à moderniser leurs services clients. La demande précise suggère qu'ils ont déjà des idées mais veulent une proposition structurée.
+
+Je vais inclure les avantages clés : réduction des temps d'attente, personnalisation, intégration facile aux systèmes existants et ROI mesurable. Ces points répondent probablement à leurs préoccupations sous-jacentes concernant l'efficacité et la rentabilité.
+
+La proposition doit être convaincante tout en restant technique pour justifier les 60
