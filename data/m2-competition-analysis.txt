@@ -1,0 +1,3 @@
+1. **Expérience quotidienne et intégration avancée** : J'utilise **Claude quotidiennement avec 30+ plugins** (comme des outils de code, d'analyse de données ou de gestion de projets), ce qui garantit une maîtrise technique approfondie et un usage concret au quotidien, contrairement aux freelances offshore ou aux développeurs généralistes.  
+
+2. **Automatisation à grande échelle via JARVIS OS** : Mon système **orchestre 600+ opérations via l'API Claude**, permettant une automatisation complexe (ex: traitement de données, gestion d

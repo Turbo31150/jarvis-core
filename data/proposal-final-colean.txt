@@ -1,0 +1,25 @@
+Bonjour,
+
+Votre projet CoLean correspond exactement à ce que je construis au quotidien — des interfaces IA connectées à Claude.
+
+Mon système JARVIS utilise l'API Anthropic Claude avec 30+ plugins custom. J'ai déjà développé des interfaces chat IA en production (LUMEN, JARVIS Dashboard) avec React + Python + WebSocket.
+
+Ce que je propose pour votre MVP :
+- Interface web chat responsive, alignée sur votre charte CoLean
+- Connexion directe à l'API Claude (Anthropic SDK)
+- Vos prompts métier Lean intégrés et configurables sans code
+- Historique des conversations avec recherche
+- Déploiement sur votre serveur ou hébergement inclus
+
+Stack : React + FastAPI + Claude SDK + SQLite
+Livrable : MVP fonctionnel + documentation + code source
+Délai : 5-7 jours ouvrés
+Prix : 800€ forfait (dans votre budget)
+
+Ce qui me différencie des 62 autres offres : je ne vais pas "apprendre" Claude pour votre projet — je l'utilise déjà en production avec 600+ opérations orchestrées. Votre MVP sera construit sur une base éprouvée, pas un prototype.
+
+Portfolio : github.com/Turbo31150 (20 repos IA documentés)
+
+Disponible pour un appel de 15 min cette semaine.
+
+Franck Delmas — Expert Claude & Architecte IA

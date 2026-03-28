@@ -1,0 +1,117 @@
+{
+  "timestamp": "2026-03-28T08:04:00",
+  "total": 105,
+  "matches": 83,
+  "new": 30,
+  "top": [
+    {
+      "title": "Application mobile reseau social",
+      "pid": "458216",
+      "link": "https://www.codeur.com/projects/458216-application-mobile-reseau-social",
+      "budget": "10 000 € et plus",
+      "offers": 98,
+      "score": 40,
+      "skills": [
+        "ia"
+      ],
+      "already": false
+    },
+    {
+      "title": "Recherche développeur Zapier et IA",
+      "pid": "480325",
+      "link": "https://www.codeur.com/projects/480325-recherche-developpeur-zapier-et-ia",
+      "budget": "Moins de 200 €",
+      "offers": 22,
+      "score": 35,
+      "skills": [
+        "ia",
+        "api"
+      ],
+      "already": false
+    },
+    {
+      "title": "Recherche community manager",
+      "pid": "480397",
+      "link": "https://www.codeur.com/projects/480397-recherche-community-manager",
+      "budget": "500 € à 1 000 €",
+      "offers": 8,
+      "score": 30,
+      "skills": [],
+      "already": false
+    },
+    {
+      "title": "Recherche développeur WinDev, WebDev,",
+      "pid": "480376",
+      "link": "https://www.codeur.com/projects/480376-recherche-developpeur-windev-webdev",
+      "budget": "10 000 € et plus",
+      "offers": 26,
+      "score": 30,
+      "skills": [],
+      "already": false
+    },
+    {
+      "title": "Recherche un designer produit mode",
+      "pid": "480299",
+      "link": "https://www.codeur.com/projects/480299-recherche-un-designer-produit-mode",
+      "budget": "<500€",
+      "offers": 8,
+      "score": 30,
+      "skills": [],
+      "already": false
+    },
+    {
+      "title": "Nous recherchons un(e) setter expérimenté(e)",
+      "pid": "480297",
+      "link": "https://www.codeur.com/projects/480297-nous-recherchons-un-e-setter-experimente-e",
+      "budget": "500 € à 1 000 €",
+      "offers": 7,
+      "score": 30,
+      "skills": [],
+      "already": false
+    },
+    {
+      "title": "Interface IA simple (Claude) – CoLean",
+      "pid": "480296",
+      "link": "https://www.codeur.com/projects/480296-interface-ia-simple-claude-colean",
+      "budget": "500 € à 1 000 €",
+      "offers": 62,
+      "score": 30,
+      "skills": [
+        "ia"
+      ],
+      "already": false
+    },
+    {
+      "title": "Apporteur d’affaires menuiserie et agencement",
+      "pid": "480288",
+      "link": "https://www.codeur.com/projects/480288-apporteur-d-affaires-menuiserie-et-agencement",
+      "budget": "500 € à 1 000 €",
+      "offers": 1,
+      "score": 30,
+      "skills": [],
+      "already": false
+    },
+    {
+      "title": "Gestion Instagram et LinkedIn dans le domaine musicale",
+      "pid": "480398",
+      "link": "https://www.codeur.com/projects/480398-gestion-instagram-et-linkedin-dans-le-domaine-musicale",
+      "budget": "500 € à 1 000 €",
+      "offers": 10,
+      "score": 25,
+      "skills": [],
+      "already": false
+    },
+    {
+      "title": "Recherche vidéaste & photographe - mariage",
+      "pid": "480343",
+      "link": "https://www.codeur.com/projects/480343-recherche-videaste-photographe-mariage",
+      "budget": "500 € à 1 000 €",
+      "offers": 4,
+      "score": 25,
+      "skills": [
+        "ia"
+      ],
+      "already": false
+    }
+  ]
+}

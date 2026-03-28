@@ -1,0 +1,18 @@
+Bonjour,
+
+Vous utilisez Zapier — je peux vous faire passer au niveau supérieur avec n8n + IA.
+
+J'ai 65 workflows d'automatisation en production, connectés à des APIs, Telegram, bases de données, et modèles IA. n8n est plus puissant que Zapier : auto-hébergé (vos données restent chez vous), illimité en exécutions, et intégrable avec l'IA.
+
+Ce que je propose :
+- Audit de vos workflows Zapier actuels
+- Migration vers n8n avec améliorations IA
+- Intégration téléphonie IP (webhook + n8n)
+- Documentation et formation
+
+Délai : 3-5 jours
+Prix : 200€ forfait
+
+Portfolio : github.com/Turbo31150
+
+Franck Delmas — Expert Automatisation & IA

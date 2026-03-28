@@ -1,0 +1,26 @@
+Bonjour,
+
+Je ne vais pas vous vendre un chatbot. Je vais vous livrer l'outil que votre équipe utilisera vraiment.
+
+Pourquoi je suis le bon choix parmi vos 62 propositions :
+Mon système JARVIS utilise l'API Claude en production depuis des mois — pas en test, en PRODUCTION. 600+ opérations orchestrées chaque jour. 30 plugins Claude que j'ai développés moi-même. C'est la différence entre quelqu'un qui "connaît Claude" et quelqu'un qui vit dedans.
+
+Ce que je vous livre en 7 jours :
+• Interface chat web épurée, aux couleurs CoLean
+• API Claude intégrée avec vos prompts Lean (PDCA, 5S, Kaizen, VSM…)
+• Historique des conversations consultable
+• Hébergement inclus pendant 3 mois
+• Code source + documentation technique
+
+Mon approche Lean pour votre projet Lean :
+Pas de surqualité. Pas de fonctionnalités inutiles. Un MVP qui marche, livré vite, itérable ensuite. Exactement ce que vous enseignez à vos clients.
+
+Prix : 800€ forfait tout compris
+Délai : 7 jours ouvrés
+Garantie : Satisfaction ou correction gratuite
+
+Prochaine étape : 15 min d'appel pour valider vos prompts métier et le périmètre exact.
+
+Portfolio : github.com/Turbo31150 — 20 repos IA documentés, interfaces chat en production.
+
+Franck Delmas — Expert Claude & Architecte IA

@@ -1,0 +1,3 @@
+Voici une analyse stratégique en français :
+
+1.  **Le VRAI besoin du client Lean :** Ce n'est probablement pas juste "un chat Claude". Le budget serré (500-1000€) suggère qu'il cherche une solution rentable et ciblée pour l'entreprise. Son vrai besoin est d'utiliser les capacités avancées de Claude **dans le contexte spécifique de son activité** (marketing, support client, développement, etc.) avec une interface simple à intégrer dans son flux de travail existant (site web, application interne, CRM). Il veut probablement une solution personnalisée et op
