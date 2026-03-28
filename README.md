@@ -106,6 +106,103 @@ python3 tests/test_agents.py  # 8/8
 
 ---
 
+## What is JARVIS Core?
+
+JARVIS Core is the **unified brain** of the JARVIS OS ecosystem. It is the central module that receives every task — whether from voice, CLI, Telegram, or cron — and decides how to handle it. Core does not run AI models itself; instead, it **routes tasks to the right AI model on the right node**, manages persistent memory across multiple SQLite databases, monitors system health in real time, and orchestrates 9 specialized agents that each handle a distinct domain (GitHub, Docker, Telegram, email, voice, browser, network, SQL, and system).
+
+Think of it as the nervous system: the models on M1/M2/M3/OL1 are the muscles, but Core is what decides which muscle to activate, how hard, and when to switch if one fails. It implements the full task lifecycle — classification, routing, execution with timeout/retry, result persistence, and observability — in 7,542 lines of Python across 26 modules. Every query passes through Core's TaskRouter and TaskDispatcher before reaching any GPU.
+
+Core is designed to be **self-contained and testable**: 29/29 tests pass, all 45 tracked tasks are complete, and the system can run health checks, incident triage, and full dashboards from a single CLI entry point (`jarvis.py`).
+
+---
+
+## Usage Examples
+
+```python
+# Route a task to the fastest node
+from core.tasks.models import TaskRequest
+from core.router.dispatcher import TaskDispatcher
+
+req = TaskRequest(prompt="Summarize this article", task_type="fast")
+result = TaskDispatcher().dispatch(req)
+# → Routed to M2 (Qwen3-8B), response in 2.3s
+
+# Route a deep reasoning task
+req = TaskRequest(prompt="Compare PostgreSQL vs SQLite for our use case", task_type="deep")
+result = TaskDispatcher().dispatch(req)
+# → Routed to M3 (DeepSeek-R1), detailed analysis in 9.1s
+
+# Check system health
+from core.workflows import morning_startup
+health = morning_startup()
+# → {cluster: 5/6 UP, network: 8/8, db: 12 tables, services: 18/18}
+
+# Use the GitHub agent
+from agents.github_operator import GitHubOperator
+gh = GitHubOperator()
+summary = gh.daily_summary()
+# → "3 new commits, 1 PR merged, 2 issues open"
+
+# Run incident triage
+from core.workflows import incident_triage
+incidents = incident_triage()
+# → Checks GPU temps, service status, DB integrity, network health
+# → Returns prioritized list of issues with suggested actions
+
+# Query via CLI
+# python3 jarvis.py query "What is the best Python async framework?"
+# → Routed to M2 (fast), response: "For I/O-bound tasks, asyncio with..."
+
+# Full dashboard
+# python3 jarvis.py dashboard
+# → Cluster status, agent health, recent tasks, anomalies, memory stats
+```
+
+---
+
+## How Routing Works
+
+The Task Router is the core decision engine. When a request arrives, it is classified by `task_type` and routed to the optimal node based on a routing table that considers model capability, current load, and thermal state:
+
+| Task Type | Primary Node | Model | Typical Latency | Fallback Chain |
+|-----------|-------------|-------|-----------------|----------------|
+| `fast` | M2 | Qwen3-8B | 1-5s | M1 -> OL1 -> M3 |
+| `deep` | M3 | DeepSeek-R1 | 7-12s | M1 -> OL1 -> M2 |
+| `code` | M2 | DeepSeek-Coder | 3-8s | M3 -> M1 -> OL1 |
+| `consensus` | M2 + M3 | Parallel query | 8-15s | Weighted vote (threshold 0.65) |
+| `browser` | BrowserOS | Chrome CDP | 2-10s | Playwright fallback |
+| `local` | M1 | Shell/Python | <1s | Direct execution |
+
+The Dispatcher checks node availability before each task. If a node is offline or its GPU temperature exceeds 85C, the task is automatically rerouted to the next node in the fallback chain. For `consensus` tasks, multiple nodes are queried in parallel and the results are aggregated using weighted scoring (minimum confidence threshold: 0.65).
+
+```mermaid
+flowchart TD
+    A[Incoming Task] --> B{Classify task_type}
+    B -->|fast| C[M2: Qwen3-8B]
+    B -->|deep| D[M3: DeepSeek-R1]
+    B -->|code| E[M2: DeepSeek-Coder]
+    B -->|consensus| F[M2 + M3 Parallel]
+    B -->|browser| G[BrowserOS CDP]
+    B -->|local| H[M1 Shell]
+
+    C --> I{Node healthy?}
+    D --> I
+    E --> I
+    I -->|Yes| J[Execute with timeout + retry]
+    I -->|No| K[Failover to next node]
+    K --> J
+
+    F --> L[Query all nodes in parallel]
+    L --> M[Weighted vote >= 0.65?]
+    M -->|Yes| N[Return consensus result]
+    M -->|No| O[Flag as low-confidence]
+
+    J --> P[Save to jarvis-master.db]
+    P --> Q[Return TaskResult]
+```
+
+---
+
 ## License
 
 MIT License — Free for personal and commercial use.
