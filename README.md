@@ -213,3 +213,271 @@ MIT License — Free for personal and commercial use.
 - [GitHub](https://github.com/Turbo31150) · [Portfolio](https://turbo31150.github.io/franckdelmas.dev/) · [LinkedIn](https://linkedin.com/in/franck-hlb-80bb231b1) · [Codeur](https://codeur.com/-6666zlkh)
 
 Part of [JARVIS OS](https://github.com/Turbo31150/jarvis-linux) ecosystem.
+
+
+---
+
+## Development Guide
+
+### Adding a New Agent
+
+Agents are modular operators that handle a specific domain. To create one:
+
+1. Create the agent file in `agents/`:
+
+```python
+# agents/my_operator.py
+from core.base_agent import BaseAgent
+
+class MyOperator(BaseAgent):
+    """Operator for [domain] tasks."""
+
+    name = "my_operator"
+    description = "Handles [domain] operations"
+
+    async def health(self) -> dict:
+        """Return health status for this agent."""
+        return {"status": "ok", "details": "All systems nominal"}
+
+    async def execute(self, task: str, params: dict = None) -> dict:
+        """Execute a task within this agent's domain."""
+        if task == "my_action":
+            return await self._do_my_action(params)
+        raise ValueError(f"Unknown task: {task}")
+
+    async def _do_my_action(self, params: dict) -> dict:
+        """Internal implementation."""
+        # Your logic here
+        return {"result": "success", "data": params}
+```
+
+2. Register the agent in `config/agents.yaml`:
+```yaml
+agents:
+  - name: my_operator
+    module: agents.my_operator
+    class: MyOperator
+    enabled: true
+    health_check_interval: 60  # seconds
+```
+
+3. Add routing rules in `core/router/dispatcher.py`:
+```python
+ROUTING_TABLE["my_domain"] = {
+    "agent": "my_operator",
+    "primary_node": "M1",
+    "fallback": ["M2", "OL1"],
+}
+```
+
+4. Write tests in `tests/test_my_operator.py`:
+```python
+import pytest
+from agents.my_operator import MyOperator
+
+@pytest.mark.asyncio
+async def test_health():
+    agent = MyOperator()
+    result = await agent.health()
+    assert result["status"] == "ok"
+
+@pytest.mark.asyncio
+async def test_my_action():
+    agent = MyOperator()
+    result = await agent.execute("my_action", {"key": "value"})
+    assert result["result"] == "success"
+```
+
+### Adding a New Route
+
+Routes map incoming task types to agents and nodes. To add a new route:
+
+1. Define the route in the dispatcher's routing table:
+```python
+# core/router/dispatcher.py
+ROUTING_TABLE["my_task_type"] = {
+    "agent": "my_operator",           # Which agent handles this
+    "primary_node": "M2",             # Preferred execution node
+    "fallback": ["M3", "M1", "OL1"], # Failover chain
+    "timeout": 30,                     # Seconds before timeout
+    "retries": 2,                      # Number of retry attempts
+    "thermal_limit": 85,              # Max GPU temp (Celsius)
+}
+```
+
+2. The task executor automatically picks up the route. Test it:
+```bash
+python3 jarvis.py query --type my_task_type "Test prompt"
+```
+
+### Adding a Test
+
+Tests are organized by scope in the `tests/` directory:
+
+| File | Scope | What It Tests |
+|------|-------|--------------|
+| `test_smoke.py` | Smoke (10) | Imports, basic instantiation, CLI entry point |
+| `test_core.py` | Unit (12) | Router, executor, events, config, security |
+| `test_agents.py` | Integration (8) | Each agent's health check and basic operations |
+
+To add a new test:
+```python
+# tests/test_core.py (append to existing file)
+
+def test_my_new_feature():
+    """Test description explaining what this validates."""
+    from core.my_module import my_function
+    result = my_function(input_data)
+    assert result == expected_output
+    assert "key" in result
+```
+
+Run all tests:
+```bash
+python3 -m pytest tests/ -v          # verbose output
+python3 -m pytest tests/ -x          # stop on first failure
+python3 -m pytest tests/ -k "smoke"  # run only smoke tests
+```
+
+---
+
+## Configuration Reference
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `JARVIS_HOME` | `~/jarvis` | Root directory for all JARVIS data and config |
+| `JARVIS_DB` | `data/jarvis-master.db` | Path to the main SQLite database |
+| `JARVIS_LOG_LEVEL` | `INFO` | Logging level: DEBUG, INFO, WARNING, ERROR |
+| `JARVIS_LOG_FILE` | `logs/jarvis.log` | Log file path (rotated daily) |
+| `M1_ENDPOINT` | `http://127.0.0.1:1234` | M1 LMStudio API endpoint |
+| `M2_ENDPOINT` | `http://192.168.1.26:1234` | M2 LMStudio API endpoint |
+| `M3_ENDPOINT` | `http://192.168.1.113:1234` | M3 LMStudio API endpoint |
+| `OL1_ENDPOINT` | `http://127.0.0.1:11434` | OL1 Ollama API endpoint |
+| `BROWSEROS_URL` | `http://localhost:9222` | BrowserOS CDP endpoint |
+| `TELEGRAM_BOT_TOKEN` | *(none)* | Telegram bot API token |
+| `TELEGRAM_CHAT_ID` | *(none)* | Default Telegram chat ID for notifications |
+| `MCP_PORT` | `8901` | Port for the MCP toolkit server |
+| `MCP_BIND` | `127.0.0.1` | Bind address for MCP server |
+| `GPU_THERMAL_LIMIT` | `85` | Maximum GPU temperature before failover (Celsius) |
+| `TASK_TIMEOUT` | `30` | Default task timeout in seconds |
+| `TASK_RETRIES` | `2` | Default retry count for failed tasks |
+| `HEALTH_CHECK_INTERVAL` | `60` | Seconds between health check cycles |
+| `MEXC_API_KEY` | *(none)* | MEXC exchange API key for trading |
+| `MEXC_API_SECRET` | *(none)* | MEXC exchange API secret |
+
+### Configuration Files
+
+| File | Purpose |
+|------|---------|
+| `config/agents.yaml` | Agent registration and settings |
+| `config/routes.yaml` | Task routing rules and fallback chains |
+| `config/nodes.yaml` | Cluster node definitions and endpoints |
+| `config/models.yaml` | AI model catalog with VRAM requirements |
+| `config/voice.yaml` | Voice pipeline settings (wake word, language) |
+| `config/trading.yaml` | Trading parameters (pairs, limits, strategies) |
+
+---
+
+## Deployment Guide
+
+### Systemd Service
+
+Create a systemd unit file for automatic startup and restart:
+
+```ini
+# /etc/systemd/system/jarvis-core.service
+[Unit]
+Description=JARVIS Core Orchestration Service
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=turbo
+Group=turbo
+WorkingDirectory=/home/turbo/IA/Core/jarvis-core
+ExecStart=/usr/bin/python3 jarvis.py serve
+Restart=always
+RestartSec=10
+Environment=JARVIS_HOME=/home/turbo/jarvis
+Environment=JARVIS_LOG_LEVEL=INFO
+Environment=GPU_THERMAL_LIMIT=85
+StandardOutput=append:/var/log/jarvis/core.log
+StandardError=append:/var/log/jarvis/core-error.log
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Enable and start:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable jarvis-core
+sudo systemctl start jarvis-core
+sudo systemctl status jarvis-core
+```
+
+### Docker Container
+
+```dockerfile
+# Dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8901
+ENV JARVIS_HOME=/data
+ENV JARVIS_LOG_LEVEL=INFO
+
+VOLUME /data
+
+CMD ["python3", "jarvis.py", "serve"]
+```
+
+Build and run:
+```bash
+docker build -t jarvis-core .
+docker run -d \
+    --name jarvis-core \
+    -p 8901:8901 \
+    -v /home/turbo/jarvis/data:/data \
+    -e M1_ENDPOINT=http://host.docker.internal:1234 \
+    -e TELEGRAM_BOT_TOKEN=your_token \
+    --restart unless-stopped \
+    jarvis-core
+```
+
+### Docker Compose (with cluster)
+
+```yaml
+# docker-compose.yml
+version: "3.8"
+services:
+  jarvis-core:
+    build: .
+    ports:
+      - "8901:8901"
+    volumes:
+      - jarvis-data:/data
+    environment:
+      - JARVIS_HOME=/data
+      - M1_ENDPOINT=http://host.docker.internal:1234
+      - M3_ENDPOINT=http://192.168.1.113:1234
+      - OL1_ENDPOINT=http://host.docker.internal:11434
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "jarvis.py", "health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  jarvis-data:
+```
+
