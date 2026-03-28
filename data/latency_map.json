@@ -1,0 +1,17 @@
+{
+  "latency": {
+    "M1": 0.035,
+    "M2": 0.501,
+    "M3": null
+  },
+  "services": {
+    "M1_LMStudio": true,
+    "M2_LMStudio": true,
+    "M3_LMStudio": true,
+    "OL1_Ollama": true,
+    "BrowserOS_CDP": true,
+    "BrowserOS_MCP": true,
+    "BrowserOS_Server": true,
+    "Dashboard": true
+  }
+}
