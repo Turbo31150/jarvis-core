@@ -1,0 +1,53 @@
+{
+  "tasks": [
+    {
+      "name": "Codeur Scanner",
+      "schedule": "*/30 * * * *",
+      "command": "python3 scripts/codeur-veille.py --once",
+      "enabled": true
+    },
+    {
+      "name": "LinkedIn Engage",
+      "schedule": "0 */4 * * *",
+      "command": "python3 scripts/publish.py linkedin --file data/generated-post-latest.txt",
+      "enabled": true,
+      "confirm_before": true
+    },
+    {
+      "name": "DB Sync",
+      "schedule": "0 */2 * * *",
+      "command": "python3 scripts/db_sync.py",
+      "enabled": true
+    },
+    {
+      "name": "Content Generate",
+      "schedule": "0 8,12,18 * * *",
+      "command": "python3 -c \"from core.router.dispatcher import TaskDispatcher; from core.tasks.models import TaskRequest; r=TaskDispatcher().dispatch(TaskRequest(prompt='Ecris un post LinkedIn court sur un sujet IA tendance',task_type='fast')); open('data/generated-post-latest.txt','w').write(str(r.output))\"",
+      "enabled": true
+    },
+    {
+      "name": "Morning Startup",
+      "schedule": "0 9 * * *",
+      "command": "python3 -c \"from core.workflows import morning_startup; import json; print(json.dumps(morning_startup(), indent=2, default=str))\"",
+      "enabled": true
+    },
+    {
+      "name": "EOD Report",
+      "schedule": "0 19 * * *",
+      "command": "python3 -c \"from core.workflows import end_of_day; import json; print(json.dumps(end_of_day(), indent=2))\"",
+      "enabled": true
+    },
+    {
+      "name": "tmp Monitor",
+      "schedule": "*/15 * * * *",
+      "command": "scripts/tmp-monitor.sh",
+      "enabled": true
+    },
+    {
+      "name": "Weekly Report",
+      "schedule": "0 10 * * 1",
+      "command": "python3 scripts/telegram_alert.py digest",
+      "enabled": true
+    }
+  ]
+}
