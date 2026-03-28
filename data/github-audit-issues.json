@@ -1,0 +1,81 @@
+[
+  {
+    "repo": "BASE-SQL3",
+    "problems": [
+      "no_quickstart",
+      "no_license"
+    ],
+    "size": 1660
+  },
+  {
+    "repo": "JARVIS-CLUSTER",
+    "problems": [
+      "no_license"
+    ],
+    "size": 18413
+  },
+  {
+    "repo": "TradeOracle-Nexus-Elastic",
+    "problems": [
+      "no_jarvis_link"
+    ],
+    "size": 2689
+  },
+  {
+    "repo": "Turbo31150",
+    "problems": [
+      "no_quickstart",
+      "no_license",
+      "no_mermaid"
+    ],
+    "size": 2027
+  },
+  {
+    "repo": "ai-freelance-automation",
+    "problems": [
+      "no_quickstart",
+      "no_license",
+      "too_short(1394)",
+      "no_jarvis_link"
+    ],
+    "size": 1394
+  },
+  {
+    "repo": "aria-agents-hackathon",
+    "problems": [
+      "no_quickstart",
+      "no_license",
+      "too_short(1389)"
+    ],
+    "size": 1389
+  },
+  {
+    "repo": "awesome-local-ai",
+    "problems": [
+      "no_quickstart",
+      "no_license",
+      "too_short(1272)"
+    ],
+    "size": 1272
+  },
+  {
+    "repo": "franckdelmas.dev",
+    "issue": "NO README",
+    "fix": "create"
+  },
+  {
+    "repo": "jarvis-core",
+    "problems": [
+      "no_license",
+      "no_topics"
+    ],
+    "size": 3644
+  },
+  {
+    "repo": "jarvis-mcp-toolkit",
+    "problems": [
+      "no_license"
+    ],
+    "size": 2186
+  }
+]
