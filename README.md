@@ -10,6 +10,9 @@
 
 **26 core modules, 9 agents, 45/45 tasks — The brain of JARVIS OS**
 
+
+<img src="assets/jarvis-os-dalle.png" alt="jarvis-core" width="800">
+
 </div>
 
 ## Architecture
