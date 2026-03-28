@@ -35,7 +35,7 @@ def _query(sql: str, params: tuple = (), db: Path = _DB_PATH) -> List[tuple]:
 
 def health_snapshot(db: Path = _DB_PATH) -> Dict[str, Any]:
     """Full system state: cluster, tasks, DB size, recent errors."""
-    snap: Dict[str, Any] = {"timestamp": datetime.utcnow().isoformat()}
+    snap: Dict[str, Any] = {"timestamp": datetime.now(tz=None).isoformat()}
 
     # Cluster health (latest row)
     rows = _query(
