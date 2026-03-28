@@ -9,15 +9,18 @@ import aiohttp
 import json
 import sqlite3
 import os
-import sys
 import signal
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
 # Config
-DB_PATH = Path(os.path.expanduser("~/IA/Core/jarvis/orchestrator/jarvis_orchestrator.db"))
-CONFIG_PATH = Path(os.path.expanduser("~/.browseros/skills/jarvis-orchestrator/config.yaml"))
+DB_PATH = Path(
+    os.path.expanduser("~/IA/Core/jarvis/orchestrator/jarvis_orchestrator.db")
+)
+CONFIG_PATH = Path(
+    os.path.expanduser("~/.browseros/skills/jarvis-orchestrator/config.yaml")
+)
 LOG_PATH = Path("/tmp/jarvis-orchestrator.log")
 CDP_PORT = 9108
 LM_STUDIO = "http://127.0.0.1:1234"
@@ -27,27 +30,49 @@ CODEUR_USER_ID = "733953"
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] %(levelname)s %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_PATH),
-        logging.StreamHandler()
-    ]
+    handlers=[logging.FileHandler(LOG_PATH), logging.StreamHandler()],
 )
 log = logging.getLogger("jarvis-orch")
 
 # Keywords filter
 KEYWORDS = [
-    "ia", "intelligence artificielle", "python", "automatisation", "chatbot",
-    "agent", "api", "docker", "linux", "machine learning", "ocr", "data",
-    "scraping", "claude", "gpt", "llm", "n8n", "workflow", "voice", "whisper",
-    "fastapi", "react", "tensorflow", "pytorch", "nlp", "cuda", "gpu"
+    "ia",
+    "intelligence artificielle",
+    "python",
+    "automatisation",
+    "chatbot",
+    "agent",
+    "api",
+    "docker",
+    "linux",
+    "machine learning",
+    "ocr",
+    "data",
+    "scraping",
+    "claude",
+    "gpt",
+    "llm",
+    "n8n",
+    "workflow",
+    "voice",
+    "whisper",
+    "fastapi",
+    "react",
+    "tensorflow",
+    "pytorch",
+    "nlp",
+    "cuda",
+    "gpu",
 ]
 
 RUNNING = True
+
 
 def handle_signal(sig, frame):
     global RUNNING
     log.info(f"Signal {sig} received, shutting down...")
     RUNNING = False
+
 
 signal.signal(signal.SIGTERM, handle_signal)
 signal.signal(signal.SIGINT, handle_signal)
@@ -57,8 +82,16 @@ signal.signal(signal.SIGINT, handle_signal)
 # DATABASE
 # ══════════════════════════════════════
 
+
 def init_db():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    # Performance pragmas (WAL for concurrent reads)
+    conn.execute("PRAGMA journal_mode=WAL")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA cache_size=-64000")
+    conn.execute("PRAGMA temp_store=MEMORY")
+    conn.execute("PRAGMA mmap_size=268435456")
+    conn.execute("PRAGMA foreign_keys=ON")
     c = conn.cursor()
     c.executescript("""
         CREATE TABLE IF NOT EXISTS projects_seen (
@@ -121,6 +154,7 @@ def init_db():
 # CODEUR.COM WATCHER
 # ══════════════════════════════════════
 
+
 async def scan_codeur_projects(db):
     """Scan Codeur.com for new matching projects."""
     log.info("CODEUR: Scanning projects...")
@@ -138,20 +172,24 @@ async def scan_codeur_projects(db):
                         html = await r.text()
                         # Extract project links and titles from HTML
                         import re
+
                         projects = re.findall(
-                            r'href="(/projects/(\d+)-([^"]+))"[^>]*>([^<]+)',
-                            html
+                            r'href="(/projects/(\d+)-([^"]+))"[^>]*>([^<]+)', html
                         )
                         for href, pid, slug, title in projects:
                             title_lower = title.strip().lower()
-                            matched = [k for k in KEYWORDS if k in title_lower or k in slug]
+                            matched = [
+                                k for k in KEYWORDS if k in title_lower or k in slug
+                            ]
                             if matched:
-                                matches.append({
-                                    "codeur_id": pid,
-                                    "title": title.strip(),
-                                    "url": f"https://www.codeur.com{href}",
-                                    "matched_keywords": ",".join(matched)
-                                })
+                                matches.append(
+                                    {
+                                        "codeur_id": pid,
+                                        "title": title.strip(),
+                                        "url": f"https://www.codeur.com{href}",
+                                        "matched_keywords": ",".join(matched),
+                                    }
+                                )
                 except Exception as e:
                     log.warning(f"CODEUR: Page {page} error: {e}")
 
@@ -159,14 +197,18 @@ async def scan_codeur_projects(db):
             c = db.cursor()
             new_matches = []
             for m in matches:
-                c.execute("SELECT id FROM projects_seen WHERE codeur_id=?", (m["codeur_id"],))
+                c.execute(
+                    "SELECT id FROM projects_seen WHERE codeur_id=?", (m["codeur_id"],)
+                )
                 if not c.fetchone():
                     c.execute(
                         "INSERT INTO projects_seen (codeur_id, title, url, matched_keywords) VALUES (?,?,?,?)",
-                        (m["codeur_id"], m["title"], m["url"], m["matched_keywords"])
+                        (m["codeur_id"], m["title"], m["url"], m["matched_keywords"]),
                     )
                     new_matches.append(m)
-                    log.info(f"CODEUR: NEW MATCH — {m['title']} [{m['matched_keywords']}]")
+                    log.info(
+                        f"CODEUR: NEW MATCH — {m['title']} [{m['matched_keywords']}]"
+                    )
 
             db.commit()
 
@@ -175,9 +217,13 @@ async def scan_codeur_projects(db):
                 for m in new_matches:
                     c.execute(
                         "INSERT INTO action_queue (type, priority, status, payload, channel) VALUES (?,?,?,?,?)",
-                        ("new_project", "high", "pending",
-                         json.dumps(m, ensure_ascii=False),
-                         "telegram")
+                        (
+                            "new_project",
+                            "high",
+                            "pending",
+                            json.dumps(m, ensure_ascii=False),
+                            "telegram",
+                        ),
                     )
                 db.commit()
                 log.info(f"CODEUR: {len(new_matches)} new matches queued")
@@ -188,8 +234,16 @@ async def scan_codeur_projects(db):
         log.error(f"CODEUR: Scan error: {e}")
 
     elapsed = (datetime.now() - start).total_seconds()
-    db.execute("INSERT INTO run_log (module, started, finished, status, details) VALUES (?,?,?,?,?)",
-               ("codeur_scan", start.isoformat(), datetime.now().isoformat(), "ok", f"{len(matches)} scanned"))
+    db.execute(
+        "INSERT INTO run_log (module, started, finished, status, details) VALUES (?,?,?,?,?)",
+        (
+            "codeur_scan",
+            start.isoformat(),
+            datetime.now().isoformat(),
+            "ok",
+            f"{len(matches)} scanned",
+        ),
+    )
     db.commit()
 
 
@@ -201,7 +255,14 @@ async def check_codeur_messages(db):
             async with s.get(f"http://127.0.0.1:{CDP_PORT}/json") as r:
                 tabs = await r.json()
 
-            tab = next((t for t in tabs if "codeur" in t.get("url", "") and t.get("type") == "page"), None)
+            tab = next(
+                (
+                    t
+                    for t in tabs
+                    if "codeur" in t.get("url", "") and t.get("type") == "page"
+                ),
+                None,
+            )
             if not tab:
                 log.warning("CODEUR: No Codeur tab in BrowserOS")
                 return
@@ -212,7 +273,9 @@ async def check_codeur_messages(db):
             async def send(method, params=None):
                 nonlocal mid
                 mid += 1
-                await ws.send_json({"id": mid, "method": method, "params": params or {}})
+                await ws.send_json(
+                    {"id": mid, "method": method, "params": params or {}}
+                )
                 for _ in range(50):
                     try:
                         m = await asyncio.wait_for(ws.receive(), timeout=15)
@@ -226,22 +289,35 @@ async def check_codeur_messages(db):
 
             await send("Page.enable")
             await send("Runtime.enable")
-            await send("Page.navigate", {"url": f"https://www.codeur.com/users/{CODEUR_USER_ID}/messages"})
+            await send(
+                "Page.navigate",
+                {"url": f"https://www.codeur.com/users/{CODEUR_USER_ID}/messages"},
+            )
             await asyncio.sleep(5)
 
-            r = await send("Runtime.evaluate", {"expression": """
+            r = await send(
+                "Runtime.evaluate",
+                {
+                    "expression": """
                 (() => {
                     const unreads = document.querySelectorAll('.unread, [class*=unread], [class*=non-lu]');
                     return unreads.length;
                 })()
-            """})
+            """
+                },
+            )
             unread = r.get("result", {}).get("value", 0)
             if unread and unread > 0:
                 log.info(f"CODEUR: {unread} unread messages!")
                 db.execute(
                     "INSERT INTO action_queue (type, priority, status, payload, channel) VALUES (?,?,?,?,?)",
-                    ("unread_messages", "urgent", "pending",
-                     json.dumps({"count": unread}), "telegram")
+                    (
+                        "unread_messages",
+                        "urgent",
+                        "pending",
+                        json.dumps({"count": unread}),
+                        "telegram",
+                    ),
                 )
                 db.commit()
 
@@ -255,6 +331,7 @@ async def check_codeur_messages(db):
 # LINKEDIN WATCHER
 # ══════════════════════════════════════
 
+
 async def check_linkedin(db):
     """Check LinkedIn notifications via CDP."""
     log.info("LINKEDIN: Checking notifications...")
@@ -263,7 +340,14 @@ async def check_linkedin(db):
             async with s.get(f"http://127.0.0.1:{CDP_PORT}/json") as r:
                 tabs = await r.json()
 
-            tab = next((t for t in tabs if "linkedin" in t.get("url", "") and t.get("type") == "page"), None)
+            tab = next(
+                (
+                    t
+                    for t in tabs
+                    if "linkedin" in t.get("url", "") and t.get("type") == "page"
+                ),
+                None,
+            )
             if not tab:
                 log.info("LINKEDIN: No LinkedIn tab — skipping")
                 return
@@ -274,7 +358,9 @@ async def check_linkedin(db):
             async def send(method, params=None):
                 nonlocal mid
                 mid += 1
-                await ws.send_json({"id": mid, "method": method, "params": params or {}})
+                await ws.send_json(
+                    {"id": mid, "method": method, "params": params or {}}
+                )
                 for _ in range(50):
                     try:
                         m = await asyncio.wait_for(ws.receive(), timeout=15)
@@ -288,24 +374,34 @@ async def check_linkedin(db):
 
             await send("Page.enable")
             await send("Runtime.enable")
-            await send("Page.navigate", {"url": "https://www.linkedin.com/notifications/"})
+            await send(
+                "Page.navigate", {"url": "https://www.linkedin.com/notifications/"}
+            )
             await asyncio.sleep(5)
 
-            r = await send("Runtime.evaluate", {"expression": """
+            r = await send(
+                "Runtime.evaluate",
+                {
+                    "expression": """
                 (() => {
                     const badge = document.querySelector('[class*=notification-badge], .count-badge');
                     return badge ? badge.textContent.trim() : '0';
                 })()
-            """})
+            """
+                },
+            )
             count = r.get("result", {}).get("value", "0")
             log.info(f"LINKEDIN: {count} notifications")
 
             # Save daily stats
             today = datetime.now().strftime("%Y-%m-%d")
-            db.execute("""
+            db.execute(
+                """
                 INSERT OR REPLACE INTO linkedin_stats (date, comments_received)
                 VALUES (?, COALESCE((SELECT comments_received FROM linkedin_stats WHERE date=?), 0))
-            """, (today, today))
+            """,
+                (today, today),
+            )
             db.commit()
 
             await ws.close()
@@ -318,6 +414,7 @@ async def check_linkedin(db):
 # CONTENT GENERATOR
 # ══════════════════════════════════════
 
+
 async def check_content_calendar(db):
     """Check if any content is scheduled for now."""
     log.info("CONTENT: Checking calendar...")
@@ -325,7 +422,7 @@ async def check_content_calendar(db):
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     c.execute(
         "SELECT id, platform, title, body FROM content_calendar WHERE status='scheduled' AND scheduled_at <= ?",
-        (now,)
+        (now,),
     )
     rows = c.fetchall()
     for row in rows:
@@ -333,9 +430,16 @@ async def check_content_calendar(db):
         log.info(f"CONTENT: Ready to publish — {platform}: {title}")
         db.execute(
             "INSERT INTO action_queue (type, priority, status, payload, channel) VALUES (?,?,?,?,?)",
-            ("publish_content", "high", "pending",
-             json.dumps({"id": cid, "platform": platform, "title": title}, ensure_ascii=False),
-             "telegram")
+            (
+                "publish_content",
+                "high",
+                "pending",
+                json.dumps(
+                    {"id": cid, "platform": platform, "title": title},
+                    ensure_ascii=False,
+                ),
+                "telegram",
+            ),
         )
     db.commit()
 
@@ -343,6 +447,7 @@ async def check_content_calendar(db):
 # ══════════════════════════════════════
 # MAIN LOOP
 # ══════════════════════════════════════
+
 
 async def main():
     log.info("=" * 50)
@@ -352,10 +457,10 @@ async def main():
     db = init_db()
     log.info(f"Database: {DB_PATH}")
 
-    codeur_interval = 300     # 5 min
-    linkedin_interval = 900   # 15 min
-    messages_interval = 600   # 10 min
-    content_interval = 1800   # 30 min
+    codeur_interval = 300  # 5 min
+    linkedin_interval = 900  # 15 min
+    messages_interval = 600  # 10 min
+    content_interval = 1800  # 30 min
 
     last_codeur = 0
     last_linkedin = 0

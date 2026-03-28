@@ -32,8 +32,16 @@ class MemoryFacade:
         if db_name not in self._connections:
             path = str(self._db_map[db_name])
             uri = f"file:{path}?mode=ro" if self._read_only else path
-            conn = sqlite3.connect(uri, uri=self._read_only, check_same_thread=False)
+            # Optimized connection with timeout for concurrent access
+            conn = sqlite3.connect(uri, uri=self._read_only, check_same_thread=False, timeout=30.0)
             conn.row_factory = sqlite3.Row
+            
+            # High-performance tuning (WAL mode + Normal sync)
+            if not self._read_only:
+                conn.execute("PRAGMA journal_mode = WAL")
+                conn.execute("PRAGMA synchronous = NORMAL")
+                conn.execute("PRAGMA cache_size = -2000")  # 2MB cache
+                
             self._connections[db_name] = conn
         return self._connections[db_name]
 
