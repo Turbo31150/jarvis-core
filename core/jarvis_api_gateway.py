@@ -183,6 +183,19 @@ def intent():
     from jarvis_intent_classifier import classify
     return jsonify(classify(text))
 
+
+@app.route("/workflow/<name>", methods=["POST"])
+def run_workflow(name):
+    from jarvis_workflow_engine import run_workflow as _run, WORKFLOWS
+    if name not in WORKFLOWS:
+        return jsonify({"error": f"unknown workflow: {name}", "available": list(WORKFLOWS.keys())}), 404
+    return jsonify(_run(name))
+
+@app.route("/workflow")
+def list_workflows():
+    from jarvis_workflow_engine import WORKFLOWS
+    return jsonify({k: {"steps": len(v["steps"]), "parallel": v["parallel"]} for k, v in WORKFLOWS.items()})
+
 if __name__ == "__main__":
     print("[API Gateway] Starting on :8767")
     app.run(host="0.0.0.0", port=8767, debug=False, threaded=True)
