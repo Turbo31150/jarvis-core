@@ -16,6 +16,18 @@ ROUTING_TABLE = {
     "classify": ("http://127.0.0.1:11434", "gemma3:4b", 15),
     "fast": ("http://127.0.0.1:11434", "gemma3:4b", 10),
     "default": ("http://192.168.1.26:1234", "qwen/qwen3.5-35b-a3b", 45),
+    # M32 (192.168.1.113) — nouveau nœud avec deepseek-r1 + mistral
+    "instruct": ("http://192.168.1.113:1234", "mistral-7b-instruct-v0.3", 30),
+    "reasoning_m32": (
+        "http://192.168.1.113:1234",
+        "deepseek/deepseek-r1-0528-qwen3-8b",
+        60,
+    ),
+    "embedding": (
+        "http://192.168.1.113:1234",
+        "text-embedding-nomic-embed-text-v1.5",
+        15,
+    ),
 }
 
 
