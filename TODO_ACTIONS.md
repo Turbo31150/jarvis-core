@@ -145,7 +145,7 @@ cd ~/IA/Core/jarvis/core && python3 jarvis_quality_hub.py
 
 ---
 
-## BLOC 6 — RÉSULTATS BENCHMARK CLUSTER [⏳ EN COURS — agent background]
+## BLOC 6 — RÉSULTATS BENCHMARK CLUSTER [✅ DONE]
 **But :** Récupérer les résultats du benchmark latence M1/M2/M32 lancé plus tôt.
 
 ```bash
@@ -236,7 +236,7 @@ Dans `~/.claude/settings.json`, ajouter :
 | 3 | Cron guard hebdo | 🔴 TODO | MEDIUM |
 | 4 | quality_hub → proxy | 🔴 TODO | HIGH |
 | 5 | Enrichissement modules | ⏳ AUTO | LOW |
-| 6 | Benchmark résultats | ⏳ BACKGROUND | MEDIUM |
+| 6 | Benchmark résultats | ✅ DONE | ~~MEDIUM~~ |
 | 7 | Commit final journée | 🔴 TODO | HIGH |
 | 8 | Hook UserPromptSubmit | 🔴 TODO | MEDIUM |
 
