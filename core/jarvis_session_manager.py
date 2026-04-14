@@ -1,59 +1,98 @@
 #!/usr/bin/env python3
-"""JARVIS Session Manager — Track Claude sessions, costs, achievements"""
-import redis, json, time, sqlite3
+"""JARVIS Session Manager — Track active sessions, contexts, conversation history"""
+
+import redis
+import json
+import uuid
+import time
 from datetime import datetime
 
 r = redis.Redis(decode_responses=True)
-DB = "/home/turbo/jarvis/core/jarvis_master_index.db"
+PREFIX = "jarvis:session"
+SESSION_TTL = 3600  # 1 hour
 
-def start_session(session_id: str = None) -> str:
-    if not session_id:
-        session_id = f"session_{int(time.time())}"
-    data = {"id": session_id, "start": datetime.now().isoformat()[:19],
-            "actions": 0, "scripts_created": 0, "cost_usd": 0.0}
-    r.setex(f"jarvis:session:{session_id}", 86400, json.dumps(data))
-    r.set("jarvis:session:current", session_id)
-    return session_id
 
-def record_action(action_type: str, detail: str = ""):
-    sid = r.get("jarvis:session:current")
-    if not sid: return
-    key = f"jarvis:session:{sid}"
-    raw = r.get(key)
-    if not raw: return
-    data = json.loads(raw)
-    data["actions"] += 1
-    if action_type == "script_created":
-        data["scripts_created"] += 1
-    r.setex(key, 86400, json.dumps(data))
-    r.lpush(f"jarvis:session:{sid}:log", json.dumps({"type": action_type, "detail": detail,
-             "ts": datetime.now().isoformat()[:19]}))
-    r.ltrim(f"jarvis:session:{sid}:log", 0, 199)
+def create_session(user: str = "turbo", metadata: dict = None) -> str:
+    sid = f"sess:{uuid.uuid4().hex[:10]}"
+    session = {
+        "id": sid,
+        "user": user,
+        "created_at": datetime.now().isoformat()[:19],
+        "last_active": time.time(),
+        "metadata": json.dumps(metadata or {}),
+        "message_count": 0,
+    }
+    r.hset(f"{PREFIX}:{sid}", mapping=session)
+    r.expire(f"{PREFIX}:{sid}", SESSION_TTL)
+    r.sadd(f"{PREFIX}:active", sid)
+    return sid
 
-def get_current() -> dict:
-    sid = r.get("jarvis:session:current")
-    if not sid: return {}
-    raw = r.get(f"jarvis:session:{sid}")
-    return json.loads(raw) if raw else {}
 
-def session_summary() -> dict:
-    data = get_current()
-    if not data: return {"error": "no active session"}
-    
-    # Count scripts this session
-    db = sqlite3.connect(DB)
-    today = datetime.now().strftime("%Y-%m-%d")
-    today_scripts = db.execute(
-        "SELECT COUNT(*) FROM scripts WHERE indexed_at LIKE ?", (today + "%",)
-    ).fetchone()[0]
-    total = db.execute("SELECT COUNT(*) FROM scripts").fetchone()[0]
-    db.close()
-    
-    elapsed = int(time.time()) - int(data["start"][:10].replace("-",""))
-    return {**data, "scripts_today": today_scripts, "total_scripts": total}
+def get_session(sid: str) -> dict:
+    data = r.hgetall(f"{PREFIX}:{sid}")
+    if not data:
+        return {}
+    data["metadata"] = json.loads(data.get("metadata", "{}"))
+    return data
+
+
+def add_message(sid: str, role: str, content: str, tokens: int = 0) -> bool:
+    if not r.exists(f"{PREFIX}:{sid}"):
+        return False
+    msg = json.dumps({
+        "role": role,
+        "content": content[:2000],
+        "tokens": tokens,
+        "ts": datetime.now().isoformat()[:19],
+    })
+    r.rpush(f"{PREFIX}:{sid}:messages", msg)
+    r.expire(f"{PREFIX}:{sid}:messages", SESSION_TTL)
+    r.hincrby(f"{PREFIX}:{sid}", "message_count", 1)
+    r.hset(f"{PREFIX}:{sid}", "last_active", time.time())
+    r.expire(f"{PREFIX}:{sid}", SESSION_TTL)
+    return True
+
+
+def get_history(sid: str, last_n: int = 20) -> list:
+    raw = r.lrange(f"{PREFIX}:{sid}:messages", -last_n, -1)
+    return [json.loads(m) for m in raw]
+
+
+def close_session(sid: str):
+    r.srem(f"{PREFIX}:active", sid)
+    r.expire(f"{PREFIX}:{sid}", 300)  # keep 5 min for audit
+    r.expire(f"{PREFIX}:{sid}:messages", 300)
+
+
+def active_sessions() -> list:
+    sids = r.smembers(f"{PREFIX}:active")
+    result = []
+    for sid in sids:
+        data = r.hgetall(f"{PREFIX}:{sid}")
+        if data:
+            result.append({
+                "id": sid,
+                "user": data.get("user"),
+                "messages": int(data.get("message_count", 0)),
+                "created": data.get("created_at"),
+            })
+    return result
+
+
+def stats() -> dict:
+    active = r.scard(f"{PREFIX}:active")
+    return {"active_sessions": active, "sessions": active_sessions()}
+
 
 if __name__ == "__main__":
-    sid = start_session("session_20260414")
-    record_action("startup", "session resumed")
-    s = session_summary()
-    print(f"Session: {s.get('id')} | Scripts today: {s.get('scripts_today')} | Total: {s.get('total_scripts')}")
+    sid = create_session("turbo", {"source": "test"})
+    print(f"Created: {sid}")
+    add_message(sid, "user", "Bonjour JARVIS")
+    add_message(sid, "assistant", "Bonjour ! Comment puis-je vous aider ?")
+    hist = get_history(sid)
+    print(f"History ({len(hist)} messages):")
+    for m in hist:
+        print(f"  [{m['role']}] {m['content'][:60]}")
+    print(f"Stats: {stats()}")
+    close_session(sid)
+    print(f"Closed. Active: {stats()['active_sessions']}")
