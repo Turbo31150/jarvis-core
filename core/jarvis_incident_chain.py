@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """JARVIS Incident Chain — incident → diagnostic → remédiation → rapport Telegram"""
 
-import redis
-import json
+import re
+import shlex
 import subprocess
+import json
+import redis
 from datetime import datetime
 from jarvis_event_bus import subscribe, publish
 from jarvis_telegram_alert import send_telegram as send_alert
@@ -54,20 +56,19 @@ def run_chain(incident_type: str, context: dict = {}):
             continue
 
         if cmd:
-            import re
-            import shlex
-
-            # SEC-002: valider les valeurs injectées via context avant shell execution
-            for k, v in context.items():
-                if not re.fullmatch(r"[\w.\-:/]+", str(v)):
-                    results.append(
-                        {
-                            "step": step_name,
-                            "status": "blocked",
-                            "output": f"context[{k!r}] rejected: unsafe chars",
-                        }
-                    )
-                    continue
+            # SEC-002: valider TOUTES les valeurs de context avant d'interpoler
+            blocked = [
+                k for k, v in context.items() if not re.fullmatch(r"[\w.\-:/]+", str(v))
+            ]
+            if blocked:
+                results.append(
+                    {
+                        "step": step_name,
+                        "status": "blocked",
+                        "output": f"unsafe context keys: {blocked}",
+                    }
+                )
+                continue  # saute ce step, pas juste la boucle inner
             cmd_fmt = cmd.format(**context)
             try:
                 out = subprocess.run(

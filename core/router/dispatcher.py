@@ -1,6 +1,7 @@
 """JARVIS Task Dispatcher — Routes tasks to M1/M2/M3/BrowserOS/local."""
 
 import logging
+import shlex
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -129,8 +130,6 @@ class TaskDispatcher:
         )
 
     def _run_local(self, task: TaskRequest, start: float) -> TaskResult:
-        import shlex
-
         # SEC-001: shell=True avec task.prompt était une RCE — tokeniser sans shell
         cmd_parts = shlex.split(task.prompt)
         proc = subprocess.run(

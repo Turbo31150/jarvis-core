@@ -92,8 +92,6 @@ def run_task(task_id: int):
     started = datetime.now().isoformat()
     try:
         # SEC-003: commande issue DB — shell=True supprimé pour éviter RCE
-        import shlex
-
         result = subprocess.run(
             shlex.split(cmd), capture_output=True, text=True, timeout=120
         )

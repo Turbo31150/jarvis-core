@@ -21,8 +21,6 @@ _PUBLIC_ENDPOINTS = {"health", "static"}
 def _check_token():
     if _API_TOKEN and request.endpoint not in _PUBLIC_ENDPOINTS:
         if request.headers.get("X-Jarvis-Token") != _API_TOKEN:
-            from flask import abort
-
             abort(401)
 
 
