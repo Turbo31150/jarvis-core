@@ -1,58 +1,110 @@
 #!/usr/bin/env python3
-"""JARVIS Dependency Graph — Map inter-module dependencies + detect cycles"""
-import ast, os, redis, json
-from pathlib import Path
+"""JARVIS Dependency Graph — Map module dependencies and detect circular refs"""
 
-r = redis.Redis(decode_responses=True)
-CORE_DIR = Path("/home/turbo/jarvis/core")
+import os
+import re
+import json
+from pathlib import Path
+from datetime import datetime
+
+CORE_DIR = Path(__file__).parent
+
 
 def extract_imports(filepath: str) -> list:
+    """Extract jarvis_* imports from a Python file"""
+    imports = []
     try:
         with open(filepath) as f:
-            tree = ast.parse(f.read())
-        imports = []
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                imports += [alias.name for alias in node.names]
-            elif isinstance(node, ast.ImportFrom):
-                if node.module:
-                    imports.append(node.module)
-        return [i for i in imports if i.startswith("jarvis")]
-    except:
-        return []
+            content = f.read()
+        for pattern in [
+            r'from (jarvis_\w+) import',
+            r'import (jarvis_\w+)',
+            r'importlib\.import_module\("(jarvis_\w+)"\)',
+        ]:
+            imports.extend(re.findall(pattern, content))
+    except Exception:
+        pass
+    return list(set(imports))
+
 
 def build_graph() -> dict:
+    """Build full dependency graph for all jarvis_*.py modules"""
     graph = {}
-    for pyfile in CORE_DIR.glob("jarvis_*.py"):
-        name = pyfile.stem
-        deps = extract_imports(str(pyfile))
-        if deps:
-            graph[name] = deps
+    for filepath in sorted(CORE_DIR.glob("jarvis_*.py")):
+        module = filepath.stem
+        deps = extract_imports(str(filepath))
+        graph[module] = deps
     return graph
 
+
 def find_cycles(graph: dict) -> list:
-    visited, rec_stack, cycles = set(), set(), []
+    """DFS cycle detection"""
+    visited = set()
+    rec_stack = set()
+    cycles = []
+
     def dfs(node, path):
-        visited.add(node); rec_stack.add(node)
+        visited.add(node)
+        rec_stack.add(node)
         for dep in graph.get(node, []):
+            if dep not in graph:
+                continue
             if dep not in visited:
                 dfs(dep, path + [dep])
             elif dep in rec_stack:
-                cycles.append(path + [dep])
+                cycle_start = path.index(dep) if dep in path else 0
+                cycle = path[cycle_start:] + [dep]
+                if cycle not in cycles:
+                    cycles.append(cycle)
+        rec_stack.discard(node)
+
     for node in graph:
         if node not in visited:
             dfs(node, [node])
     return cycles
 
-def run():
+
+def most_depended_on(graph: dict) -> list:
+    """Modules depended on by the most others"""
+    dep_count = {}
+    for deps in graph.values():
+        for d in deps:
+            dep_count[d] = dep_count.get(d, 0) + 1
+    return sorted(dep_count.items(), key=lambda x: -x[1])[:10]
+
+
+def analyze() -> dict:
     graph = build_graph()
     cycles = find_cycles(graph)
-    result = {"modules": len(graph), "deps": graph, "cycles": cycles}
-    r.setex("jarvis:dep_graph", 3600, json.dumps(result))
+    top_deps = most_depended_on(graph)
+    # Modules with no dependencies (leaves)
+    leaves = [m for m, deps in graph.items() if not deps]
+    # Modules with most dependencies
+    most_deps = sorted(graph.items(), key=lambda x: -len(x[1]))[:5]
+
+    result = {
+        "ts": datetime.now().isoformat()[:19],
+        "total_modules": len(graph),
+        "total_edges": sum(len(deps) for deps in graph.values()),
+        "cycles": cycles,
+        "cycle_count": len(cycles),
+        "most_depended_on": top_deps,
+        "most_dependencies": [(m, len(d)) for m, d in most_deps],
+        "leaf_modules": len(leaves),
+    }
     return result
 
+
 if __name__ == "__main__":
-    res = run()
-    print(f"Modules: {res['modules']} | Cycles: {len(res['cycles'])}")
-    for mod, deps in res["deps"].items():
-        print(f"  {mod} → {deps}")
+    res = analyze()
+    print(f"Modules: {res['total_modules']}, Edges: {res['total_edges']}")
+    print(f"Cycles: {res['cycle_count']}")
+    if res["cycles"]:
+        for c in res["cycles"]:
+            print(f"  ⚠️  {' → '.join(c)}")
+    print("Most depended on:")
+    for m, cnt in res["most_depended_on"][:5]:
+        print(f"  {m}: {cnt} dependents")
+    print("Most dependencies:")
+    for m, cnt in res["most_dependencies"]:
+        print(f"  {m}: {cnt} deps")
