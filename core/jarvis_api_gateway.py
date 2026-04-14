@@ -231,6 +231,42 @@ def self_test():
     return jsonify(run())
 
 
+@app.route("/health/full")
+def health_full():
+    from jarvis_health_aggregator import aggregate
+
+    return jsonify(aggregate())
+
+
+@app.route("/config")
+def config_all():
+    from jarvis_config_manager import get_all
+
+    return jsonify(get_all())
+
+
+@app.route("/config/<path:key>", methods=["GET", "POST"])
+def config_key(key):
+    if request.method == "POST":
+        data = request.json or {}
+        from jarvis_config_manager import set_config
+
+        ok = set_config(key.replace("/", "."), data.get("value"))
+        return jsonify({"ok": ok})
+    from jarvis_config_manager import get
+
+    return jsonify({"key": key, "value": get(key.replace("/", "."))})
+
+
+@app.route("/bench/run")
+def bench_run():
+    backend = request.args.get("backend")
+    bench = request.args.get("bench", "math_simple")
+    from jarvis_model_benchmark import run_benchmark
+
+    return jsonify(run_benchmark(backend, bench))
+
+
 @app.route("/scheduler/tick")
 def scheduler_tick():
     from jarvis_adaptive_scheduler import tick
@@ -288,6 +324,39 @@ def mesh_best_llm():
     from jarvis_service_mesh import get_best_llm
 
     return jsonify(get_best_llm(task))
+
+
+@app.route("/runbook")
+def runbook_list():
+    from jarvis_runbook import list_runbooks
+
+    return jsonify(list_runbooks())
+
+
+@app.route("/runbook/<name>", methods=["POST"])
+def runbook_run(name):
+    dry = request.args.get("dry", "false").lower() == "true"
+    from jarvis_runbook import run_runbook
+
+    return jsonify(run_runbook(name, dry_run=dry))
+
+
+@app.route("/notify", methods=["POST"])
+def notify():
+    data = request.json or {}
+    msg = data.get("message", "")
+    if not msg:
+        return jsonify({"error": "message required"}), 400
+    from jarvis_notification_router import send
+
+    return jsonify(send(msg, data.get("severity", "info"), data.get("source", "api")))
+
+
+@app.route("/notif/stats")
+def notif_stats():
+    from jarvis_notification_router import stats
+
+    return jsonify(stats())
 
 
 if __name__ == "__main__":
