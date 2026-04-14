@@ -178,7 +178,7 @@ Invoke these skills automatically when their context applies:
 | Node | Role | Endpoint |
 |------|------|----------|
 | M1 LMStudio | gemma-3-4b (0.4s rapide) + qwen3.5-9b + deepseek-r1 | `http://127.0.0.1:1234` |
-| M3 (remote) | deepseek-r1-qwen3-8b — **champion fiabilite 100%** | `http://192.168.1.113:1234` |
+| M32 (remote) | mistral-7b-instruct + deepseek-r1-qwen3-8b + gpt-oss-20b + phi-3.1-mini + nomic-embed | `http://192.168.1.113:1234` |
 | OL1 | Ollama: qwen2.5:1.5b, deepseek-r1:7b | `http://127.0.0.1:11434` |
 | M2 (remote) | deepseek-coder — instable | `http://192.168.1.26:1234` |
 
