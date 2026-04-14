@@ -1,57 +1,115 @@
 #!/usr/bin/env python3
-"""JARVIS Request Logger — Log all LLM requests for audit trail and replay"""
-import redis, sqlite3, json, hashlib
+"""JARVIS Request Logger — Structured logging of all API requests"""
+
+import redis
+import json
+import time
+import uuid
 from datetime import datetime
 
 r = redis.Redis(decode_responses=True)
-DB = "/home/turbo/jarvis/core/jarvis_master_index.db"
+PREFIX = "jarvis:reqlog"
+MAX_LOGS = 10000
 
-def _ensure_table():
-    db = sqlite3.connect(DB)
-    db.execute("""CREATE TABLE IF NOT EXISTS llm_request_log (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        request_id TEXT,
-        task_type TEXT,
-        backend TEXT,
-        model TEXT,
-        prompt_hash TEXT,
-        response_len INTEGER,
-        latency_ms INTEGER,
-        ok INTEGER,
-        ts TEXT
-    )""")
-    db.execute("CREATE INDEX IF NOT EXISTS idx_rlog_ts ON llm_request_log(ts)")
-    db.commit()
-    return db
 
-def log_request(task_type: str, backend: str, model: str, prompt: str,
-                response: str, latency_ms: int, ok: bool):
-    rid = hashlib.md5(f"{prompt}{datetime.now().isoformat()}".encode()).hexdigest()[:10]
-    prompt_hash = hashlib.sha256(prompt.encode()).hexdigest()[:12]
-    
-    db = _ensure_table()
-    db.execute(
-        "INSERT INTO llm_request_log (request_id,task_type,backend,model,prompt_hash,response_len,latency_ms,ok,ts) VALUES (?,?,?,?,?,?,?,?,?)",
-        (rid, task_type, backend, model, prompt_hash, len(response), latency_ms, int(ok), datetime.now().isoformat()[:19])
-    )
-    db.commit()
-    db.close()
+def log_request(
+    method: str,
+    path: str,
+    status_code: int,
+    latency_ms: int,
+    user_id: str = "anonymous",
+    body_size: int = 0,
+    ip: str = "127.0.0.1",
+    request_id: str = None,
+) -> str:
+    rid = request_id or uuid.uuid4().hex[:8]
+    entry = {
+        "id": rid,
+        "ts": datetime.now().isoformat()[:23],
+        "method": method,
+        "path": path,
+        "status": status_code,
+        "ms": latency_ms,
+        "user": user_id,
+        "size": body_size,
+        "ip": ip,
+    }
+    r.lpush(f"{PREFIX}:all", json.dumps(entry))
+    r.ltrim(f"{PREFIX}:all", 0, MAX_LOGS - 1)
+
+    # Stats
+    today = datetime.now().strftime("%Y-%m-%d")
+    r.hincrby(f"{PREFIX}:stats:{today}", "total", 1)
+    r.hincrby(f"{PREFIX}:stats:{today}", f"status_{status_code // 100}xx", 1)
+    r.expire(f"{PREFIX}:stats:{today}", 86400 * 30)
+
+    # Slow request alert
+    if latency_ms > 5000:
+        r.lpush(f"{PREFIX}:slow", json.dumps(entry))
+        r.ltrim(f"{PREFIX}:slow", 0, 99)
+
+    # Error log
+    if status_code >= 400:
+        r.lpush(f"{PREFIX}:errors", json.dumps(entry))
+        r.ltrim(f"{PREFIX}:errors", 0, 499)
+
+    # Path stats
+    r.hincrby(f"{PREFIX}:paths:{path}", "count", 1)
+    r.hincrby(f"{PREFIX}:paths:{path}", "total_ms", latency_ms)
     return rid
 
-def stats(last_n: int = 100) -> dict:
-    db = _ensure_table()
-    total = db.execute("SELECT COUNT(*) FROM llm_request_log").fetchone()[0]
-    ok_count = db.execute("SELECT COUNT(*) FROM llm_request_log WHERE ok=1").fetchone()[0]
-    avg_lat = db.execute("SELECT AVG(latency_ms) FROM llm_request_log WHERE ok=1 AND latency_ms > 0").fetchone()[0]
-    by_backend = dict(db.execute(
-        "SELECT backend, COUNT(*) FROM llm_request_log GROUP BY backend"
-    ).fetchall())
-    db.close()
-    return {"total": total, "ok": ok_count, "success_rate": round(ok_count/max(total,1)*100,1),
-            "avg_latency_ms": round(avg_lat or 0), "by_backend": by_backend}
+
+def recent(n: int = 20) -> list:
+    raw = r.lrange(f"{PREFIX}:all", 0, n - 1)
+    return [json.loads(e) for e in raw]
+
+
+def slow_requests(n: int = 10) -> list:
+    raw = r.lrange(f"{PREFIX}:slow", 0, n - 1)
+    return [json.loads(e) for e in raw]
+
+
+def error_requests(n: int = 20) -> list:
+    raw = r.lrange(f"{PREFIX}:errors", 0, n - 1)
+    return [json.loads(e) for e in raw]
+
+
+def top_paths(n: int = 10) -> list:
+    result = []
+    for key in r.scan_iter(f"{PREFIX}:paths:*"):
+        path = key.replace(f"{PREFIX}:paths:", "")
+        data = r.hgetall(key)
+        count = int(data.get("count", 0))
+        avg_ms = int(data.get("total_ms", 0)) // max(count, 1)
+        result.append({"path": path, "count": count, "avg_ms": avg_ms})
+    return sorted(result, key=lambda x: -x["count"])[:n]
+
+
+def stats() -> dict:
+    today = datetime.now().strftime("%Y-%m-%d")
+    data = r.hgetall(f"{PREFIX}:stats:{today}")
+    total = int(data.get("total", 0))
+    errors = int(data.get("status_4xx", 0)) + int(data.get("status_5xx", 0))
+    return {
+        "today": total,
+        "errors": errors,
+        "error_rate_pct": round(errors / max(total, 1) * 100, 2),
+        "status": {k: int(v) for k, v in data.items()},
+        "top_paths": top_paths(5),
+    }
+
 
 if __name__ == "__main__":
-    # Add some test entries
-    log_request("fast", "ol1", "gemma3:4b", "1+1=", "2", 693, True)
-    log_request("code", "m2", "qwen3.5-35b", "Fix this bug", "", -1, False)
-    print("Stats:", stats())
+    # Simulate requests
+    for path, code, ms in [
+        ("/health", 200, 1), ("/score", 200, 2), ("/llm/ask", 200, 850),
+        ("/health", 200, 1), ("/sla", 200, 3), ("/health", 500, 15),
+        ("/health", 200, 1), ("/mesh", 200, 5), ("/unknown", 404, 2),
+    ]:
+        log_request("GET", path, code, ms)
+
+    s = stats()
+    print(f"Today: {s['today']} requests, {s['error_rate_pct']}% errors")
+    print("Top paths:")
+    for p in s["top_paths"]:
+        print(f"  {p['path']}: {p['count']} reqs, avg {p['avg_ms']}ms")
