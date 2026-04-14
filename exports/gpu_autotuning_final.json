@@ -1,0 +1,33 @@
+{
+  "optimal_pl_gpu4": 170,
+  "optimal_pl_gpu0": 125,
+  "perf_score": 163.264,
+  "baseline_tps": 26.3,
+  "optimized_tps": 27.2,
+  "improvement_pct": -0.0,
+  "baseline_success_pct": 42.0,
+  "optimized_success_pct": 100.0,
+  "pcie_analysis": {
+    "gpu4_slot": "0000:2b:00.0",
+    "gpu4_speed": "PCIe Gen4 x16",
+    "gpu4_status": "OPTIMAL",
+    "gpu0_slot": "0000:04:00.0",
+    "gpu0_speed": "PCIe Gen3 x4",
+    "gpu0_status": "BOTTLENECK \u2014 x4 instead of x16",
+    "gpu1_2_3_speed": "PCIe Gen2 x1",
+    "gpu1_2_3_status": "SEVERELY_LIMITED",
+    "p2p": "Not supported (no NVLink)",
+    "numa": "Single NUMA node, all GPUs node 0",
+    "topology_gpu4_to_others": "PHB \u2014 traverses PCIe Host Bridge (CPU)"
+  },
+  "recommendations": [
+    "GPU4 (RTX 3080) est sur PCIe Gen4 x16 \u2014 configuration optimale pour LM Studio",
+    "Power limit optimal: 170W (100% success_rate, 27.2 tok/s, score=163)",
+    "PL 200W donne +34% tps (38 tok/s) mais seulement 73% succ\u00e8s LM Studio \u2014 instable",
+    "PL 160W donne stabilit\u00e9 correcte (77%) mais -24% tps \u2014 sous-optimal",
+    "Concurrence max recommand\u00e9e: 3 requ\u00eates simultan\u00e9es (5 causait 58% \u00e9checs)",
+    "GPU0-3 sur PCIe x1/x4 \u2014 P2P inter-GPU non support\u00e9, pas de goulot pour workloads LM mono-GPU",
+    "Root cause 42% \u00e9checs phase1: LM Studio queue overflow avec 5 concurrent requests",
+    "RAM syst\u00e8me libre: 2.6GB/48GB \u2014 pressure m\u00e9moire d\u00e9tect\u00e9e, surveiller OOM"
+  ]
+}

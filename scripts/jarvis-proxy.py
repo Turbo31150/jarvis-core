@@ -6,6 +6,7 @@ Compatible OpenAI API (/v1/chat/completions).
 """
 
 import json
+import logging
 import subprocess
 import sys
 import threading
@@ -14,14 +15,21 @@ import urllib.error
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+logger = logging.getLogger(__name__)
+
 # ── Quality Hub (optionnel — ne bloque pas si absent) ───────────────────────
 sys.path.insert(0, "/home/turbo/IA/Core/jarvis/core")
 try:
     from jarvis_quality_hub import build_jarvis_quality_hub
 
     _hub = build_jarvis_quality_hub()
-except Exception:
+    logger.info("Quality Hub active")
+except ImportError:
     _hub = None
+    logger.info("Quality Hub not installed — moderation disabled")
+except Exception as e:
+    _hub = None
+    logger.error("Quality Hub failed to initialize: %s — moderation DISABLED", e)
 
 LM_GUARD = "/home/turbo/IA/Core/jarvis/scripts/lm_guard.py"
 
@@ -33,13 +41,18 @@ def _guard_check():
             ["python3", LM_GUARD, "check"], capture_output=True, text=True, timeout=5
         )
         if r.returncode == 2:
+            logger.warning("lm_guard: critical VRAM state — launching enforce")
             subprocess.Popen(
                 ["python3", LM_GUARD, "enforce"],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
-    except Exception:
-        pass
+    except FileNotFoundError:
+        logger.error("lm_guard not found at %s — VRAM guard DISABLED", LM_GUARD)
+    except subprocess.TimeoutExpired:
+        logger.warning("lm_guard check timed out")
+    except Exception as e:
+        logger.error("lm_guard check failed: %s", e)
 
 
 BACKENDS = [
@@ -164,17 +177,25 @@ class Handler(BaseHTTPRequestHandler):
             m.get("content", "") for m in messages if m.get("role") == "user"
         )
         if _hub and prompt_text:
-            guard = _hub.analyze_input(prompt_text)
-            if guard.get("action") == "BLOCK":
-                resp = json.dumps(
-                    {"error": "blocked", "reason": guard.get("reason", "quality_hub")}
-                ).encode()
-                self.send_response(400)
-                self.send_header("Content-Type", "application/json")
-                self.send_header("Content-Length", len(resp))
-                self.end_headers()
-                self.wfile.write(resp)
-                return
+            try:
+                guard = _hub.analyze_input(prompt_text)
+                if isinstance(guard, dict) and guard.get("action") == "BLOCK":
+                    resp = json.dumps(
+                        {
+                            "error": "blocked",
+                            "reason": guard.get("reason", "quality_hub"),
+                        }
+                    ).encode()
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", len(resp))
+                    self.end_headers()
+                    self.wfile.write(resp)
+                    return
+            except Exception as e:
+                logger.error(
+                    "Quality Hub analyze_input failed: %s — request allowed through", e
+                )
 
         t0 = time.time()
         r = race(messages, max_tokens, temperature)

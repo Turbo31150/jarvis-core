@@ -11,6 +11,10 @@ set -e
 MODEL_FAST="qwen/qwen3.5-9b"
 MODEL_R1="deepseek/deepseek-r1-0528-qwen3-8b"
 MODEL_BIG="qwen/qwen3.5-35b-a3b"
+MODEL_CLOUD="deepseek-v3.1:671b"
+MODEL_CLOUD_FAST="qwen3-next:80b"
+OLLAMA_CLOUD="https://api.ollama.com"
+OLLAMA_CLOUD_KEY="${OLLAMA_API_KEY:-5ed25086692848798d4322d4c9861d57.-KFfHj-wHbNma_PyCrWdr9hQ}"
 MAX=3000
 MODE="dual"   # dual | seq | single
 SYS="Tu es un assistant concis. Réponds directement en français, sans préambule."
@@ -26,6 +30,8 @@ while [[ "$1" == --* ]]; do
     --big)    MODELS_M1=("$MODEL_FAST"); MODELS_M2=("$MODEL_BIG"); shift ;;
     --fast)   MODELS_M1=("$MODEL_FAST"); MODELS_M2=("$MODEL_FAST"); shift ;;
     --seq)    MODE="seq"; shift ;;
+    --cloud)  MODELS_M1=("$MODEL_CLOUD_FAST"); MODELS_M2=("$MODEL_CLOUD_FAST"); MODE="cloud"; shift ;;
+    --cloud-big) MODELS_M1=("$MODEL_CLOUD"); MODELS_M2=("$MODEL_CLOUD"); MODE="cloud"; shift ;;
     *) shift ;;
   esac
 done
@@ -53,6 +59,16 @@ call_model() {
     | jq -r '(.choices[0].message.content // .choices[0].message.reasoning_content // empty)' 2>/dev/null
 }
 
+call_ollama_cloud() {
+  local model="${1:-$MODEL_CLOUD_FAST}"
+  curl -s -m 180 "https://ollama.com/v1/chat/completions" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $OLLAMA_CLOUD_KEY" \
+    -d "$(jq -nc --arg m "$model" --arg s "$SYS" --arg p "$PROMPT" --argjson n "$MAX" \
+      '{model:$m,messages:[{role:"system",content:$s},{role:"user",content:$p}],max_tokens:$n,temperature:0.2}')" \
+    | jq -r '(.choices[0].message.content // empty)' 2>/dev/null
+}
+
 call_ollama() {
   curl -s -m 60 http://127.0.0.1:11434/api/generate \
     -d "$(jq -nc --arg p "$SYS\n\n$PROMPT" '{model:"gemma3:4b",prompt:$p,stream:false}')" \
@@ -65,9 +81,17 @@ curl -s -m 1 "$M1/v1/models" >/dev/null 2>&1 && M1_UP=1
 curl -s -m 1 "$M2/v1/models" >/dev/null 2>&1 && M2_UP=1
 curl -s -m 1 http://127.0.0.1:11434/api/tags >/dev/null 2>&1 && OL1_UP=1
 
-[[ $M1_UP -eq 0 && $M2_UP -eq 0 && $OL1_UP -eq 0 ]] && { echo "✘ Aucun backend dispo" >&2; exit 2; }
+[[ "$MODE" != "cloud" && $M1_UP -eq 0 && $M2_UP -eq 0 && $OL1_UP -eq 0 ]] && { echo "✘ Aucun backend dispo" >&2; exit 2; }
 
-if [[ "$MODE" == "dual" ]]; then
+if [[ "$MODE" == "cloud" ]]; then
+  # === MODE CLOUD : Ollama Cloud direct ===
+  for m in "${MODELS_M1[@]}"; do
+    R="$(call_ollama_cloud "$m")"
+    [[ -n "$R" ]] && echo "$R" && exit 0
+  done
+  echo "✘ Ollama Cloud failed" >&2; exit 2
+
+elif [[ "$MODE" == "dual" ]]; then
   # === MODE DUAL : M1×2 + M2×2 en parallèle — premier gagne ===
   TMPF="$(mktemp)"
   PIDS=()

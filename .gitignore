@@ -12,3 +12,4 @@ node_modules/
 backups/
 *.png
 *.pdf
+config/secrets.env

@@ -11,9 +11,12 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 app = Flask("jarvis-api")
 r_client = redis.Redis(decode_responses=True)
+logger = app.logger
 
 # SEC-004: token interne minimal (définir JARVIS_API_TOKEN dans l'env pour activer)
 _API_TOKEN = os.environ.get("JARVIS_API_TOKEN", "")
+if not _API_TOKEN:
+    logger.warning("JARVIS_API_TOKEN not set — API authentication is DISABLED")
 _PUBLIC_ENDPOINTS = {"health", "static"}
 
 

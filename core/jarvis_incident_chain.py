@@ -81,6 +81,22 @@ def run_chain(incident_type: str, context: dict = {}):
                         "output": out.stdout[:200] or out.stderr[:100],
                     }
                 )
+            except KeyError as e:
+                results.append(
+                    {
+                        "step": step_name,
+                        "status": "exception",
+                        "output": f"Missing context key {e} in template: {cmd!r}",
+                    }
+                )
+            except ValueError as e:
+                results.append(
+                    {
+                        "step": step_name,
+                        "status": "exception",
+                        "output": f"Command parse error: {e} — template: {cmd_fmt!r}",
+                    }
+                )
             except Exception as e:
                 results.append(
                     {"step": step_name, "status": "exception", "output": str(e)}

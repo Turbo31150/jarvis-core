@@ -131,10 +131,36 @@ class TaskDispatcher:
 
     def _run_local(self, task: TaskRequest, start: float) -> TaskResult:
         # SEC-001: shell=True avec task.prompt était une RCE — tokeniser sans shell
-        cmd_parts = shlex.split(task.prompt)
-        proc = subprocess.run(
-            cmd_parts, capture_output=True, text=True, timeout=task.timeout
-        )
+        try:
+            cmd_parts = shlex.split(task.prompt)
+        except ValueError as e:
+            return TaskResult(
+                request_id=task.id,
+                status=TaskStatus.FAILED,
+                error=f"Invalid command syntax: {e}",
+                node="local",
+                duration=time.time() - start,
+            )
+        if not cmd_parts:
+            return TaskResult(
+                request_id=task.id,
+                status=TaskStatus.FAILED,
+                error="Empty command after tokenization",
+                node="local",
+                duration=time.time() - start,
+            )
+        try:
+            proc = subprocess.run(
+                cmd_parts, capture_output=True, text=True, timeout=task.timeout
+            )
+        except (FileNotFoundError, PermissionError, subprocess.TimeoutExpired) as e:
+            return TaskResult(
+                request_id=task.id,
+                status=TaskStatus.FAILED,
+                error=str(e),
+                node="local",
+                duration=time.time() - start,
+            )
         return TaskResult(
             request_id=task.id,
             status=TaskStatus.COMPLETED if proc.returncode == 0 else TaskStatus.FAILED,
