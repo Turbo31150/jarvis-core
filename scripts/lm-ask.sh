@@ -47,16 +47,78 @@ python3 ~/IA/Core/jarvis/scripts/lm_guard.py check >/dev/null 2>&1
 
 M1="http://127.0.0.1:1234"
 M2="http://192.168.1.26:1234"
+CB_FILE="/tmp/lm-circuit-breaker.json"
+CB_THRESHOLD=3
+CB_TIMEOUT=300
+
+# Init circuit breaker state file if missing
+cb_init() {
+  [[ -f "$CB_FILE" ]] && return
+  echo '{"M1":{"failures":0,"until":0},"M2":{"failures":0,"until":0},"OL1":{"failures":0,"until":0}}' > "$CB_FILE"
+}
+
+# Returns 0 if node is OPEN (should skip), 1 if CLOSED (ok to use)
+cb_check() {
+  local node="$1"
+  cb_init
+  local until
+  until=$(jq -r --arg n "$node" '.[$n].until // 0' "$CB_FILE" 2>/dev/null || echo 0)
+  local now; now=$(date +%s)
+  [[ "$until" -gt "$now" ]] && return 0  # circuit open → skip
+  return 1  # circuit closed → ok
+}
+
+cb_record_failure() {
+  local node="$1"
+  cb_init
+  local failures now until
+  failures=$(jq -r --arg n "$node" '.[$n].failures // 0' "$CB_FILE" 2>/dev/null || echo 0)
+  failures=$((failures + 1))
+  now=$(date +%s)
+  if [[ "$failures" -ge "$CB_THRESHOLD" ]]; then
+    until=$((now + CB_TIMEOUT))
+    jq --arg n "$node" --argjson f "$failures" --argjson u "$until" \
+      '.[$n].failures = $f | .[$n].until = $u' "$CB_FILE" > "${CB_FILE}.tmp" && mv "${CB_FILE}.tmp" "$CB_FILE"
+  else
+    jq --arg n "$node" --argjson f "$failures" \
+      '.[$n].failures = $f' "$CB_FILE" > "${CB_FILE}.tmp" && mv "${CB_FILE}.tmp" "$CB_FILE"
+  fi
+}
+
+cb_record_success() {
+  local node="$1"
+  cb_init
+  jq --arg n "$node" '.[$n].failures = 0 | .[$n].until = 0' "$CB_FILE" > "${CB_FILE}.tmp" && mv "${CB_FILE}.tmp" "$CB_FILE"
+}
 
 call_model() {
   local host="$1" model="$2"
-  local payload
+  local payload result
   payload="$(jq -nc --arg m "$model" --arg s "$SYS" --arg p "$PROMPT" --argjson n "$MAX" \
     '{model:$m,messages:[{role:"system",content:$s},{role:"user",content:$p}],max_tokens:$n,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}')"
-  curl -s -m 120 "$host/v1/chat/completions" \
+  result=$(curl -s -m 120 "$host/v1/chat/completions" \
     -H "Content-Type: application/json" \
     -d "$payload" \
-    | jq -r '(.choices[0].message.content // .choices[0].message.reasoning_content // empty)' 2>/dev/null
+    | jq -r '(.choices[0].message.content // .choices[0].message.reasoning_content // empty)' 2>/dev/null)
+  echo "$result"
+}
+
+# call_model with circuit-breaker tracking
+call_model_cb() {
+  local node="$1" host="$2" model="$3"
+  if [[ "$MODE" != "cloud" ]] && cb_check "$node"; then
+    return 1  # circuit open, skip
+  fi
+  local result
+  result=$(call_model "$host" "$model")
+  if [[ -n "$result" ]]; then
+    [[ "$MODE" != "cloud" ]] && cb_record_success "$node"
+    echo "$result"
+    return 0
+  else
+    [[ "$MODE" != "cloud" ]] && cb_record_failure "$node"
+    return 1
+  fi
 }
 
 call_ollama_cloud() {
@@ -97,17 +159,17 @@ elif [[ "$MODE" == "dual" ]]; then
   PIDS=()
 
   [[ $M1_UP -eq 1 ]] && for m in "${MODELS_M1[@]}"; do
-    ( R="$(call_model "$M1" "$m")"; [[ -n "$R" ]] && echo "$R" > "$TMPF" ) &
+    ( R="$(call_model_cb "M1" "$M1" "$m")"; [[ -n "$R" ]] && echo "$R" > "$TMPF" ) &
     PIDS+=($!)
   done
 
   [[ $M2_UP -eq 1 ]] && for m in "${MODELS_M2[@]}"; do
-    ( R="$(call_model "$M2" "$m")"; [[ -n "$R" ]] && echo "$R" > "$TMPF" ) &
+    ( R="$(call_model_cb "M2" "$M2" "$m")"; [[ -n "$R" ]] && echo "$R" > "$TMPF" ) &
     PIDS+=($!)
   done
 
-  [[ $OL1_UP -eq 1 && ${#PIDS[@]} -eq 0 ]] && {
-    ( R="$(call_ollama)"; [[ -n "$R" ]] && echo "$R" > "$TMPF" ) &
+  [[ $OL1_UP -eq 1 && ${#PIDS[@]} -eq 0 ]] && ! cb_check "OL1" && {
+    ( R="$(call_ollama)"; if [[ -n "$R" ]]; then cb_record_success "OL1"; echo "$R" > "$TMPF"; else cb_record_failure "OL1"; fi ) &
     PIDS+=($!)
   }
 
@@ -126,12 +188,12 @@ elif [[ "$MODE" == "dual" ]]; then
 else
   # === MODE SEQ : M1 → M2 → OL1 ===
   for m in "${MODELS_M1[@]}"; do
-    [[ $M1_UP -eq 1 ]] && { R="$(call_model "$M1" "$m")"; [[ -n "$R" ]] && echo "$R" && exit 0; }
+    [[ $M1_UP -eq 1 ]] && { R="$(call_model_cb "M1" "$M1" "$m")"; [[ -n "$R" ]] && echo "$R" && exit 0; }
   done
   for m in "${MODELS_M2[@]}"; do
-    [[ $M2_UP -eq 1 ]] && { R="$(call_model "$M2" "$m")"; [[ -n "$R" ]] && echo "$R" && exit 0; }
+    [[ $M2_UP -eq 1 ]] && { R="$(call_model_cb "M2" "$M2" "$m")"; [[ -n "$R" ]] && echo "$R" && exit 0; }
   done
-  [[ $OL1_UP -eq 1 ]] && { R="$(call_ollama)"; [[ -n "$R" ]] && echo "$R" && exit 0; }
+  [[ $OL1_UP -eq 1 ]] && ! cb_check "OL1" && { R="$(call_ollama)"; if [[ -n "$R" ]]; then cb_record_success "OL1"; echo "$R"; exit 0; else cb_record_failure "OL1"; fi; }
   echo "✘ Tous backends ont échoué" >&2; exit 2
 fi
 

@@ -1,17 +1,31 @@
+"""
+JARVIS Core Module: LoRA Manager
+Version: 1.1.0
+Role: Dynamic lifecycle management of LoRA adapters for fine-tuned LLM inference.
+"""
+
 import asyncio
 import json
-from dataclasses import dataclass
+import logging
+import os
+import time
+from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger("jarvis.inference.lora_manager")
 
 class LoraStatus(Enum):
-    UNLOADED = "UNLOADED"
-    LOADING = "LOADING"
-    ACTIVE = "ACTIVE"
-    ERROR = "ERROR"
-    DEPRECATED = "DEPRECATED"
-
+    UNLOADED = "unloaded"
+    LOADING = "loading"
+    ACTIVE = "active"
+    ERROR = "error"
+    DEPRECATED = "deprecated"
 
 @dataclass
 class LoraAdapter:
@@ -19,228 +33,180 @@ class LoraAdapter:
     name: str
     base_model: str
     path: str
-    rank: int
-    alpha: float
-    task_type: str
-    status: LoraStatus
-    metadata: dict
-
+    rank: int = 16
+    alpha: float = 32.0
+    task_type: str = "general"
+    status: LoraStatus = LoraStatus.UNLOADED
+    metadata: Dict[str, Any] = field(default_factory=dict)
 
 @dataclass
 class LoraLoadResult:
     adapter_id: str
     success: bool
     latency_ms: float
-    error: str = ""
-
+    error: Optional[str] = None
 
 class LoraManager:
-    def __init__(self):
-        self.adapters: List[LoraAdapter] = []
-        self.active_adapter_id: Optional[str] = None
+    """
+    Manages registration, loading, and unloading of LoRA adapters.
+    Maintains persistent state and performance statistics.
+    """
+
+    def __init__(self, state_path: str = "/tmp/jarvis_lora_state.json"):
+        self.state_path = state_path
+        self.adapters: Dict[str, LoraAdapter] = {}
+        self.stats = {
+            "total_loads": 0,
+            "total_errors": 0,
+            "avg_load_time_ms": 0.0
+        }
         self._load_state()
 
-    async def register(self, adapter: LoraAdapter):
-        if any(a.adapter_id == adapter.adapter_id for a in self.adapters):
-            return  # already registered, skip silently
-        self.adapters.append(adapter)
+    def _load_state(self):
+        """Loads manager state from disk if exists."""
+        if os.path.exists(self.state_path):
+            try:
+                with open(self.state_path, 'r') as f:
+                    data = json.load(f)
+                    # We only restore the stats and known adapters registry
+                    # but we reset all statuses to UNLOADED on startup
+                    self.stats = data.get("stats", self.stats)
+                    for aid, a_data in data.get("adapters", {}).items():
+                        # Enum restoration
+                        a_data['status'] = LoraStatus.UNLOADED
+                        self.adapters[aid] = LoraAdapter(**a_data)
+            except Exception as e:
+                logger.error(f"Failed to load LoRA state: {e}")
+
+    def _save_state(self):
+        """Saves current state to disk."""
+        try:
+            data = {
+                "stats": self.stats,
+                "adapters": {aid: asdict(a) for aid, a in self.adapters.items()}
+            }
+            # Handle Enums for JSON serialization
+            for aid in data["adapters"]:
+                data["adapters"][aid]["status"] = data["adapters"][aid]["status"].value
+                
+            with open(self.state_path, 'w') as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to save LoRA state: {e}")
+
+    def register(self, adapter: LoraAdapter):
+        """Registers a new adapter without loading it."""
+        self.adapters[adapter.adapter_id] = adapter
+        logger.info(f"Registered LoRA adapter: {adapter.adapter_id} for {adapter.base_model}")
         self._save_state()
 
     async def load(self, adapter_id: str) -> LoraLoadResult:
-        adapter = next((a for a in self.adapters if a.adapter_id == adapter_id), None)
-        if not adapter:
-            return LoraLoadResult(
-                adapter_id=adapter_id,
-                success=False,
-                latency_ms=0.0,
-                error="Adapter not found.",
-            )
-
-        if adapter.status == LoraStatus.LOADING:
-            return LoraLoadResult(
-                adapter_id=adapter_id,
-                success=False,
-                latency_ms=0.0,
-                error="Adapter is already loading.",
-            )
-
+        """Simulates loading a LoRA adapter into VRAM."""
+        if adapter_id not in self.adapters:
+            return LoraLoadResult(adapter_id, False, 0, "Adapter not found")
+            
+        adapter = self.adapters[adapter_id]
+        if adapter.status == LoraStatus.ACTIVE:
+            return LoraLoadResult(adapter_id, True, 0)
+            
+        start_time = time.time()
         adapter.status = LoraStatus.LOADING
-        self._save_state()
-
-        # Simulate loading delay
-        await asyncio.sleep(1)
-
-        if adapter.adapter_id == "error_adapter":
+        logger.info(f"Loading LoRA {adapter_id}...")
+        
+        try:
+            # Simulate I/O and GPU overhead
+            await asyncio.sleep(0.5) 
+            
+            # Implementation would call LM Link or Ollama API here
+            # mock failure case
+            if "fail" in adapter_id:
+                raise Exception("GPU Out of Memory or File not found")
+                
+            adapter.status = LoraStatus.ACTIVE
+            success = True
+            error = None
+        except Exception as e:
             adapter.status = LoraStatus.ERROR
-            return LoraLoadResult(
-                adapter_id=adapter_id,
-                success=False,
-                latency_ms=1000.0,
-                error="Simulated load error.",
-            )
-
-        adapter.status = LoraStatus.ACTIVE
-        self.active_adapter_id = adapter.adapter_id
+            success = False
+            error = str(e)
+            self.stats["total_errors"] += 1
+            
+        latency = (time.time() - start_time) * 1000
+        
+        # Update stats
+        self.stats["total_loads"] += 1
+        n = self.stats["total_loads"]
+        self.stats["avg_load_time_ms"] = (self.stats["avg_load_time_ms"] * (n-1) + latency) / n
+        
         self._save_state()
-
-        return LoraLoadResult(adapter_id=adapter_id, success=True, latency_ms=1000.0)
+        return LoraLoadResult(adapter_id, success, latency, error)
 
     async def unload(self, adapter_id: str):
-        adapter = next((a for a in self.adapters if a.adapter_id == adapter_id), None)
-        if not adapter:
-            raise ValueError(f"Adapter with ID {adapter_id} not found.")
+        """Unloads an adapter from memory."""
+        if adapter_id in self.adapters:
+            logger.info(f"Unloading LoRA {adapter_id}...")
+            await asyncio.sleep(0.1)
+            self.adapters[adapter_id].status = LoraStatus.UNLOADED
+            self._save_state()
 
-        if adapter.status != LoraStatus.ACTIVE:
-            return
-
-        adapter.status = LoraStatus.UNLOADED
-        self.active_adapter_id = None
-        self._save_state()
-
-    async def switch(self, from_id: str, to_id: str):
+    async def switch(self, from_id: str, to_id: str) -> LoraLoadResult:
+        """Unloads one adapter and loads another (atomic-like switch)."""
         await self.unload(from_id)
-        await self.load(to_id)
+        return await self.load(to_id)
 
     def list_active(self) -> List[LoraAdapter]:
-        return [a for a in self.adapters if a.status == LoraStatus.ACTIVE]
+        """Returns list of currently active adapters."""
+        return [a for a in self.adapters.values() if a.status == LoraStatus.ACTIVE]
 
     def list_available(self) -> List[LoraAdapter]:
-        return [
-            a
-            for a in self.adapters
-            if a.status != LoraStatus.ERROR and a.status != LoraStatus.DEPRECATED
-        ]
+        """Returns all registered adapters."""
+        return list(self.adapters.values())
 
     def get_by_task(self, task_type: str) -> List[LoraAdapter]:
-        return [a for a in self.adapters if a.task_type == task_type]
-
-    def _save_state(self):
-        def _serial(obj):
-            if hasattr(obj, "name"):
-                return obj.name
-            return str(obj)
-
-        with open("/tmp/jarvis_lora_state.json", "w") as f:
-            json.dump(
-                [
-                    {
-                        k: _serial(v) if hasattr(v, "name") else v
-                        for k, v in a.__dict__.items()
-                    }
-                    for a in self.adapters
-                ],
-                f,
-            )
-
-    def _load_state(self):
-        try:
-            with open("/tmp/jarvis_lora_state.json", "r") as f:
-                data = json.load(f)
-                self.adapters = [LoraAdapter(**d) for d in data]
-                self.active_adapter_id = next(
-                    (
-                        a.adapter_id
-                        for a in self.adapters
-                        if a.status == LoraStatus.ACTIVE
-                    ),
-                    None,
-                )
-        except FileNotFoundError:
-            pass
-
-    def stats(self) -> dict:
-        return {
-            "total_adapters": len(self.adapters),
-            "active_adapters": len(
-                [a for a in self.adapters if a.status == LoraStatus.ACTIVE]
-            ),
-            "available_adapters": len(
-                [
-                    a
-                    for a in self.adapters
-                    if a.status != LoraStatus.ERROR
-                    and a.status != LoraStatus.DEPRECATED
-                ]
-            ),
-        }
-
+        """Filters adapters by task type."""
+        return [a for a in self.adapters.values() if a.task_type == task_type]
 
 def build_jarvis_lora_manager() -> LoraManager:
+    """Factory with example adapters."""
     manager = LoraManager()
-
-    adapter1 = LoraAdapter(
-        adapter_id="adapter1",
-        name="Adapter 1",
-        base_model="base_model_1",
-        path="/path/to/adapter1",
-        rank=8,
-        alpha=0.5,
-        task_type="classification",
-        status=LoraStatus.UNLOADED,
-        metadata={"description": "First adapter"},
-    )
-
-    adapter2 = LoraAdapter(
-        adapter_id="adapter2",
-        name="Adapter 2",
-        base_model="base_model_2",
-        path="/path/to/adapter2",
-        rank=16,
-        alpha=0.75,
-        task_type="regression",
-        status=LoraStatus.UNLOADED,
-        metadata={"description": "Second adapter"},
-    )
-
-    adapter3 = LoraAdapter(
-        adapter_id="error_adapter",
-        name="Error Adapter",
-        base_model="base_model_3",
-        path="/path/to/error_adapter",
-        rank=8,
-        alpha=0.5,
-        task_type="classification",
-        status=LoraStatus.UNLOADED,
-        metadata={"description": "Adapter that simulates an error"},
-    )
-
-    asyncio.run(manager.register(adapter1))
-    asyncio.run(manager.register(adapter2))
-    asyncio.run(manager.register(adapter3))
-
+    manager.register(LoraAdapter(
+        "lora-trading-v1", "Trading Expert", "qwen3.5-9b", 
+        "/mnt/storage/loras/trading_v1", task_type="trading"
+    ))
+    manager.register(LoraAdapter(
+        "lora-code-py-v2", "Python Specialist", "qwen3.5-9b", 
+        "/mnt/storage/loras/python_v2", task_type="coding"
+    ))
+    manager.register(LoraAdapter(
+        "lora-med-analysis", "Medical Triage", "gemma3", 
+        "/mnt/storage/loras/med_v1", task_type="analysis"
+    ))
     return manager
 
+async def demo():
+    manager = build_jarvis_lora_manager()
+    
+    print("\n--- INITIAL STATE ---")
+    for a in manager.list_available():
+        print(f"[{a.adapter_id}] Status: {a.status.name} | Task: {a.task_type}")
+        
+    print("\n--- LOADING ADAPTERS ---")
+    res1 = await manager.load("lora-trading-v1")
+    res2 = await manager.load("lora-code-py-v2")
+    
+    print(f"Load Trading: {'OK' if res1.success else 'FAIL'} ({res1.latency_ms:.1f}ms)")
+    print(f"Load Code: {'OK' if res2.success else 'FAIL'} ({res2.latency_ms:.1f}ms)")
+    
+    print("\n--- SWITCHING ---")
+    res3 = await manager.switch("lora-trading-v1", "lora-med-analysis")
+    print(f"Switch Trading -> Med: {'OK' if res3.success else 'FAIL'}")
+    
+    print("\n--- ACTIVE ADAPTERS ---")
+    for a in manager.list_active():
+        print(f"ACTIVE: {a.adapter_id} on model {a.base_model}")
+        
+    print("\n--- MANAGER STATS ---")
+    print(json.dumps(manager.stats, indent=2))
 
 if __name__ == "__main__":
-    manager = build_jarvis_lora_manager()
-
-    print("Available adapters:")
-    for adapter in manager.list_available():
-        print(f" - {adapter.name} (ID: {adapter.adapter_id})")
-
-    print("\nLoading Adapter 1...")
-    result = asyncio.run(manager.load("adapter1"))
-    print(
-        f"Load result: Success={result.success}, Latency={result.latency_ms}ms, Error='{result.error}'"
-    )
-
-    print("\nActive adapters:")
-    for adapter in manager.list_active():
-        print(f" - {adapter.name} (ID: {adapter.adapter_id})")
-
-    print("\nSwitching to Adapter 2...")
-    asyncio.run(manager.switch("adapter1", "adapter2"))
-
-    print("\nActive adapters after switch:")
-    for adapter in manager.list_active():
-        print(f" - {adapter.name} (ID: {adapter.adapter_id})")
-
-    print("\nUnloading Adapter 2...")
-    asyncio.run(manager.unload("adapter2"))
-
-    print("\nActive adapters after unload:")
-    for adapter in manager.list_active():
-        print(f" - {adapter.name} (ID: {adapter.adapter_id})")
-
-    print("\nManager stats:")
-    print(json.dumps(manager.stats(), indent=4))
+    asyncio.run(demo())

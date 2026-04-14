@@ -1,0 +1,7 @@
+{
+  "display_gpus": [0],
+  "vram_threshold": 90,
+  "alert_threshold": 80,
+  "poll_interval": 10,
+  "http_port": 9090
+}

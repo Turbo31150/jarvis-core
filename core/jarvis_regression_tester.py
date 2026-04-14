@@ -1,24 +1,36 @@
-import os
+"""
+JARVIS Core Module: Regression Tester
+Version: 1.1.0
+Role: Automated performance and quality regression detection for JARVIS OMEGA nodes.
+"""
+
 import json
-from dataclasses import dataclass, field
+import logging
+import os
+import time
+from dataclasses import asdict, dataclass, field
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger("jarvis.quality.regression_tester")
 
-class Severity(Enum):
-    OK = "OK"
-    WARN = "WARN"
-    CRITICAL = "CRITICAL"
-
+class RegressionSeverity(Enum):
+    OK = "ok"
+    WARN = "warn"
+    CRITICAL = "critical"
 
 @dataclass
 class Baseline:
     name: str
     metrics: Dict[str, float]
-    captured_at: float
     version: str
+    captured_at: float = field(default_factory=time.time)
     tags: List[str] = field(default_factory=list)
-
 
 @dataclass
 class RegressionResult:
@@ -27,219 +39,174 @@ class RegressionResult:
     current_value: float
     delta_pct: float
     regressed: bool
-    severity: Severity
-
+    severity: RegressionSeverity
 
 @dataclass
 class RegressionReport:
     baseline_name: str
     results: List[RegressionResult]
-    overall_status: Severity
+    overall_status: RegressionSeverity
     n_regressions: int
     n_improvements: int
+    timestamp: float = field(default_factory=time.time)
 
+    def to_json(self) -> str:
+        data = asdict(self)
+        data['overall_status'] = self.overall_status.value
+        for r in data['results']:
+            r['severity'] = r['severity'].value
+        return json.dumps(data, indent=2)
 
 class RegressionTester:
-    def __init__(self, storage_path: str):
-        self.storage_path = storage_path
-        if not os.path.exists(storage_path):
-            os.makedirs(storage_path)
+    """
+    Benchmarks current performance against historical baselines.
+    Detects latency spikes and quality degradation automatically.
+    """
 
-    def capture_baseline(
-        self, name: str, metrics: Dict[str, float], version: str, tags: List[str] = None
-    ) -> Baseline:
-        baseline = Baseline(
-            name=name,
-            metrics=metrics,
-            captured_at=time.time(),
-            version=version,
-            tags=tags or [],
-        )
-        self.persist(baseline)
+    def __init__(self, storage_path: str = "/tmp/jarvis_regression_baselines.json"):
+        self.storage_path = storage_path
+        self.baselines: Dict[str, Baseline] = {}
+        self.history: List[Dict[str, float]] = []
+        self._load()
+
+    def _load(self):
+        """Loads baselines from disk."""
+        if os.path.exists(self.storage_path):
+            try:
+                with open(self.storage_path, 'r') as f:
+                    data = json.load(f)
+                    for name, b_data in data.items():
+                        self.baselines[name] = Baseline(**b_data)
+            except Exception as e:
+                logger.error(f"Failed to load baselines: {e}")
+
+    def persist(self):
+        """Saves current baselines to disk."""
+        try:
+            data = {name: asdict(b) for name, b in self.baselines.items()}
+            with open(self.storage_path, 'w') as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            logger.error(f"Failed to persist baselines: {e}")
+
+    def capture_baseline(self, name: str, metrics: Dict[str, float], 
+                         version: str = "1.0.0", tags: List[str] = None) -> Baseline:
+        """Saves current metrics as a reference baseline."""
+        baseline = Baseline(name, metrics, version, tags=tags or [])
+        self.baselines[name] = baseline
+        self.persist()
+        logger.info(f"Captured new baseline: {name} (v{version})")
         return baseline
 
-    def load_baseline(self, name: str) -> Optional[Baseline]:
-        for filename in os.listdir(self.storage_path):
-            if filename.startswith(f"{name}_"):
-                with open(os.path.join(self.storage_path, filename), "r") as f:
-                    data = json.load(f)
-                    return Baseline(**data)
-        return None
-
-    def list_baselines(self) -> List[str]:
-        baselines = []
-        for filename in os.listdir(self.storage_path):
-            if filename.endswith(".json"):
-                baselines.append(filename.split("_")[0])
-        return baselines
-
-    def compare(
-        self, current_metrics: Dict[str, float], baseline_name: str, thresholds=None
-    ) -> RegressionReport:
-        baseline = self.load_baseline(baseline_name)
-        if not baseline:
+    def compare(self, current_metrics: Dict[str, float], 
+                baseline_name: str, thresholds: Dict[str, Dict[str, float]] = None) -> RegressionReport:
+        """Compares current metrics against a baseline."""
+        if baseline_name not in self.baselines:
             raise ValueError(f"Baseline {baseline_name} not found")
-
-        thresholds = thresholds or {
-            "latency": {"warn": 1.10, "crit": 1.25},
-            "score": {"warn": 0.95, "crit": 0.90},
-        }
-
+            
+        base = self.baselines[baseline_name]
         results = []
-        for metric_name, current_value in current_metrics.items():
-            baseline_value = baseline.metrics.get(metric_name)
-            if baseline_value is None:
-                continue
-
-            delta_pct = (current_value - baseline_value) / baseline_value * 100
-            regressed = False
-            severity = Severity.OK
-
-            if metric_name.startswith("latency"):
-                if current_value > baseline_value * thresholds["latency"]["warn"]:
-                    severity = Severity.WARN
-                if current_value > baseline_value * thresholds["latency"]["crit"]:
-                    severity = Severity.CRITICAL
-            elif metric_name.startswith("score"):
-                if current_value < baseline_value * thresholds["score"]["warn"]:
-                    severity = Severity.WARN
-                if current_value < baseline_value * thresholds["score"]["crit"]:
-                    severity = Severity.CRITICAL
-
-            results.append(
-                RegressionResult(
-                    metric_name=metric_name,
-                    baseline_value=baseline_value,
-                    current_value=current_value,
-                    delta_pct=delta_pct,
-                    regressed=(severity != Severity.OK),
-                    severity=severity,
-                )
-            )
-
-        n_regressions = sum(result.regressed for result in results)
-        n_improvements = len(results) - n_regressions
-
-        overall_status = max(
-            (result.severity for result in results), default=Severity.OK
-        )
-
-        return RegressionReport(
-            baseline_name=baseline.name,
-            results=results,
-            overall_status=overall_status,
-            n_regressions=n_regressions,
-            n_improvements=n_improvements,
-        )
-
-    def auto_detect(
-        self, current_metrics: Dict[str, float], window=5
-    ) -> RegressionReport:
-        baselines = sorted(
-            [self.load_baseline(name) for name in self.list_baselines()],
-            key=lambda b: b.captured_at,
-        )
-        if len(baselines) < window:
-            raise ValueError("Not enough baselines to perform auto-detection")
-
-        recent_baselines = baselines[-window:]
-        baseline_metrics = {
-            metric_name: sum(b.metrics.get(metric_name, 0) for b in recent_baselines)
-            / window
-            for metric_name in current_metrics
+        
+        # Default thresholds
+        # For latency: +10% warn, +25% critical (higher is worse)
+        # For score: -5% warn, -10% critical (lower is worse)
+        default_thresholds = {
+            "latency": {"warn": 10.0, "critical": 25.0, "higher_is_worse": True},
+            "score": {"warn": -5.0, "critical": -10.0, "higher_is_worse": False},
+            "pass_rate": {"warn": -5.0, "critical": -15.0, "higher_is_worse": False}
         }
-
-        return self.compare(
-            current_metrics,
-            "auto_detected",
-            thresholds={
-                "latency": {"warn": 1.10, "crit": 1.25},
-                "score": {"warn": 0.95, "crit": 0.90},
-            },
+        active_thresholds = thresholds or default_thresholds
+        
+        n_regressions = 0
+        n_improvements = 0
+        max_severity = RegressionSeverity.OK
+        
+        for m_name, c_val in current_metrics.items():
+            if m_name not in base.metrics: continue
+            
+            b_val = base.metrics[m_name]
+            if b_val == 0: continue
+            
+            delta_pct = ((c_val - b_val) / b_val) * 100
+            
+            # Find matching threshold config
+            t_key = next((k for k in active_thresholds if k in m_name), "score")
+            t_cfg = active_thresholds[t_key]
+            
+            is_worse = (delta_pct > 0) if t_cfg["higher_is_worse"] else (delta_pct < 0)
+            severity = RegressionSeverity.OK
+            regressed = False
+            
+            if is_worse:
+                abs_delta = abs(delta_pct)
+                if abs_delta >= abs(t_cfg["critical"]):
+                    severity = RegressionSeverity.CRITICAL
+                    regressed = True
+                    n_regressions += 1
+                elif abs_delta >= abs(t_cfg["warn"]):
+                    severity = RegressionSeverity.WARN
+                    regressed = True
+                    n_regressions += 1
+            else:
+                if abs(delta_pct) > 5.0: # Significant improvement
+                    n_improvements += 1
+                    
+            if severity.value == "critical" or (severity.value == "warn" and max_severity == RegressionSeverity.OK):
+                max_severity = severity
+                
+            results.append(RegressionResult(
+                metric_name=m_name,
+                baseline_value=b_val,
+                current_value=c_val,
+                delta_pct=round(delta_pct, 2),
+                regressed=regressed,
+                severity=severity
+            ))
+            
+        return RegressionReport(
+            baseline_name=baseline_name,
+            results=results,
+            overall_status=max_severity,
+            n_regressions=n_regressions,
+            n_improvements=n_improvements
         )
 
-    def persist(self, baseline: Baseline):
-        filename = f"{baseline.name}_{int(baseline.captured_at)}.json"
-        with open(os.path.join(self.storage_path, filename), "w") as f:
-            json.dump(baseline.__dict__, f)
+    def trend(self, metric_name: str, n_last: int = 10) -> List[float]:
+        """Returns the trend for a specific metric from history."""
+        return [h.get(metric_name, 0.0) for h in self.history[-n_last:]]
 
-    def load(self, path: str) -> List[Baseline]:
-        baselines = []
-        for filename in os.listdir(path):
-            if filename.endswith(".json"):
-                with open(os.path.join(path, filename), "r") as f:
-                    data = json.load(f)
-                    baselines.append(Baseline(**data))
-        return baselines
+def build_jarvis_regression_tester() -> RegressionTester:
+    """Factory function."""
+    return RegressionTester()
 
-    def trend(self, metric_name: str, n: int) -> List[float]:
-        baselines = sorted(
-            [self.load_baseline(name) for name in self.list_baselines()],
-            key=lambda b: b.captured_at,
-        )
-        if len(baselines) < n:
-            raise ValueError("Not enough baselines to determine trend")
-
-        return [b.metrics.get(metric_name, 0) for b in baselines[-n:]]
-
-
-def build_jarvis_regression_tester(storage_path: str = "/tmp/jarvis_regression_baselines.json") -> RegressionTester:
-    return RegressionTester(storage_path)
-
+def demo():
+    tester = build_jarvis_regression_tester()
+    
+    # 1. Capture baseline
+    base_metrics = {
+        "avg_latency_ms": 450.0,
+        "avg_score": 0.88,
+        "pass_rate": 0.95
+    }
+    tester.capture_baseline("production_v1", base_metrics, version="1.0.0", tags=["stable"])
+    
+    # 2. Simulate current metrics (Regression)
+    current_bad = {
+        "avg_latency_ms": 600.0, # +33% (Critical)
+        "avg_score": 0.82,       # -6.8% (Warn)
+        "pass_rate": 0.94        # -1% (OK)
+    }
+    
+    report = tester.compare(current_bad, "production_v1")
+    
+    print(f"\n--- REGRESSION REPORT [{report.overall_status.name}] ---")
+    print(f"Baseline: {report.baseline_name}")
+    print(f"Regressions: {report.n_regressions} | Improvements: {report.n_improvements}")
+    print("-" * 65)
+    print(f"{'METRIC':<20} | {'BASE':<8} | {'CURR':<8} | {'DELTA%':<8} | {'STATUS'}")
+    
+    for r in report.results:
+        print(f"{r.metric_name:<20} | {r.baseline_value:<8.2f} | {r.current_value:<8.2f} | {r.delta_pct:<+8.1f} | {r.severity.name}")
 
 if __name__ == "__main__":
-    import time
-
-    # Initialize the regression tester
-    rt = build_jarvis_regression_tester("baselines")
-
-    # Capture 3 baselines
-    baseline1 = rt.capture_baseline(
-        name="baseline1", metrics={"latency": 0.1, "score": 0.9}, version="v1"
-    )
-
-    time.sleep(1)
-
-    baseline2 = rt.capture_baseline(
-        name="baseline2", metrics={"latency": 0.15, "score": 0.85}, version="v2"
-    )
-
-    time.sleep(1)
-
-    baseline3 = rt.capture_baseline(
-        name="baseline3", metrics={"latency": 0.2, "score": 0.8}, version="v3"
-    )
-
-    # Compare current metrics with the latest baseline
-    current_metrics = {"latency": 0.25, "score": 0.75}
-    report = rt.compare(current_metrics, "baseline3")
-
-    print(f"Overall Status: {report.overall_status}")
-    print(f"Number of Regressions: {report.n_regressions}")
-    print(f"Number of Improvements: {report.n_improvements}")
-
-    for result in report.results:
-        print(
-            f"Metric: {result.metric_name}, Baseline Value: {result.baseline_value}, "
-            f"Current Value: {result.current_value}, Delta %: {result.delta_pct:.2f}, "
-            f"Regressed: {result.regressed}, Severity: {result.severity}"
-        )
-
-    # Auto-detect regression
-    auto_report = rt.auto_detect(current_metrics)
-    print("\nAuto-Detection Report:")
-    print(f"Overall Status: {auto_report.overall_status}")
-    print(f"Number of Regressions: {auto_report.n_regressions}")
-    print(f"Number of Improvements: {auto_report.n_improvements}")
-
-    for result in auto_report.results:
-        print(
-            f"Metric: {result.metric_name}, Baseline Value: {result.baseline_value}, "
-            f"Current Value: {result.current_value}, Delta %: {result.delta_pct:.2f}, "
-            f"Regressed: {result.regressed}, Severity: {result.severity}"
-        )
-
-    # Load all baselines
-    all_baselines = rt.load("baselines")
-    for baseline in all_baselines:
-        print(f"Loaded Baseline: {baseline.name}, Version: {baseline.version}")
+    demo()

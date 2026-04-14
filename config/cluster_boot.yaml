@@ -1,0 +1,38 @@
+machines:
+  M1:
+    host: "127.0.0.1"
+    services:
+      lm-studio:
+        health: "http://127.0.0.1:1234/v1/models"
+        start: "systemctl --user start lm-studio"
+        depends: []
+        timeout: 30
+        retries: 3
+      jarvis-pipeline:
+        health: "http://127.0.0.1:9742/"
+        start: "docker start jarvis-pipeline"
+        depends: []
+        timeout: 15
+        retries: 3
+      jarvis-n8n:
+        health: "http://127.0.0.1:5678/healthz"
+        start: "docker start jarvis-n8n"
+        depends: []
+        timeout: 15
+        retries: 3
+      gpu-guardian:
+        health: "http://127.0.0.1:9090/health"
+        start: "systemctl --user start gpu-guardian"
+        depends: ["lm-studio"]
+        timeout: 10
+        retries: 2
+
+  M2:
+    host: "192.168.1.26"
+    services:
+      lm-studio-m2:
+        health: "http://192.168.1.26:1234/v1/models"
+        start: "ssh turbo@192.168.1.26 'systemctl --user start lm-studio'"
+        depends: []
+        timeout: 30
+        retries: 3

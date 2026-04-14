@@ -1,19 +1,37 @@
+"""
+JARVIS Core Module: Model Committee
+Version: 1.1.0
+Role: Multi-model consensus and voting for high-reliability decision making in JARVIS OMEGA.
+"""
+
 import asyncio
-import random
-from dataclasses import dataclass
+import json
+import logging
+import time
+from dataclasses import asdict, dataclass, field
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger("jarvis.consensus.committee")
 
 class VotingStrategy(Enum):
-    MAJORITY = "MAJORITY"
-    WEIGHTED = "WEIGHTED"
-    BEST_SCORE = "BEST_SCORE"
+    MAJORITY = "majority"
+    WEIGHTED = "weighted"
+    UNANIMOUS = "unanimous"
+    BEST_SCORE = "best_score"
+    RANKED_CHOICE = "ranked_choice"
 
 @dataclass
 class CommitteeMember:
     model_id: str
-    weight: float
-    node: str
-    specialties: list
+    weight: float = 1.0
+    node: str = "local"
+    specialties: List[str] = field(default_factory=list)
 
 @dataclass
 class MemberVote:
@@ -21,116 +39,157 @@ class MemberVote:
     response: str
     confidence: float
     latency_ms: float
+    timestamp: float = field(default_factory=time.time)
 
 @dataclass
 class CommitteeVerdict:
     question: str
-    votes: list[MemberVote]
+    votes: List[MemberVote]
     consensus: str
     agreement_score: float
     strategy_used: VotingStrategy
+    metadata: Dict[str, Any] = field(default_factory=dict)
+
+    def to_json(self) -> str:
+        data = asdict(self)
+        data['strategy_used'] = self.strategy_used.value
+        return json.dumps(data, indent=2)
 
 class ModelCommittee:
+    """
+    Orchestrates multiple LLMs to reach a consensus on a given query.
+    Uses various voting strategies to ensure reliability.
+    """
+
     def __init__(self):
-        self.members = []
-
+        self.members: Dict[str, CommitteeMember] = {}
+        
     def add_member(self, member: CommitteeMember):
-        self.members.append(member)
+        """Adds a model to the committee."""
+        self.members[member.model_id] = member
+        logger.info(f"Added committee member: {member.model_id} (weight={member.weight})")
 
-    async def query(self, question: str, strategy: VotingStrategy) -> CommitteeVerdict:
-        votes = await asyncio.gather(*(self._call_member(m, question) for m in self.members))
+    async def _get_member_vote(self, member: CommitteeMember, question: str, llm_fn: Callable) -> MemberVote:
+        """Helper to get a single vote from a member."""
+        start_time = time.time()
+        try:
+            # We assume llm_fn takes (model_id, prompt)
+            if asyncio.iscoroutinefunction(llm_fn):
+                resp_data = await llm_fn(member.model_id, question)
+            else:
+                resp_data = llm_fn(member.model_id, question)
+                
+            # Expected format: {"text": "...", "confidence": 0.9}
+            text = resp_data.get("text", str(resp_data))
+            conf = resp_data.get("confidence", 0.5)
+        except Exception as e:
+            logger.error(f"Error getting vote from {member.model_id}: {e}")
+            text = f"ERROR: {str(e)}"
+            conf = 0.0
+            
+        latency = (time.time() - start_time) * 1000
+        return MemberVote(member.model_id, text, conf, latency)
+
+    async def query(self, question: str, strategy: VotingStrategy, llm_fn: Callable) -> CommitteeVerdict:
+        """Queries the committee and applies the voting strategy."""
+        if not self.members:
+            raise ValueError("Committee has no members")
+            
+        logger.info(f"Querying committee with strategy: {strategy.name}")
+        tasks = [self._get_member_vote(m, question, llm_fn) for m in self.members.values()]
+        votes = await asyncio.gather(*tasks)
+        
+        consensus = ""
+        agreement = 0.0
         
         if strategy == VotingStrategy.MAJORITY:
-            consensus = self._aggregate_majority(votes)
+            consensus, agreement = self._resolve_majority(votes)
         elif strategy == VotingStrategy.WEIGHTED:
-            consensus = self._aggregate_weighted(votes)
+            consensus, agreement = self._resolve_weighted(votes)
+        elif strategy == VotingStrategy.UNANIMOUS:
+            consensus, agreement = self._resolve_unanimous(votes)
         elif strategy == VotingStrategy.BEST_SCORE:
-            consensus = self._aggregate_best_score(votes)
+            consensus, agreement = self._resolve_best_score(votes)
         else:
-            raise ValueError("Invalid voting strategy")
-
-        agreement_score = self._compute_agreement(votes)
-
+            consensus = votes[0].response # Fallback
+            agreement = 1.0 / len(votes)
+            
         return CommitteeVerdict(
             question=question,
             votes=votes,
             consensus=consensus,
-            agreement_score=agreement_score,
+            agreement_score=agreement,
             strategy_used=strategy
         )
 
-    async def _call_member(self, member: CommitteeMember, question: str) -> MemberVote:
-        # Simulated response generation
-        response = f"Response from {member.model_id}"
-        confidence = random.uniform(0.5, 1.0)
-        latency_ms = random.randint(10, 200)
+    def _resolve_majority(self, votes: List[MemberVote]) -> Tuple[str, float]:
+        """Simple count-based majority."""
+        counts: Dict[str, int] = {}
+        for v in votes:
+            counts[v.response] = counts.get(v.response, 0) + 1
+            
+        winner = max(counts, key=counts.get)
+        agreement = counts[winner] / len(votes)
+        return winner, agreement
 
-        return MemberVote(
-            member_id=member.model_id,
-            response=response,
-            confidence=confidence,
-            latency_ms=latency_ms
-        )
+    def _resolve_weighted(self, votes: List[MemberVote]) -> Tuple[str, float]:
+        """Weighted majority based on member weights and confidence."""
+        scores: Dict[str, float] = {}
+        total_weight = 0.0
+        
+        for v in votes:
+            weight = self.members[v.member_id].weight * v.confidence
+            scores[v.response] = scores.get(v.response, 0.0) + weight
+            total_weight += weight
+            
+        winner = max(scores, key=scores.get)
+        agreement = scores[winner] / total_weight if total_weight > 0 else 0.0
+        return winner, agreement
 
-    def _aggregate_majority(self, votes: list[MemberVote]) -> str:
-        vote_counts = {}
-        for vote in votes:
-            if vote.response in vote_counts:
-                vote_counts[vote.response] += 1
-            else:
-                vote_counts[vote.response] = 1
+    def _resolve_unanimous(self, votes: List[MemberVote]) -> Tuple[str, float]:
+        """Requires all votes to be identical."""
+        responses = set(v.response for v in votes)
+        if len(responses) == 1:
+            return votes[0].response, 1.0
+        return "NO_CONSENSUS", 0.0
 
-        return max(vote_counts, key=vote_counts.get)
+    def _resolve_best_score(self, votes: List[MemberVote]) -> Tuple[str, float]:
+        """Selects the response with the highest confidence."""
+        best = max(votes, key=lambda x: x.confidence)
+        return best.response, best.confidence
 
-    def _aggregate_weighted(self, votes: list[MemberVote]) -> str:
-        weighted_votes = {}
-        for vote in votes:
-            if vote.response in weighted_votes:
-                weighted_votes[vote.response] += vote.confidence * self.members[self._get_member_index(vote.member_id)].weight
-            else:
-                weighted_votes[vote.response] = vote.confidence * self.members[self._get_member_index(vote.member_id)].weight
-
-        return max(weighted_votes, key=weighted_votes.get)
-
-    def _aggregate_best_score(self, votes: list[MemberVote]) -> str:
-        best_vote = max(votes, key=lambda v: v.confidence)
-        return best_vote.response
-
-    def _compute_agreement(self, votes: list[MemberVote]) -> float:
-        if not votes:
-            return 0.0
-
-        response_set = set(vote.response for vote in votes)
-        if len(response_set) == 1:
-            return 1.0
-
-        max_count = max(len(list(filter(lambda v: v.response == r, votes))) for r in response_set)
-        agreement_score = max_count / len(votes)
-
-        return agreement_score
-
-    def _get_member_index(self, member_id: str) -> int:
-        for i, member in enumerate(self.members):
-            if member.model_id == member_id:
-                return i
-        raise ValueError("Member not found")
-
-def build_jarvis_model_committee():
+def build_jarvis_model_committee() -> ModelCommittee:
+    """Factory with default members."""
     committee = ModelCommittee()
-    committee.add_member(CommitteeMember(model_id="model1", weight=0.3, node="node1", specialties=["science"]))
-    committee.add_member(CommitteeMember(model_id="model2", weight=0.4, node="node2", specialties=["technology"]))
-    committee.add_member(CommitteeMember(model_id="model3", weight=0.3, node="node3", specialties=["art"]))
+    committee.add_member(CommitteeMember("qwen3.5-9b", weight=1.5, specialties=["code", "logic"]))
+    committee.add_member(CommitteeMember("deepseek-r1", weight=1.2, specialties=["reasoning"]))
+    committee.add_member(CommitteeMember("gemma3", weight=1.0, specialties=["general"]))
     return committee
 
-async def main():
+# Mock multi-model LLM for demo
+async def mock_cluster_llm(model_id: str, prompt: str) -> Dict[str, Any]:
+    await asyncio.sleep(0.05)
+    # Simulate slightly different opinions
+    if "health" in prompt.lower():
+        if model_id == "qwen3.5-9b":
+            return {"text": "Cluster is HEALTHY", "confidence": 0.95}
+        if model_id == "deepseek-r1":
+            return {"text": "Cluster is HEALTHY", "confidence": 0.92}
+        return {"text": "Cluster might be STABLE", "confidence": 0.7}
+    return {"text": "I don't know", "confidence": 0.1}
+
+async def demo():
     committee = build_jarvis_model_committee()
-    question = "What is the capital of France?"
-    strategy = VotingStrategy.MAJORITY
-    verdict = await committee.query(question, strategy)
-    print(f"Question: {verdict.question}")
-    print(f"Consensus: {verdict.consensus}")
-    print(f"Agreement Score: {verdict.agreement_score:.2f}")
-    print(f"Strategy Used: {verdict.strategy_used.name}")
+    question = "What is the current health status of the JARVIS cluster?"
+    
+    for strategy in [VotingStrategy.MAJORITY, VotingStrategy.WEIGHTED, VotingStrategy.BEST_SCORE]:
+        print(f"\n--- TESTING STRATEGY: {strategy.name} ---")
+        verdict = await committee.query(question, strategy, mock_cluster_llm)
+        
+        print(f"Consensus: {verdict.consensus}")
+        print(f"Agreement Score: {verdict.agreement_score:.2%}")
+        for vote in verdict.votes:
+            print(f"  [{vote.member_id}] -> \"{vote.response}\" (conf: {vote.confidence})")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(demo())
