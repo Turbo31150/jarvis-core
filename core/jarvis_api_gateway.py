@@ -196,6 +196,25 @@ def list_workflows():
     from jarvis_workflow_engine import WORKFLOWS
     return jsonify({k: {"steps": len(v["steps"]), "parallel": v["parallel"]} for k, v in WORKFLOWS.items()})
 
+
+@app.route("/advisor")
+def advisor():
+    from jarvis_optimization_advisor import analyze
+    return jsonify(analyze())
+
+@app.route("/logs")
+def logs():
+    raw = r_client.get("jarvis:log_analysis")
+    if not raw:
+        from jarvis_log_analyzer import analyze_all
+        return jsonify(analyze_all())
+    return jsonify(json.loads(raw))
+
+@app.route("/self-test")
+def self_test():
+    from jarvis_self_test import run
+    return jsonify(run())
+
 if __name__ == "__main__":
     print("[API Gateway] Starting on :8767")
     app.run(host="0.0.0.0", port=8767, debug=False, threaded=True)

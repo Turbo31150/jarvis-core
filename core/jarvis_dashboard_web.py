@@ -32,8 +32,10 @@ h2{{color:#9598a1;font-size:14px;margin-top:20px}}
 {llm_blocks}
 <h2>CIRCUIT BREAKERS</h2>
 {cb_status}
+<h2>SERVICES</h2>
+{service_blocks}
 {cost_line}
-<p style="color:#444;font-size:11px">Auto-refresh 10s</p>
+<p style="color:#444;font-size:11px">Auto-refresh 10s | <a href="http://localhost:8767/workflow" style="color:#555">Workflows</a> | <a href="http://localhost:9090/metrics" style="color:#555">Prometheus</a></p>
 </body></html>"""
 
 
@@ -101,6 +103,34 @@ def render():
         cost_total += float(r.hget(key, "cost_usd") or 0)
     cost_line = f'<p style="color:#888;font-size:12px">💰 Tokens cost today: ${cost_total:.4f} | <a href="/api" style="color:#555">API</a></p>'
 
+    # Service health
+    import subprocess
+
+    svc_out = (
+        subprocess.run(
+            [
+                "systemctl",
+                "is-active",
+                "jarvis-api",
+                "jarvis-dashboard",
+                "jarvis-prometheus",
+                "jarvis-hw-monitor",
+                "jarvis-telegram-alert",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        .stdout.strip()
+        .split("\n")
+    )
+    svc_names = ["api", "dashboard", "prometheus", "hw-monitor", "telegram"]
+    service_blocks = ""
+    for name, status in zip(svc_names, svc_out):
+        c = "ok" if status == "active" else "err"
+        service_blocks += (
+            f'<span class="{c}" style="margin-right:12px">{name}:{status}</span>'
+        )
+
     return HTML_TEMPLATE.format(
         total=total,
         score_color=score_color,
@@ -111,6 +141,7 @@ def render():
         node_blocks=nodes,
         llm_blocks=llms,
         cb_status=cb_status,
+        service_blocks=service_blocks,
         cost_line=cost_line,
     )
 
