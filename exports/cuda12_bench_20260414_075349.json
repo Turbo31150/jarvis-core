@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-04-14T07:53:49",
+  "backend": "llama.cpp-linux-x86_64-nvidia-cuda12-avx2",
+  "model": "qwen/qwen3.5-9b",
+  "gpu": "RTX 3080 (GPU4, 10GB)",
+  "stages": [
+    {
+      "stage": "x1",
+      "concurrent": 1,
+      "ok": 1,
+      "fail": 0,
+      "total_time_s": 0.91,
+      "avg_tps": 66.2,
+      "max_tps": 66.2,
+      "avg_lat": 0.91,
+      "throughput_rps": 1.1,
+      "vram_gpu4_mb": 8292
+    },
+    {
+      "stage": "x5",
+      "concurrent": 5,
+      "ok": 5,
+      "fail": 0,
+      "total_time_s": 2.76,
+      "avg_tps": 32.7,
+      "max_tps": 40.1,
+      "avg_lat": 2.0,
+      "throughput_rps": 1.81,
+      "vram_gpu4_mb": 8292
+    },
+    {
+      "stage": "x10",
+      "concurrent": 10,
+      "ok": 0,
+      "fail": 10,
+      "total_time_s": 0.54,
+      "avg_tps": 0,
+      "max_tps": 0,
+      "avg_lat": 0,
+      "throughput_rps": 0.0,
+      "vram_gpu4_mb": 296
+    },
+    {
+      "stage": "x20",
+      "concurrent": 20,
+      "ok": 16,
+      "fail": 4,
+      "total_time_s": 9.16,
+      "avg_tps": 9.5,
+      "max_tps": 13.6,
+      "avg_lat": 6.78,
+      "throughput_rps": 1.75,
+      "vram_gpu4_mb": 8292
+    }
+  ],
+  "summary": {
+    "avg_tps": 36.1,
+    "peak_tps": 66.2,
+    "peak_rps": 1.81,
+    "success_rate_pct": 70.0,
+    "score": 25.3
+  }
+}
