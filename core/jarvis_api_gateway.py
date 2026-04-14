@@ -142,6 +142,37 @@ def models():
     return jsonify(json.loads(raw))
 
 
+@app.route("/flags")
+def flags():
+    from jarvis_feature_flags import all_flags
+
+    return jsonify(all_flags())
+
+
+@app.route("/flags/<flag>", methods=["POST"])
+def set_flag_route(flag):
+    data = request.json or {}
+    value = bool(data.get("value", False))
+    from jarvis_feature_flags import set_flag
+
+    set_flag(flag, value)
+    return jsonify({"flag": flag, "value": value})
+
+
+@app.route("/tracer/recent")
+def tracer_recent():
+    from jarvis_distributed_tracer import recent_traces
+
+    return jsonify(recent_traces(20))
+
+
+@app.route("/sla")
+def sla():
+    from jarvis_sla_tracker import full_report
+
+    return jsonify(full_report())
+
+
 if __name__ == "__main__":
     print("[API Gateway] Starting on :8767")
     app.run(host="0.0.0.0", port=8767, debug=False, threaded=True)
