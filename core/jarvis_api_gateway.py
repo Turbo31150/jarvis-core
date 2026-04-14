@@ -173,6 +173,16 @@ def sla():
     return jsonify(full_report())
 
 
+
+@app.route("/intent", methods=["POST"])
+def intent():
+    data = request.json or {}
+    text = data.get("text", "")
+    if not text:
+        return jsonify({"error": "text required"}), 400
+    from jarvis_intent_classifier import classify
+    return jsonify(classify(text))
+
 if __name__ == "__main__":
     print("[API Gateway] Starting on :8767")
     app.run(host="0.0.0.0", port=8767, debug=False, threaded=True)
