@@ -35,6 +35,14 @@ PROMPT="$*"
 $PROMPT"
 [[ -z "$PROMPT" ]] && { echo "Usage: lm-ask.sh \"question\"" >&2; exit 1; }
 
+# Guard VRAM (warn si critique, enforce si >85%)
+GUARD_OUT=$(python3 ~/IA/Core/jarvis/scripts/lm_guard.py check 2>/dev/null)
+GUARD_EXIT=$?
+if [[ $GUARD_EXIT -eq 2 ]]; then
+  echo "🔴 [GUARD CRITICAL] $GUARD_OUT" >&2
+  python3 ~/IA/Core/jarvis/scripts/lm_guard.py enforce >/dev/null 2>&1
+fi
+
 M1="http://127.0.0.1:1234"
 M2="http://192.168.1.26:1234"
 

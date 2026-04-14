@@ -54,10 +54,24 @@ def run_chain(incident_type: str, context: dict = {}):
             continue
 
         if cmd:
+            import re
+            import shlex
+
+            # SEC-002: valider les valeurs injectées via context avant shell execution
+            for k, v in context.items():
+                if not re.fullmatch(r"[\w.\-:/]+", str(v)):
+                    results.append(
+                        {
+                            "step": step_name,
+                            "status": "blocked",
+                            "output": f"context[{k!r}] rejected: unsafe chars",
+                        }
+                    )
+                    continue
             cmd_fmt = cmd.format(**context)
             try:
                 out = subprocess.run(
-                    cmd_fmt, shell=True, capture_output=True, text=True, timeout=30
+                    shlex.split(cmd_fmt), capture_output=True, text=True, timeout=30
                 )
                 results.append(
                     {

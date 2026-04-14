@@ -31,7 +31,7 @@ done
 
 ---
 
-## BLOC 1 — INTÉGRER lm_guard dans lm-ask.sh [🔴 TODO]
+## BLOC 1 — INTÉGRER lm_guard dans lm-ask.sh [✅ DONE]
 **But :** Enforcement automatique avant chaque appel LLM. Sans ça, les règles restent du texte.
 
 ```bash
@@ -93,7 +93,7 @@ crontab -l | grep lm_guard
 
 ---
 
-## BLOC 4 — BRANCHER quality_hub SUR LE PROXY LLM [🔴 TODO]
+## BLOC 4 — BRANCHER quality_hub SUR LE PROXY LLM [✅ DONE]
 **But :** Chaque requête passant par `jarvis-proxy:18800` est automatiquement analysée (injection, modération, hallucination).
 
 ```bash
@@ -203,7 +203,7 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"
 
 ---
 
-## BLOC 8 — HOOK lm_guard DANS UserPromptSubmit [🔴 TODO]
+## BLOC 8 — HOOK lm_guard DANS UserPromptSubmit [✅ DONE]
 **But :** Guard auto à chaque message Claude Code (pas seulement lm-ask).
 
 Dans `~/.claude/settings.json`, ajouter :
@@ -231,14 +231,14 @@ Dans `~/.claude/settings.json`, ajouter :
 | Bloc | Action | Statut | Priorité |
 |------|--------|--------|----------|
 | 0 | Guard pré-session | ✅ OPÉRATIONNEL | Chaque session |
-| 1 | Hook lm-ask.sh | 🔴 TODO | HIGH |
+| 1 | Hook lm-ask.sh | ✅ DONE | HIGH |
 | 2 | TTL LM Studio par défaut | 🔴 TODO | HIGH |
 | 3 | Cron guard hebdo | 🔴 TODO | MEDIUM |
-| 4 | quality_hub → proxy | 🔴 TODO | HIGH |
+| 4 | quality_hub → proxy | ✅ DONE | HIGH |
 | 5 | Enrichissement modules | ⏳ AUTO | LOW |
 | 6 | Benchmark résultats | ✅ DONE | ~~MEDIUM~~ |
 | 7 | Commit final journée | 🔴 TODO | HIGH |
-| 8 | Hook UserPromptSubmit | 🔴 TODO | MEDIUM |
+| 8 | Hook UserPromptSubmit | ✅ DONE | MEDIUM |
 
 ---
 

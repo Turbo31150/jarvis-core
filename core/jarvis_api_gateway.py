@@ -12,6 +12,28 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 app = Flask("jarvis-api")
 r_client = redis.Redis(decode_responses=True)
 
+# SEC-004: token interne minimal (définir JARVIS_API_TOKEN dans l'env pour activer)
+_API_TOKEN = os.environ.get("JARVIS_API_TOKEN", "")
+_PUBLIC_ENDPOINTS = {"health", "static"}
+
+
+@app.before_request
+def _check_token():
+    if _API_TOKEN and request.endpoint not in _PUBLIC_ENDPOINTS:
+        if request.headers.get("X-Jarvis-Token") != _API_TOKEN:
+            from flask import abort
+
+            abort(401)
+
+
+# SEC-005: security headers sur toutes les réponses
+@app.after_request
+def _security_headers(resp):
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["X-Frame-Options"] = "DENY"
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
+
 
 @app.route("/health")
 def health():

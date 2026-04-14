@@ -1,9 +1,10 @@
 """JARVIS Task Dispatcher — Routes tasks to M1/M2/M3/BrowserOS/local."""
+
 import logging
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import requests
 
@@ -21,19 +22,29 @@ NODES: Dict[str, str] = {
 
 # Task type → (primary node, model, fallback chain)
 ROUTING_TABLE: Dict[str, List[dict]] = {
-    "fast":      [{"node": "M3", "model": "deepseek-r1-qwen3-8b"},
-                  {"node": "M1", "model": "gemma-3-4b"},
-                  {"node": "OL1", "model": "qwen2.5:1.5b"}],
-    "deep":      [{"node": "M3", "model": "deepseek-r1-qwen3-8b"},
-                  {"node": "M1", "model": "deepseek-r1"},
-                  {"node": "OL1", "model": "deepseek-r1:7b"}],
-    "code":      [{"node": "M2", "model": "deepseek-coder"},
-                  {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
-                  {"node": "M1", "model": "qwen3.5-9b"}],
-    "generic":   [{"node": "M1", "model": "gemma-3-4b"},
-                  {"node": "M3", "model": "deepseek-r1-qwen3-8b"}],
-    "analysis":  [{"node": "M3", "model": "deepseek-r1-qwen3-8b"},
-                  {"node": "M1", "model": "qwen3.5-9b"}],
+    "fast": [
+        {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
+        {"node": "M1", "model": "gemma-3-4b"},
+        {"node": "OL1", "model": "qwen2.5:1.5b"},
+    ],
+    "deep": [
+        {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
+        {"node": "M1", "model": "deepseek-r1"},
+        {"node": "OL1", "model": "deepseek-r1:7b"},
+    ],
+    "code": [
+        {"node": "M2", "model": "deepseek-coder"},
+        {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
+        {"node": "M1", "model": "qwen3.5-9b"},
+    ],
+    "generic": [
+        {"node": "M1", "model": "gemma-3-4b"},
+        {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
+    ],
+    "analysis": [
+        {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
+        {"node": "M1", "model": "qwen3.5-9b"},
+    ],
 }
 
 ANTI_THINK_PREFIX = "<think>\n</think>\n\n"
@@ -96,37 +107,58 @@ class TaskDispatcher:
 
         for route in chain:
             try:
-                output = _call_node(route["node"], route["model"], task.prompt, task.timeout)
+                output = _call_node(
+                    route["node"], route["model"], task.prompt, task.timeout
+                )
                 return TaskResult(
-                    request_id=task.id, status=TaskStatus.COMPLETED,
-                    output=output, node=route["node"],
-                    duration=time.time() - start, confidence=1.0,
+                    request_id=task.id,
+                    status=TaskStatus.COMPLETED,
+                    output=output,
+                    node=route["node"],
+                    duration=time.time() - start,
+                    confidence=1.0,
                 )
             except Exception as e:
                 logger.warning("Node %s failed: %s — trying fallback", route["node"], e)
 
         return TaskResult(
-            request_id=task.id, status=TaskStatus.FAILED,
-            error="All nodes exhausted", duration=time.time() - start,
+            request_id=task.id,
+            status=TaskStatus.FAILED,
+            error="All nodes exhausted",
+            duration=time.time() - start,
         )
 
     def _run_local(self, task: TaskRequest, start: float) -> TaskResult:
-        proc = subprocess.run(task.prompt, shell=True, capture_output=True, text=True, timeout=task.timeout)
+        import shlex
+
+        # SEC-001: shell=True avec task.prompt était une RCE — tokeniser sans shell
+        cmd_parts = shlex.split(task.prompt)
+        proc = subprocess.run(
+            cmd_parts, capture_output=True, text=True, timeout=task.timeout
+        )
         return TaskResult(
             request_id=task.id,
             status=TaskStatus.COMPLETED if proc.returncode == 0 else TaskStatus.FAILED,
-            output=proc.stdout.strip(), error=proc.stderr.strip() or None,
-            node="local", duration=time.time() - start,
+            output=proc.stdout.strip(),
+            error=proc.stderr.strip() or None,
+            node="local",
+            duration=time.time() - start,
         )
 
     def _run_browser(self, task: TaskRequest, start: float) -> TaskResult:
-        proc = subprocess.run(["browseros", "run", task.prompt],
-                              capture_output=True, text=True, timeout=task.timeout)
+        proc = subprocess.run(
+            ["browseros", "run", task.prompt],
+            capture_output=True,
+            text=True,
+            timeout=task.timeout,
+        )
         return TaskResult(
             request_id=task.id,
             status=TaskStatus.COMPLETED if proc.returncode == 0 else TaskStatus.FAILED,
-            output=proc.stdout.strip(), error=proc.stderr.strip() or None,
-            node="browseros", duration=time.time() - start,
+            output=proc.stdout.strip(),
+            error=proc.stderr.strip() or None,
+            node="browseros",
+            duration=time.time() - start,
         )
 
     def _run_consensus(self, task: TaskRequest, start: float) -> TaskResult:
@@ -138,7 +170,9 @@ class TaskDispatcher:
         results = {}
         with ThreadPoolExecutor(max_workers=2) as pool:
             futures = {
-                pool.submit(_call_node, r["node"], r["model"], task.prompt, task.timeout): r["node"]
+                pool.submit(
+                    _call_node, r["node"], r["model"], task.prompt, task.timeout
+                ): r["node"]
                 for r in routes
             }
             for future in as_completed(futures):
@@ -149,8 +183,11 @@ class TaskDispatcher:
                     results[node] = f"[ERROR] {e}"
 
         return TaskResult(
-            request_id=task.id, status=TaskStatus.COMPLETED,
-            output=results, node="consensus",
-            duration=time.time() - start, confidence=0.8,
+            request_id=task.id,
+            status=TaskStatus.COMPLETED,
+            output=results,
+            node="consensus",
+            duration=time.time() - start,
+            confidence=0.8,
             metadata={"nodes_queried": list(results.keys())},
         )

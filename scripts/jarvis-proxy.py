@@ -6,11 +6,41 @@ Compatible OpenAI API (/v1/chat/completions).
 """
 
 import json
+import subprocess
+import sys
 import threading
 import urllib.request
 import urllib.error
 import time
 from http.server import HTTPServer, BaseHTTPRequestHandler
+
+# ── Quality Hub (optionnel — ne bloque pas si absent) ───────────────────────
+sys.path.insert(0, "/home/turbo/IA/Core/jarvis/core")
+try:
+    from jarvis_quality_hub import build_jarvis_quality_hub
+
+    _hub = build_jarvis_quality_hub()
+except Exception:
+    _hub = None
+
+LM_GUARD = "/home/turbo/IA/Core/jarvis/scripts/lm_guard.py"
+
+
+def _guard_check():
+    """Lance lm_guard check en background — enforce si critique."""
+    try:
+        r = subprocess.run(
+            ["python3", LM_GUARD, "check"], capture_output=True, text=True, timeout=5
+        )
+        if r.returncode == 2:
+            subprocess.Popen(
+                ["python3", LM_GUARD, "enforce"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+    except Exception:
+        pass
+
 
 BACKENDS = [
     ("http://192.168.1.85:1234", "qwen/qwen3.5-9b", "openai"),
@@ -125,6 +155,26 @@ class Handler(BaseHTTPRequestHandler):
         messages = body.get("messages", [])
         max_tokens = body.get("max_tokens", 4096)
         temperature = body.get("temperature", 0.2)
+
+        # Guard VRAM en background (non-bloquant)
+        threading.Thread(target=_guard_check, daemon=True).start()
+
+        # Quality Hub — pré-filtre injection/modération
+        prompt_text = " ".join(
+            m.get("content", "") for m in messages if m.get("role") == "user"
+        )
+        if _hub and prompt_text:
+            guard = _hub.analyze_input(prompt_text)
+            if guard.get("action") == "BLOCK":
+                resp = json.dumps(
+                    {"error": "blocked", "reason": guard.get("reason", "quality_hub")}
+                ).encode()
+                self.send_response(400)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Length", len(resp))
+                self.end_headers()
+                self.wfile.write(resp)
+                return
 
         t0 = time.time()
         r = race(messages, max_tokens, temperature)
