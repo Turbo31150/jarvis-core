@@ -13,3 +13,6 @@ backups/
 *.png
 *.pdf
 config/secrets.env
+
+# Session data (may contain sensitive context)
+data/session/

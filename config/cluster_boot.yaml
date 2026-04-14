@@ -9,7 +9,7 @@ machines:
         timeout: 30
         retries: 3
       jarvis-pipeline:
-        health: "http://127.0.0.1:9742/"
+        health: "http://127.0.0.1:9742/health"
         start: "docker start jarvis-pipeline"
         depends: []
         timeout: 15

@@ -42,8 +42,8 @@ $PROMPT"
 [[ -z "$PROMPT" ]] && { echo "Usage: lm-ask.sh \"question\"" >&2; exit 1; }
 
 # Guard VRAM (enforce silencieux si critique >85%)
-python3 ~/IA/Core/jarvis/scripts/lm_guard.py check >/dev/null 2>&1
-[[ $? -eq 2 ]] && python3 ~/IA/Core/jarvis/scripts/lm_guard.py enforce >/dev/null 2>&1
+python3 ~/IA/Core/jarvis/scripts/lm_guard.py check >/dev/null 2>&1 || true
+[[ $? -eq 2 ]] && python3 ~/IA/Core/jarvis/scripts/lm_guard.py enforce >/dev/null 2>&1 || true
 
 M1="http://127.0.0.1:1234"
 M2="http://192.168.1.26:1234"

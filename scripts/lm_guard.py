@@ -287,7 +287,9 @@ def main():
         for i in all_issues:
             icon = "🔴" if i["level"] == "CRITICAL" else "⚠️"
             print(f"{icon} [{i['level']}] {i['msg']}")
-        sys.exit(2 if has_critical else 1)
+        sys.exit(
+            2 if has_critical else 0
+        )  # WARN = exit 0 (non-bloquant pour lm-ask.sh)
 
     elif cmd == "enforce":
         actions = enforce(models, gpus)
