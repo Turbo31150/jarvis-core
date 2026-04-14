@@ -1,0 +1,37 @@
+{
+  "exported_at": "2026-04-14T06:22:04.668828",
+  "count": 4,
+  "events": [
+    {
+      "ts": "2026-04-14T06:17:55",
+      "type": "notification",
+      "severity": "info",
+      "source": "test",
+      "message": "Test dedup"
+    },
+    {
+      "ts": "2026-04-14T06:17:55",
+      "type": "notification",
+      "severity": "info",
+      "source": "test",
+      "message": "Test info notification"
+    },
+    {
+      "type": "test",
+      "source": "claude",
+      "ts": "2026-04-14T03:31:22.246126",
+      "data": {
+        "msg": "event_sourcing_check"
+      }
+    },
+    {
+      "type": "system_ready",
+      "source": "jarvis",
+      "ts": "2026-04-14T02:38:35.502093",
+      "data": {
+        "version": "1.0",
+        "phase": "optimization"
+      }
+    }
+  ]
+}

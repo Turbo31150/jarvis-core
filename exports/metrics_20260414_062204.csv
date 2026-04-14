@@ -1,0 +1,14 @@
+metric,value,unit
+gpu0_temp,37,celsius
+gpu0_vram_pct,4.0,percent
+gpu1_temp,32,celsius
+gpu1_vram_pct,0.1,percent
+gpu2_temp,33,celsius
+gpu2_vram_pct,0.1,percent
+gpu3_temp,30,celsius
+gpu3_vram_pct,0.1,percent
+gpu4_temp,31,celsius
+gpu4_vram_pct,0.7,percent
+llm_calls_fast,4,count
+llm_calls_summary,1,count
+jarvis_score,100,points
