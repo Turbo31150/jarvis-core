@@ -359,6 +359,59 @@ def notif_stats():
     return jsonify(stats())
 
 
+@app.route("/infer", methods=["POST"])
+def infer_route():
+    data = request.json or {}
+    prompt = data.get("prompt", "")
+    if not prompt:
+        return jsonify({"error": "prompt required"}), 400
+    from jarvis_inference_gateway import infer
+
+    return jsonify(
+        infer(prompt, data.get("task_type", "default"), data.get("use_cache", True))
+    )
+
+
+@app.route("/models/select")
+def models_select():
+    task = request.args.get("task", "default")
+    from jarvis_model_selector import select
+
+    return jsonify(select(task))
+
+
+@app.route("/models/probe")
+def models_probe():
+    from jarvis_model_selector import probe_all
+
+    return jsonify(probe_all())
+
+
+@app.route("/governor")
+def governor_route():
+    from jarvis_resource_governor import govern
+
+    return jsonify(govern())
+
+
+@app.route("/anomalies")
+def anomalies():
+    from jarvis_anomaly_scorer import scan_anomalies
+
+    return jsonify(scan_anomalies())
+
+
+@app.route("/nodes")
+def nodes():
+    result = {}
+    for n in ["M1", "M2", "M3", "M32", "OL1"]:
+        result[n] = {
+            "status": r_client.get(f"jarvis:node:{n}:status") or "unknown",
+            "info": r_client.hgetall(f"jarvis:node:{n}:info"),
+        }
+    return jsonify(result)
+
+
 if __name__ == "__main__":
     print("[API Gateway] Starting on :8767")
     app.run(host="0.0.0.0", port=8767, debug=False, threaded=True)

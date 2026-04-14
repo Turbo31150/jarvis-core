@@ -1,47 +1,87 @@
 #!/usr/bin/env python3
-"""JARVIS Prompt Optimizer — Améliore les prompts selon score historique"""
-import redis, json
+"""JARVIS Prompt Optimizer — Optimize prompts for better LLM performance"""
+
+import redis
+import json
+import re
 from datetime import datetime
 
 r = redis.Redis(decode_responses=True)
+PREFIX = "jarvis:prompt_opt"
 
-PROMPT_TEMPLATES = {
-    "code_review":    "Analyse ce code Python et liste les bugs critiques uniquement:\n{code}",
-    "summarize":      "Résume en 3 points clés maximum:\n{text}",
-    "dispatch":       "Tâche: {task}\nAgent optimal parmi: {agents}\nRéponds juste le nom de l'agent.",
-    "trading_signal": "Données: {data}\nSignal BUY/SELL/HOLD uniquement avec confiance 0-100.",
-    "debug":          "Erreur: {error}\nCause probable + fix en 2 lignes max.",
+OPTIMIZATION_RULES = [
+    {"name": "add_conciseness",   "trigger": lambda p: len(p) > 500,          "transform": lambda p: f"Be concise. {p}"},
+    {"name": "add_format",        "trigger": lambda p: "list" in p.lower() and "\n" not in p, "transform": lambda p: f"{p}\nRespond as a numbered list."},
+    {"name": "add_no_preamble",   "trigger": lambda p: len(p) < 200,          "transform": lambda p: f"{p}\nAnswer directly without preamble."},
+    {"name": "add_json_format",   "trigger": lambda p: "json" in p.lower(),   "transform": lambda p: f"{p}\nRespond with valid JSON only."},
+    {"name": "strip_filler",      "trigger": lambda p: "please" in p.lower() or "could you" in p.lower(), "transform": lambda p: re.sub(r'(?i)(please |could you |can you )', '', p).strip()},
+]
+
+TASK_PROMPTS = {
+    "code":      "You are an expert Python developer. Write clean, minimal code. ",
+    "reasoning": "Think step by step. Show your reasoning. ",
+    "summary":   "Summarize concisely in plain language. ",
+    "classify":  "Classify the following. Answer with just the category name. ",
+    "trading":   "You are an expert crypto trader. Be precise and data-driven. ",
 }
 
-def get_best_prompt(template_name: str) -> str:
-    # Cherche version optimisée dans Redis
-    opt = r.get(f"jarvis:prompt_opt:{template_name}")
-    if opt:
-        return json.loads(opt)["prompt"]
-    return PROMPT_TEMPLATES.get(template_name, "")
 
-def record_prompt_result(template_name: str, prompt: str, score: float):
-    key = f"jarvis:prompt_history:{template_name}"
-    r.lpush(key, json.dumps({"prompt": prompt, "score": score, "ts": datetime.now().isoformat()}))
-    r.ltrim(key, 0, 49)
-    # Si score > seuil, sauvegarder comme meilleur
-    best = r.get(f"jarvis:prompt_opt:{template_name}")
-    best_score = json.loads(best)["score"] if best else 0
-    if score > best_score:
-        r.set(f"jarvis:prompt_opt:{template_name}", json.dumps({"prompt": prompt, "score": score}))
+def optimize(prompt: str, task_type: str = "default", aggressive: bool = False) -> dict:
+    original = prompt
+    applied_rules = []
 
-def stats():
-    result = {}
-    for name in PROMPT_TEMPLATES:
-        history = r.lrange(f"jarvis:prompt_history:{name}", 0, -1)
-        if history:
-            scores = [json.loads(h)["score"] for h in history]
-            result[name] = {"uses": len(scores), "avg_score": round(sum(scores)/len(scores),1)}
+    # Add task-specific prefix
+    if task_type in TASK_PROMPTS:
+        prefix = TASK_PROMPTS[task_type]
+        if not prompt.startswith(prefix[:20]):
+            prompt = prefix + prompt
+            applied_rules.append("task_prefix")
+
+    # Apply rules
+    for rule in OPTIMIZATION_RULES:
+        try:
+            if rule["trigger"](prompt):
+                new_prompt = rule["transform"](prompt)
+                if new_prompt != prompt:
+                    prompt = new_prompt
+                    applied_rules.append(rule["name"])
+        except Exception:
+            pass
+
+    # Aggressive: compress whitespace
+    if aggressive:
+        prompt = " ".join(prompt.split())
+        applied_rules.append("whitespace_compress")
+
+    result = {
+        "original": original[:200],
+        "optimized": prompt,
+        "original_len": len(original),
+        "optimized_len": len(prompt),
+        "rules_applied": applied_rules,
+        "delta_chars": len(prompt) - len(original),
+    }
+    r.hincrby(f"{PREFIX}:stats", "optimized", 1)
     return result
 
+
+def batch_optimize(prompts: list, task_type: str = "default") -> list:
+    return [optimize(p, task_type) for p in prompts]
+
+
+def stats() -> dict:
+    data = r.hgetall(f"{PREFIX}:stats")
+    return {"total_optimized": int(data.get("optimized", 0))}
+
+
 if __name__ == "__main__":
-    print("Prompt templates:", list(PROMPT_TEMPLATES.keys()))
-    record_prompt_result("debug", PROMPT_TEMPLATES["debug"], 8.5)
-    record_prompt_result("summarize", PROMPT_TEMPLATES["summarize"], 9.0)
-    print("Stats:", stats())
-    print("✅ Prompt optimizer OK")
+    tests = [
+        ("What is redis?", "default"),
+        ("Please could you write a python function to sort a list", "code"),
+        ("Give me a list of 5 best practices for REST APIs", "default"),
+        ('Return user data as json format: {"name": "test"}', "default"),
+    ]
+    for prompt, task in tests:
+        res = optimize(prompt, task)
+        print(f"  [{task}] '{prompt[:40]}...' → rules={res['rules_applied']}")
+    print(f"Stats: {stats()}")
