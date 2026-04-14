@@ -173,7 +173,6 @@ def sla():
     return jsonify(full_report())
 
 
-
 @app.route("/intent", methods=["POST"])
 def intent():
     data = request.json or {}
@@ -181,39 +180,115 @@ def intent():
     if not text:
         return jsonify({"error": "text required"}), 400
     from jarvis_intent_classifier import classify
+
     return jsonify(classify(text))
 
 
 @app.route("/workflow/<name>", methods=["POST"])
 def run_workflow(name):
     from jarvis_workflow_engine import run_workflow as _run, WORKFLOWS
+
     if name not in WORKFLOWS:
-        return jsonify({"error": f"unknown workflow: {name}", "available": list(WORKFLOWS.keys())}), 404
+        return jsonify(
+            {"error": f"unknown workflow: {name}", "available": list(WORKFLOWS.keys())}
+        ), 404
     return jsonify(_run(name))
+
 
 @app.route("/workflow")
 def list_workflows():
     from jarvis_workflow_engine import WORKFLOWS
-    return jsonify({k: {"steps": len(v["steps"]), "parallel": v["parallel"]} for k, v in WORKFLOWS.items()})
+
+    return jsonify(
+        {
+            k: {"steps": len(v["steps"]), "parallel": v["parallel"]}
+            for k, v in WORKFLOWS.items()
+        }
+    )
 
 
 @app.route("/advisor")
 def advisor():
     from jarvis_optimization_advisor import analyze
+
     return jsonify(analyze())
+
 
 @app.route("/logs")
 def logs():
     raw = r_client.get("jarvis:log_analysis")
     if not raw:
         from jarvis_log_analyzer import analyze_all
+
         return jsonify(analyze_all())
     return jsonify(json.loads(raw))
+
 
 @app.route("/self-test")
 def self_test():
     from jarvis_self_test import run
+
     return jsonify(run())
+
+
+@app.route("/scheduler/tick")
+def scheduler_tick():
+    from jarvis_adaptive_scheduler import tick
+
+    return jsonify(tick())
+
+
+@app.route("/scheduler/can-run")
+def scheduler_can_run():
+    task = request.args.get("task", "default")
+    from jarvis_adaptive_scheduler import can_run
+
+    ok, reason = can_run(task)
+    return jsonify({"task": task, "can_run": ok, "reason": reason})
+
+
+@app.route("/cost/today")
+def cost_today():
+    from jarvis_cost_tracker import daily_report
+
+    return jsonify(daily_report())
+
+
+@app.route("/cost/week")
+def cost_week():
+    from jarvis_cost_tracker import weekly_summary
+
+    return jsonify(weekly_summary())
+
+
+@app.route("/events/stats")
+def events_stats():
+    from jarvis_event_replay import stats
+
+    return jsonify(stats())
+
+
+@app.route("/mesh")
+def mesh():
+    from jarvis_service_mesh import topology
+
+    return jsonify(topology())
+
+
+@app.route("/mesh/scan")
+def mesh_scan():
+    from jarvis_service_mesh import scan_all
+
+    return jsonify(scan_all())
+
+
+@app.route("/mesh/best-llm")
+def mesh_best_llm():
+    task = request.args.get("task", "default")
+    from jarvis_service_mesh import get_best_llm
+
+    return jsonify(get_best_llm(task))
+
 
 if __name__ == "__main__":
     print("[API Gateway] Starting on :8767")
