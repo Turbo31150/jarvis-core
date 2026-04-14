@@ -7,6 +7,9 @@ Usage: python3 task_decomposer.py "ma demande" [--session <sid>]
 """
 
 import json
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
 import subprocess
 import sys
 import re
@@ -73,8 +76,12 @@ def decompose_with_llm(request: str) -> list[dict]:
         if match:
             data = json.loads(match.group())
             return data.get("taches", [])
-    except Exception:
-        pass
+    except subprocess.TimeoutExpired:
+        print(f"[JPTE][WARN] LLM timeout — fallback decomposition", file=sys.stderr)
+    except json.JSONDecodeError as e:
+        print(f"[JPTE][WARN] LLM invalid JSON: {e}", file=sys.stderr)
+    except Exception as e:
+        print(f"[JPTE][ERROR] Decompose error: {type(e).__name__}: {e}", file=sys.stderr)
     return _fallback_decompose(request)
 
 

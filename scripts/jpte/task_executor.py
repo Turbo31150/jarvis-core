@@ -7,6 +7,9 @@ Usage: python3 task_executor.py <task_id>
 """
 
 import json
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
 import subprocess
 import sys
 from todolist_engine import get_db, start_task, complete_task, fail_task
