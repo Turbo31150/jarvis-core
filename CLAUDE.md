@@ -12,10 +12,51 @@ Language: French preferred for communication, English for code.
 
 ### Session Startup Sequence
 
-At every session start, automatically:
-1. Run the `session-cluster-check` hook (health check M1/M2/OL1)
-2. Check GPU thermal state via `nvidia-smi` if GPU tasks are likely
-3. Note any offline nodes silently
+At every session start, automatically execute these CLIs:
+```bash
+# 1. Health snapshot (2s)
+python3 /home/turbo/jarvis-linux/scripts/jarvis-monitor.py snapshot --json
+# 2. Kill zombies (1s)
+python3 /home/turbo/jarvis-linux/scripts/jarvis-zombie.py kill
+# 3. GPU thermal check (1s)
+python3 /home/turbo/jarvis-linux/scripts/jarvis-gpu.py thermal
+# 4. Cluster health (2s)
+python3 /home/turbo/jarvis-linux/scripts/jarvis-cluster.py health --json
+# 5. Security quick check (2s)
+python3 /home/turbo/jarvis-linux/scripts/jarvis-security.py ports
+```
+
+### CLI Auto-Trigger During Session
+
+Detect keywords in user messages and auto-execute the matching CLI:
+
+| Keywords detected | CLI to execute | Priority |
+|-------------------|----------------|----------|
+| status, health, system state | `jarvis status` | 10 |
+| gpu, vram, thermal, temperature | `jarvis-gpu status` | 9 |
+| zombie, defunct, dead process | `jarvis-zombie kill` | 9 |
+| security, audit, ports, secrets | `jarvis-security scan` | 8 |
+| cluster, node, m1, m2, m3, ol1 | `jarvis-cluster health` | 8 |
+| dispatch, send, consensus | `jai [target] "[prompt]"` | 8 |
+| boot, startup, layer | `jarvis-layers check` | 7 |
+| monitor, watch, live | `jarvis-monitor snapshot` | 7 |
+| predict, optimize, decision | `jarvis-decide predict` | 7 |
+| codeur, mission, freelance | invoke skill codeur-operator | 6 |
+| linkedin, post, content | invoke skill linkedin-operator | 6 |
+
+### Available CLIs (all in /usr/local/bin/)
+
+```
+jarvis status|health|gpu|ask|security|clean|load|skills
+jarvis-gpu status|load|unload|thermal|vram
+jarvis-cluster health|nodes|route|failover
+jarvis-security scan|ports|secrets|guard
+jarvis-zombie list|kill|parents
+jarvis-monitor snapshot|live|services
+jarvis-layers check|boot
+jarvis-decide predict|simulate|matrix|optimize|visualize
+jai [23 targets] "[prompt]" --json
+```
 
 ### Agent Auto-Trigger Matrix
 
@@ -23,6 +64,13 @@ Use these agents **proactively** when their conditions are met — do NOT wait f
 
 | Agent | Auto-Trigger When |
 |-------|-------------------|
+| `omega-dev-agent` | New feature implementation, TDD, refactoring, code generation |
+| `omega-analysis-agent` | Deep research, tech comparison, due diligence, code review |
+| `omega-system-agent` | Infra changes, backups, automation workflows, monitoring rules |
+| `omega-security-agent` | Security implementations, incident response, vulnerability scan |
+| `omega-docs-agent` | Documentation requests, learning plans, knowledge management |
+| `omega-trading-agent` | Market analysis, trading strategies, backtesting, portfolio management |
+| `omega-voice-agent` | Voice commands, audio feedback, HUD alerts, speech-to-text |
 | `jarvis-system-agent` | Any cluster operation, health check, MCP call, GPU management, EasySpeak, wave launch |
 | `ia-flow` | CPU > 80%, task separation violations, backpressure needed, system health queries |
 | `architect-guardian` | Structural changes to multi-agent system, performance anomalies, drift detection, pre-mutation validation |

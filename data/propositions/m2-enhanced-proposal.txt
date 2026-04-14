@@ -1,0 +1,15 @@
+**Note /10 : 8/10**  
+Justification : La proposition est claire et structurée (technologies, délais, investissement), mais manque de **persuasion**, d'**originalité** et de **clarté dans les bénéfices concrets**. Le langage est technique mais peu engageant, et l'appel à l'action pourrait être plus percutant.
+
+---
+
+**3 améliorations concrètes :**  
+1. **Simplifier le langage** pour mieux cibler un public non-technicien (ex. "analyser un chantier 5S" → "optimiser vos processus de production").  
+2. **Ajouter une valeur proposition unique** (ex. "un assistant IA qui réduit votre temps de prise de décision de 40%").  
+3. **Structurer en sections visuelles** (ex. "Ce que vous gagnez", "Pourquoi nous ?") pour améliorer la lecture.
+
+---
+
+**Version finale améliorée (150 mots) :**  
+Développez votre assistant IA personnalisé pour CoLean : un outil intégré à vos flux PDCA, capable d'analyser des chantiers 5S, prioriser des backlogs Lean et structurer des améliorations continues en quelques secondes.  
+Stack : React + FastAPI (déploiement en 7 jours).

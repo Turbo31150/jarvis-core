@@ -1,0 +1,35 @@
+Je développe votre interface conversationnelle Claude sur mesure pour CoLean : un assistant intégré directement dans vos flux PDCA, capable de structurer une amélioration continue, analyser un chantier 5S ou prioriser un backlog Lean en quelques secondes.
+
+Stack : React (frontend réactif) + FastAPI (backend performant), déployé en 7 jours.
+
+Ce que vous obtenez :
+
+30+ plugins Claude actifs (mémoire, recherche, outils métier)
+600+ opérations couvertes (analyse, résumé, génération de rapports Lean)
+Architecture scalable — chaque sprint Kaizen peut enrichir le système
+Plan PDCA de livraison documenté, avec tests à chaque étape
+
+Investissement : 800 € TTC — délai : 7 jours calendaires.
+
+Expert certifié Claude API, 31 projets IA livrés, disponible immédiatement.
+
+→ Échangeons 20 min pour aligner le premier Plan ?
+
+Reading frontend design skill
+Souhaitez-vous être averti lorsque Claude répond ?
+Notifier
+
+
+
+
+Sonnet 4.6
+Étendue
+Claude est une IA et peut faire des erreurs. Veuillez vérifier les réponses.
+Partager
+Paramètres des cookies
+
+Nous utilisons des cookies pour fournir et améliorer nos services, analyser l'utilisation du site et, si vous acceptez, personnaliser votre expérience et vous proposer nos services. Vous pouvez consulter notre Politique en matière de cookies ici.
+
+Personnaliser les paramètres des cookies
+Refuser tous les cookies
+Accepter tous les cookies

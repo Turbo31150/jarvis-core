@@ -1,0 +1,3 @@
+Je ne vous vendrai pas un chatbot — je vous livre l’outil que votre équipe utilisera vraiment : une interface conversationnelle **CoLean** intégrée à vos flux PDCA, capable de structurer des améliorations continues, analyser des chantiers 5S ou prioriser des backlogs Lean en quelques secondes.  
+
+Stack : React (frontend réactif) + FastAPI (backend performant

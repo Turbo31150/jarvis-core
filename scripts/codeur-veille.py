@@ -186,22 +186,31 @@ def parse_projects(html: str) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
     projects = []
 
-    # Cards have id="project-XXXXX" and class containing "card"
-    cards = soup.find_all("div", id=re.compile(r"^project-\d+"))
-    for card in cards:
-        # Extract project ID from the card's id attribute
-        card_id = card.get("id", "")
-        pid_match = re.search(r"project-(\d+)", card_id)
+    # Sélecteurs 2026 : projects-list > div.row > liens /projects/ID-slug
+    project_links = soup.find_all("a", href=re.compile(r"^/projects/\d+"))
+    seen_hrefs = set()
+    cards_links = []
+    for lnk in project_links:
+        h = lnk.get("href", "")
+        if h not in seen_hrefs:
+            seen_hrefs.add(h)
+            cards_links.append(lnk)
+    # Fallback ancien sélecteur div#project-XXXXX
+    if not cards_links:
+        for card_old in soup.find_all("div", id=re.compile(r"^project-\d+")):
+            lnk = card_old.find("a", href=re.compile(r"^/projects/\d+"))
+            if lnk and lnk.get("href") not in seen_hrefs:
+                seen_hrefs.add(lnk.get("href"))
+                cards_links.append(lnk)
+
+    for link in cards_links:
+        href = link.get("href", "")
+        pid_match = re.search(r"/projects/(\d+)", href)
         if not pid_match:
             continue
         project_id = pid_match.group(1)
-
-        # Title: find the <a> link to /projects/XXXXX-...
-        link = card.find("a", href=re.compile(r"^/projects/\d+"))
-        if not link:
-            continue
-        href = link.get("href", "")
         title = link.get_text(strip=True)
+        card = link.find_parent("article") or link.find_parent("div") or link
 
         # Full card text for field extraction and keyword matching
         card_text = card.get_text(" ", strip=True)
@@ -305,8 +314,8 @@ def save_to_db(projects: list[dict], applied_pids: set[str]) -> None:
 
 def run_check(dry_run: bool = False) -> int:
     """Run a single check cycle. Returns number of new matching projects found."""
-    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-    chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
+    bot_token = os.environ.get("TELEGRAM_BOT_TOKEN", os.environ.get("TELEGRAM_TOKEN", ""))
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID", os.environ.get("TELEGRAM_CHAT", ""))
 
     if not dry_run and (not bot_token or not chat_id):
         logger.warning("TELEGRAM_BOT_TOKEN/CHAT_ID not set — running without Telegram alerts.")

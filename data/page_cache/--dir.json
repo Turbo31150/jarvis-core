@@ -1,0 +1,13 @@
+{
+  "url": "chrome://new-tab-page/",
+  "title": "Nouvel onglet",
+  "buttons": [],
+  "links": [],
+  "forms": [],
+  "inputs": [],
+  "textareas": [],
+  "selects": [],
+  "headings": [],
+  "images": [],
+  "interactable": []
+}
