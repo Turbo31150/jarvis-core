@@ -74,13 +74,16 @@ KEYWORD_MAP = {
     "jpte": ["jpte", "todolist", "tâche", "pipeline", "dispatcher", "task", "executor"],
 }
 
-# Agents OpenClaw par pipeline
+# Agents OpenClaw par pipeline (noms réels dans openclaw agents list)
 OPENCLAW_AGENTS = {
-    "codeur": "codeur-operator",
-    "hackathon": "network-operator",
-    "cluster": "container-operator",
-    "jpte": "default",
+    "codeur": "jarvis-task-balancer",
+    "hackathon": "omega-analysis-agent",
+    "cluster": "jarvis-cluster-health",
+    "jpte": "task-decomposer-prime",
 }
+
+# Agent maître — point d'entrée unique pour orchestration complète
+MASTER_AGENT = "openclaw-master"
 
 # Prompts par pipeline
 PIPELINE_PROMPTS = {
@@ -271,42 +274,38 @@ def run_pipeline(pipeline: str, score: float) -> str:
 
     output = ""
 
-    # Try OpenClaw first (find container by name pattern)
+    # Dispatch via Agent Maître — orchestre tout le cluster stratégique
     try:
-        find_result = subprocess.run(
-            [
-                "docker",
-                "ps",
-                "--filter",
-                f"name=openclaw-sbx-agent-{agent}",
-                "--format",
-                "{{.Names}}",
-            ],
+        master_msg = (
+            f"[ADAPTIVE-TRIGGER] pipeline={pipeline} score={score:.2f} | {prompt}"
+        )
+        master_result = subprocess.run(
+            ["openclaw", "agent", "--agent", MASTER_AGENT, "--message", master_msg],
             capture_output=True,
             text=True,
-            timeout=5,
+            timeout=60,
         )
-        container_name = find_result.stdout.strip().split("\n")[0]
-
-        if container_name:
-            exec_result = subprocess.run(
-                [
-                    "docker",
-                    "exec",
-                    container_name,
-                    "python3",
-                    "-c",
-                    f"print('Pipeline {pipeline} dispatched to {container_name}')",
-                ],
-                capture_output=True,
-                text=True,
-                timeout=30,
-            )
-            output = exec_result.stdout.strip() or exec_result.stderr.strip()
-            if output:
-                return f"[OpenClaw:{container_name}] {output}"
+        master_out = master_result.stdout.strip() or master_result.stderr.strip()
+        if master_out and master_result.returncode == 0:
+            return f"[MASTER] {master_out[:300]}"
+    except subprocess.TimeoutExpired:
+        pass
     except Exception:
-        pass  # fall through to lm-ask
+        pass
+
+    # Fallback direct — agent spécialisé du pipeline
+    try:
+        direct_result = subprocess.run(
+            ["openclaw", "agent", "--agent", agent, "--message", prompt],
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        direct_out = direct_result.stdout.strip() or direct_result.stderr.strip()
+        if direct_out and direct_result.returncode == 0:
+            return f"[OpenClaw:{agent}] {direct_out[:300]}"
+    except Exception:
+        pass
 
     # Try lm-ask.sh next
     output = dispatch_via_lm_ask(pipeline, prompt)
