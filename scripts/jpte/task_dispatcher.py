@@ -1,92 +1,59 @@
 #!/usr/bin/env python3
+"""JARVIS Parallel Task Engine (JPTE) - Task Dispatcher.
+Lances agents/skills/CLI en parallèle.
 """
-JPTE — Task Dispatcher
-Lance les tâches prêtes en parallèle via asyncio.gather.
-Gère les dépendances, le domino trigger, et l'auto-feed.
-Usage: python3 task_dispatcher.py <session_id>
-"""
-
-import asyncio
-import json
 import sys
-from todolist_engine import get_ready_tasks, update_session_status, get_db, list_session
+import asyncio
+import os
+import subprocess
+from todolist_engine import TodolistEngine
 
-MAX_PARALLEL = 5
-
-
-async def run_task_async(task_id: str) -> dict:
-    proc = await asyncio.create_subprocess_exec(
-        sys.executable,
-        "/home/turbo/IA/Core/jarvis/scripts/jpte/task_executor.py",
-        task_id,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
+def run_task_executor(task_id):
+    """Sync wrapper to run task executor in a separate process."""
     try:
-        stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=180)
-    except asyncio.TimeoutError:
-        proc.kill()
-        return {"task_id": task_id, "score": 0.0, "output": "TIMEOUT"}
+        # Resolve the absolute path to task_executor.py
+        executor_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "task_executor.py")
+        result = subprocess.run([sys.executable, executor_path, task_id], capture_output=True, text=True)
+        return result.stdout
+    except Exception as e:
+        return str(e)
 
-    output = stdout.decode().strip()
-    try:
-        result = json.loads(output.split("\n")[-1])
-    except Exception:
-        result = {"task_id": task_id, "score": 0.5, "output": output[-200:]}
-    return result
-
-
-async def dispatch_session(session_id: str) -> list[dict]:
-    all_results = []
-
-    for round_num in range(20):
-        ready = get_ready_tasks(session_id)
-        if not ready:
-            db = get_db()
-            pending = db.execute(
-                "SELECT COUNT(*) FROM tasks WHERE session_id=? AND status='pending'",
-                (session_id,),
-            ).fetchone()[0]
-            db.close()
-            if pending == 0:
-                print(f"\n[JPTE] Session {session_id} — toutes les tâches terminées")
+async def dispatch(session_id):
+    engine = TodolistEngine()
+    
+    while True:
+        pending_tasks = engine.get_pending_tasks(session_id)
+        if not pending_tasks:
+            # Check if session is actually done
+            tasks = engine.get_all_tasks(session_id)
+            if all(t['status'] in ['done', 'failed', 'skipped'] for t in tasks):
+                print(f"Session {session_id} complete.")
                 break
-            await asyncio.sleep(1)
-            continue
-
-        batch = ready[:MAX_PARALLEL]
-        print(
-            f"\n[JPTE] Round {round_num + 1} — {len(batch)} tâche(s): {[t['id'] for t in batch]}"
-        )
-
-        results = await asyncio.gather(
-            *[run_task_async(t["id"]) for t in batch],
-            return_exceptions=True,
-        )
-
-        for r in results:
-            if isinstance(r, Exception):
-                all_results.append({"error": str(r), "score": 0.0})
             else:
-                all_results.append(r)
-
-        update_session_status(session_id)
-
-    return all_results
-
-
-def main(session_id: str) -> list[dict]:
-    print(f"[JPTE Dispatcher] Session: {session_id}")
-    results = asyncio.run(dispatch_session(session_id))
-    scores = [r.get("score", 0) for r in results if isinstance(r, dict)]
-    avg = sum(scores) / len(scores) if scores else 0
-    print(f"[JPTE] {len(results)} tâches | Score moyen: {avg:.2f}")
-    list_session(session_id)
-    return results
-
-
+                # Wait for running tasks
+                print("Waiting for running tasks...")
+                await asyncio.sleep(2)
+                continue
+        
+        # Dispatch each pending task that has no outstanding dependencies
+        print(f"Dispatching {len(pending_tasks)} tasks...")
+        tasks_to_run = []
+        for task in pending_tasks:
+            engine.update_task_status(task['id'], 'in_progress')
+            tasks_to_run.append(task['id'])
+            
+        # Run executors in parallel
+        loop = asyncio.get_event_loop()
+        futures = [loop.run_in_executor(None, run_task_executor, tid) for tid in tasks_to_run]
+        results = await asyncio.gather(*futures)
+        
+        for i, res in enumerate(results):
+            print(f"Task {tasks_to_run[i]} executor finished: {res}")
+            
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: task_dispatcher.py <session_id>")
         sys.exit(1)
-    main(sys.argv[1])
+        
+    sid = sys.argv[1]
+    asyncio.run(dispatch(sid))

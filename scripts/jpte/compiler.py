@@ -1,120 +1,65 @@
 #!/usr/bin/env python3
+"""JARVIS Parallel Task Engine (JPTE) - Compiler.
+Merge final multi-tâches → output cohérent.
 """
-JPTE — Compiler
-Merge tous les outputs d'une session en résultat cohérent.
-Met à jour la mémoire projet et commit git si code modifié.
-Usage: python3 compiler.py <session_id>
-"""
-
-import json
-import subprocess
 import sys
-from datetime import datetime
-from todolist_engine import get_db
+import json
+import sqlite3
+import os
+from todolist_engine import TodolistEngine
 
-MEMORY_PATH = "/home/turbo/.claude/projects/-home-turbo-IA-Core-jarvis/memory/"
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data/todolist.db")
 
-
-def compile_session(session_id: str) -> dict:
-    db = get_db()
-    sess = db.execute("SELECT * FROM sessions WHERE id=?", (session_id,)).fetchone()
-    if not sess:
-        return {"error": f"Session {session_id} introuvable"}
-
-    tasks = db.execute(
-        "SELECT * FROM tasks WHERE session_id=? ORDER BY priority, created_at",
-        (session_id,),
-    ).fetchall()
-
-    done_tasks = [dict(t) for t in tasks if t["status"] == "done"]
-    failed_tasks = [dict(t) for t in tasks if t["status"] == "failed"]
-    auto_tasks = [dict(t) for t in tasks if t["auto_generated"]]
-
-    outputs = []
-    for t in done_tasks:
-        if t.get("output"):
-            try:
-                o = json.loads(t["output"])
-                if o.get("action"):
-                    outputs.append(
-                        f"[{t['type'].upper()}] {t['title']}: {o['action'][:200]}"
-                    )
-            except Exception:
-                outputs.append(
-                    f"[{t['type'].upper()}] {t['title']}: {str(t['output'])[:200]}"
-                )
-
-    scores = [t.get("score_final", 0) or 0 for t in done_tasks]
-    avg_score = sum(scores) / len(scores) if scores else 0
-
-    result = {
+def compile_results(session_id):
+    engine = TodolistEngine()
+    tasks = engine.get_all_tasks(session_id)
+    
+    # Check if session request exists
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT original_request FROM sessions WHERE id = ?", (session_id,))
+    row = c.fetchone()
+    request = row[0] if row else "Unknown"
+    conn.close()
+    
+    summary = {
         "session_id": session_id,
-        "request": sess["original_request"][:100],
-        "status": sess["status"],
-        "tasks_done": len(done_tasks),
-        "tasks_failed": len(failed_tasks),
-        "auto_corrections": len(auto_tasks),
-        "avg_score": round(avg_score, 2),
-        "outputs": outputs,
-        "compiled_at": datetime.now().isoformat(),
+        "original_request": request,
+        "total_tasks": len(tasks),
+        "results": []
     }
-
-    db.close()
-
-    # Print rapport
-    print(f"\n{'=' * 60}")
-    print(f"JPTE COMPILATION — Session {session_id}")
-    print(f"{'=' * 60}")
-    print(f"Demande : {result['request']}")
-    print(f"Statut  : {result['status']} | Score moyen : {result['avg_score']}")
-    print(
-        f"Tâches  : {result['tasks_done']} done / {result['tasks_failed']} failed / {result['auto_corrections']} auto-corrections"
-    )
-    print("\nOutputs compilés :")
-    for o in outputs:
-        print(f"  • {o[:120]}")
-    print(f"{'=' * 60}")
-
-    # Auto-commit si tâches meta effectuées
-    _auto_commit(session_id, result)
-
-    return result
-
-
-def _auto_commit(session_id: str, result: dict) -> None:
-    """Commit automatique si des fichiers ont été modifiés."""
-    try:
-        # I3 fix: vérifier uniquement les fichiers JPTE, pas tout le repo
-        jpte_files = ["scripts/jpte/", "data/todolist.db"]
-        git_status = subprocess.run(
-            ["git", "-C", "/home/turbo/IA/Core/jarvis", "status", "--short", "--"]
-            + jpte_files,
-            capture_output=True,
-            text=True,
-        )
-        if git_status.stdout.strip():
-            print("\n[JPTE] Fichiers JPTE modifiés — auto-commit...")
-            subprocess.run(
-                ["git", "-C", "/home/turbo/IA/Core/jarvis", "add"] + jpte_files,
-                capture_output=True,
-            )
-            msg = f"feat(jpte): session {session_id} — {result['tasks_done']} tasks done, score {result['avg_score']}"
-            commit_result = subprocess.run(
-                ["git", "-C", "/home/turbo/IA/Core/jarvis", "commit", "-m", msg],
-                capture_output=True,
-                text=True,
-            )
-            if commit_result.returncode == 0:
-                print(f"[JPTE] Commit: {msg}")
-            else:
-                print(f"[JPTE] Auto-commit skipped: {commit_result.stderr.strip()}")
-    except Exception as e:
-        print(f"[JPTE] Auto-commit skipped: {e}")
-
+    
+    for t in tasks:
+        if t['status'] == 'done':
+            try:
+                output = json.loads(t['output']) if t['output'] else {}
+                summary['results'].append({
+                    "task": t['title'],
+                    "status": "success",
+                    "action_data": output.get('action', {}).get('action_output', "No data")
+                })
+            except Exception:
+                summary['results'].append({"task": t['title'], "status": "parse_error"})
+        else:
+            summary['results'].append({
+                "task": t['title'],
+                "status": t['status'],
+                "error": t['error']
+            })
+            
+    # Final merge into a string
+    final_text = f"JARVIS JPTE Execution Report for: {request}\n"
+    final_text += "="*50 + "\n"
+    for res in summary['results']:
+        final_text += f"- [{res['status'].upper()}] {res['task']}: {res.get('action_data', res.get('error', 'N/A'))}\n"
+        
+    return final_text
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: compiler.py <session_id>")
         sys.exit(1)
-    result = compile_session(sys.argv[1])
-    print(json.dumps(result, indent=2))
+        
+    sid = sys.argv[1]
+    report = compile_results(sid)
+    print(report)

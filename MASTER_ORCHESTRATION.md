@@ -56,6 +56,31 @@ Jamais : demande → question → attente → token perdu.
 
 ---
 
+## JARVIS PARALLEL TASK ENGINE (JPTE) — TODOLIST AUTO-ALIMENTÉE
+
+Chaque demande est décomposée en N tâches parallèles (max 10) gérées via SQLite `data/todolist.db`.
+
+### Protocole JPTE — AUDIT → ACTION → CORRECTION
+
+1. **DÉCOMPOSEUR** : Découpe demande → T1..T10 (JSON).
+2. **SCOREUR** : Calcule complexité (1-5), priorité (P1-P3) et score initial.
+3. **DISPATCHER** : Lance agents/skills/CLI en parallèle via `asyncio`.
+4. **EXÉCUTEUR** : Boucle AUDIT (existant) → ACTION (agent) → CORRECTION (validation).
+5. **AUTO-FEED** : Si score < 0.5 ou échec → génère sous-tâche de correction immédiate.
+6. **COMPILATEUR** : Merge tous les outputs en résultat cohérent + mise à jour mémoire.
+
+### Commandes JPTE
+
+```bash
+# Lancer une pipeline JPTE complète
+cd scripts/jpte && ./jpte_run.py "votre demande ici"
+
+# Consulter l'état des tâches actives
+sqlite3 data/todolist.db "SELECT title, status, score_final FROM tasks WHERE status != 'done'"
+```
+
+---
+
 ## BLOC DE TÂCHE — STRUCTURE STANDARD
 
 Chaque tâche suit ce pipeline automatique :

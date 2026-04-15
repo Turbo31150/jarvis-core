@@ -58,7 +58,7 @@ fi
 
 ---
 
-## BLOC 2 — CONFIGURER TTL PAR DÉFAUT LM STUDIO [🔴 TODO]
+## BLOC 2 — CONFIGURER TTL PAR DÉFAUT LM STUDIO [⚠️ MANUEL — UI LM Studio → Settings → Server → TTL 30min]
 **But :** Modèles idle se déchargent automatiquement après 30min (évite les 22GB gaspillés).
 
 ```bash
@@ -76,7 +76,7 @@ cat ~/.lmstudio/config.json 2>/dev/null | python3 -m json.tool | grep -i ttl
 
 ---
 
-## BLOC 3 — CRON GUARD HEBDOMADAIRE [🔴 TODO]
+## BLOC 3 — CRON GUARD HEBDOMADAIRE [✅ DONE]
 **But :** Audit automatique lundi matin + mise à jour INVENTORY.md.
 
 ```bash
@@ -167,7 +167,7 @@ else:
 
 ---
 
-## BLOC 7 — COMMIT FINAL JOURNÉE [🔴 TODO]
+## BLOC 7 — COMMIT FINAL JOURNÉE [✅ DONE]
 **But :** Sauvegarder tout le travail du jour en un commit propre.
 
 ```bash
@@ -233,11 +233,11 @@ Dans `~/.claude/settings.json`, ajouter :
 | 0 | Guard pré-session | ✅ OPÉRATIONNEL | Chaque session |
 | 1 | Hook lm-ask.sh | ✅ DONE | HIGH |
 | 2 | TTL LM Studio par défaut | 🔴 TODO | HIGH |
-| 3 | Cron guard hebdo | 🔴 TODO | MEDIUM |
+| 3 | Cron guard hebdo | ✅ DONE | MEDIUM |
 | 4 | quality_hub → proxy | ✅ DONE | HIGH |
 | 5 | Enrichissement modules | ⏳ AUTO | LOW |
 | 6 | Benchmark résultats | ✅ DONE | ~~MEDIUM~~ |
-| 7 | Commit final journée | 🔴 TODO | HIGH |
+| 7 | Commit final journée | ✅ DONE | HIGH |
 | 8 | Hook UserPromptSubmit | ✅ DONE | MEDIUM |
 
 ---

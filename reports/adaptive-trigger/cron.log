@@ -1,0 +1,33 @@
+Cron log init mer. 15 avril 2026 02:05:17 CEST
+[ADAPTIVE] → cluster (score=0.89, kw=1.00 flux=0.72)
+[ADAPTIVE] → codeur (score=0.77, kw=0.80 flux=0.72)
+[ADAPTIVE] → jpte (score=0.53, kw=0.40 flux=0.72)
+[ADAPTIVE] → hackathon (score=0.47, kw=0.30 flux=0.72)
+[
+  {
+    "pipeline": "cluster",
+    "score": 0.8877665935062409,
+    "output": "[OpenClaw:jarvis-cluster-health] Ollama API error 400: {\"error\":\"registry.ollama.ai/library/gemma3:4b does not support tools\"}",
+    "ok": true
+  },
+  {
+    "pipeline": "codeur",
+    "score": 0.767766593506241,
+    "output": "[lm-ask] [TIMEOUT] lm-ask.sh exceeded 60s for pipeline=codeur",
+    "ok": false
+  },
+  {
+    "pipeline": "jpte",
+    "score": 0.527766593506241,
+    "output": "[OpenClaw:task-decomposer-prime] completed",
+    "ok": true
+  },
+  {
+    "pipeline": "hackathon",
+    "score": 0.46776659350624095,
+    "output": "[OpenClaw:omega-analysis-agent] HTTP 400: Failed to load model \"qwen/qwen3.5-35b-a3b\". Error: Failed to load model.",
+    "ok": true
+  }
+]
+[]
+[]
