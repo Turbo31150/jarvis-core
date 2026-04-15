@@ -84,30 +84,30 @@ def compile_session(session_id: str) -> dict:
 def _auto_commit(session_id: str, result: dict) -> None:
     """Commit automatique si des fichiers ont été modifiés."""
     try:
+        # I3 fix: vérifier uniquement les fichiers JPTE, pas tout le repo
+        jpte_files = ["scripts/jpte/", "data/todolist.db"]
         git_status = subprocess.run(
-            ["git", "-C", "/home/turbo/IA/Core/jarvis", "status", "--short"],
+            ["git", "-C", "/home/turbo/IA/Core/jarvis", "status", "--short", "--"]
+            + jpte_files,
             capture_output=True,
             text=True,
         )
         if git_status.stdout.strip():
-            print("\n[JPTE] Fichiers modifiés détectés — auto-commit...")
+            print("\n[JPTE] Fichiers JPTE modifiés — auto-commit...")
             subprocess.run(
-                [
-                    "git",
-                    "-C",
-                    "/home/turbo/IA/Core/jarvis",
-                    "add",
-                    "scripts/jpte/",
-                    "data/todolist.db",
-                ],
+                ["git", "-C", "/home/turbo/IA/Core/jarvis", "add"] + jpte_files,
                 capture_output=True,
             )
             msg = f"feat(jpte): session {session_id} — {result['tasks_done']} tasks done, score {result['avg_score']}"
-            subprocess.run(
+            commit_result = subprocess.run(
                 ["git", "-C", "/home/turbo/IA/Core/jarvis", "commit", "-m", msg],
                 capture_output=True,
+                text=True,
             )
-            print(f"[JPTE] Commit effectué: {msg}")
+            if commit_result.returncode == 0:
+                print(f"[JPTE] Commit: {msg}")
+            else:
+                print(f"[JPTE] Auto-commit skipped: {commit_result.stderr.strip()}")
     except Exception as e:
         print(f"[JPTE] Auto-commit skipped: {e}")
 

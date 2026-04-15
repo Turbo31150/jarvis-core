@@ -17,7 +17,7 @@ from compiler import compile_session
 from todolist_engine import list_session, update_session_status
 
 
-def run(request: str, session_id: str | None = None) -> dict:
+async def run_async(request: str, session_id: str | None = None) -> dict:
     print(f"\n{'=' * 60}")
     print("JPTE — JARVIS PARALLEL TASK ENGINE")
     print(f"{'=' * 60}")
@@ -28,9 +28,9 @@ def run(request: str, session_id: str | None = None) -> dict:
     sid, task_ids = decompose(request, session_id)
     print(f"  → Session {sid} | {len(task_ids)} tâches créées: {task_ids}")
 
-    # Phase 2 — Dispatch parallèle
+    # Phase 2 — Dispatch parallèle (I2 fix: await au lieu de asyncio.run imbriqué)
     print("\n[2/3] Dispatch parallèle (AUDIT → ACTION → CORRECTION)...")
-    results = asyncio.run(dispatch_session(sid))
+    results = await dispatch_session(sid)
     update_session_status(sid)
 
     # Phase 3 — Compilation finale
@@ -38,6 +38,10 @@ def run(request: str, session_id: str | None = None) -> dict:
     compiled = compile_session(sid)
 
     return compiled
+
+
+def run(request: str, session_id: str | None = None) -> dict:
+    return asyncio.run(run_async(request, session_id))
 
 
 if __name__ == "__main__":
@@ -49,7 +53,7 @@ if __name__ == "__main__":
         list_session(sys.argv[2])
     elif "--session" in sys.argv and len(sys.argv) > 2:
         sid = sys.argv[sys.argv.index("--session") + 1]
-        results = asyncio.run(dispatch_session(sid))
+        asyncio.run(dispatch_session(sid))
         compile_session(sid)
     else:
         request = " ".join(sys.argv[1:])

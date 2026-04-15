@@ -75,7 +75,8 @@ def _init_schema(db: sqlite3.Connection) -> None:
 
 
 def create_session(request: str) -> str:
-    sid = str(uuid.uuid4())[:8]
+    # C2 fix: full UUID pour éviter collisions sur sessions simultanées
+    sid = str(uuid.uuid4())
     db = get_db()
     db.execute(
         "INSERT INTO sessions (id, original_request) VALUES (?, ?)",
@@ -119,7 +120,8 @@ def add_task(
     depends_on: list[str] | None = None,
     auto_generated: bool = False,
 ) -> str:
-    tid = str(uuid.uuid4())[:8]
+    # C2 fix: full UUID
+    tid = str(uuid.uuid4())
     db = get_db()
     db.execute(
         """INSERT INTO tasks
@@ -196,7 +198,8 @@ def fail_task(task_id: str, error: str = "", score: float = 0.0) -> None:
 
 def auto_feed_correction(task: dict, db: sqlite3.Connection) -> str:
     """Generate a correction subtask automatically when a task fails or scores low."""
-    tid = str(uuid.uuid4())[:8]
+    # C2 fix: full UUID
+    tid = str(uuid.uuid4())
     db.execute(
         """INSERT INTO tasks
            (id, parent_id, session_id, title, description, type, priority,
@@ -225,28 +228,31 @@ def auto_feed_correction(task: dict, db: sqlite3.Connection) -> str:
 def get_ready_tasks(session_id: str) -> list[dict]:
     """Tasks whose dependencies are all done."""
     db = get_db()
-    rows = db.execute(
-        "SELECT * FROM tasks WHERE session_id=? AND status='pending'", (session_id,)
-    ).fetchall()
-    ready = []
-    for row in rows:
-        deps = db.execute(
-            "SELECT depends_on FROM task_dependencies WHERE task_id=?", (row["id"],)
+    try:
+        rows = db.execute(
+            "SELECT * FROM tasks WHERE session_id=? AND status='pending'", (session_id,)
         ).fetchall()
-        if not deps:
-            ready.append(dict(row))
-            continue
-        all_done = all(
-            db.execute(
-                "SELECT status FROM tasks WHERE id=?", (d["depends_on"],)
-            ).fetchone()["status"]
-            == "done"
-            for d in deps
-        )
-        if all_done:
-            ready.append(dict(row))
-    db.close()
-    return ready
+        ready = []
+        for row in rows:
+            deps = db.execute(
+                "SELECT depends_on FROM task_dependencies WHERE task_id=?", (row["id"],)
+            ).fetchall()
+            if not deps:
+                ready.append(dict(row))
+                continue
+            all_done = True
+            for d in deps:
+                dep_row = db.execute(
+                    "SELECT status FROM tasks WHERE id=?", (d["depends_on"],)
+                ).fetchone()
+                if dep_row is None or dep_row["status"] != "done":
+                    all_done = False
+                    break
+            if all_done:
+                ready.append(dict(row))
+        return ready
+    finally:
+        db.close()  # C3 fix: toujours fermé même si exception
 
 
 def list_session(session_id: str) -> None:
