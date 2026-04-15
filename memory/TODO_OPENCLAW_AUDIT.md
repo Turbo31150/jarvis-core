@@ -1,6 +1,6 @@
 # JARVIS — TODO OpenClaw Audit & Hardening
 > Généré : 2026-04-15 | Protocole : AUDIT → ACTION → CORRECTION → DOMINO
-> Statut : [✅ DONE] [🔴 TODO] [⏳ EN COURS] [⚠️ BLOQUÉ]
+> Statut : [✅ DONE] [✅ DONE] [⏳ EN COURS] [⚠️ BLOQUÉ]
 
 ---
 
@@ -18,7 +18,7 @@
 
 ---
 
-## BLOC P1 — GATEWAY : démarrer et stabiliser [🔴 TODO]
+## BLOC P1 — GATEWAY : démarrer et stabiliser [✅ DONE]
 **But :** openclaw agent sans --local = timeout. Gateway jamais démarré (systemd user bus absent).
 **Dépend de :** rien (P1 critique, premier)
 **Domino :** → P5 (cron nécessite gateway)
@@ -52,7 +52,7 @@ chmod +x ~/.openclaw/start-gateway.sh
 
 ---
 
-## BLOC P2 — MEMORY : activer la mémoire persistante [🔴 TODO]
+## BLOC P2 — MEMORY : activer la mémoire persistante [✅ DONE]
 **But :** Agents sans mémoire = contexte perdu à chaque session. plugin memory-core désactivé.
 **Dépend de :** P1 (gateway)
 **Domino :** → P7 (routing enrichi par mémoire)
@@ -83,7 +83,7 @@ openclaw doctor 2>/dev/null | grep -i memory
 
 ---
 
-## BLOC P3 — MODELS : routing intelligent par agent [🔴 TODO]
+## BLOC P3 — MODELS : routing intelligent par agent [✅ DONE]
 **But :** 51 agents tous sur qwen3.5-9b. Pas de spécialisation modèle par type de tâche.
 **Dépend de :** rien (indépendant)
 **Domino :** → P7 (routing rules s'appuient sur bons modèles)
@@ -128,7 +128,7 @@ openclaw agents list 2>/dev/null | grep -E "^-|Model:" | grep -v "qwen3.5-9b" | 
 
 ---
 
-## BLOC P4 — BOOTSTRAP : pruner les fichiers tronqués [🔴 TODO]
+## BLOC P4 — BOOTSTRAP : pruner les fichiers tronqués [✅ DONE]
 **But :** AGENTS.md 16k, IDENTITY.md 10k, TOOLS.md 8k → tronqués à 8000 chars → agents perdent leurs instructions.
 **Dépend de :** rien
 **Domino :** → améliore P3 (agents lisent instructions complètes)
@@ -165,7 +165,7 @@ wc -c /tmp/agents_pruned.md /tmp/identity_pruned.md /tmp/tools_pruned.md
 
 ---
 
-## BLOC P5 — CRON : normaliser les 10 jobs payload [🔴 TODO]
+## BLOC P5 — CRON : normaliser les 10 jobs payload [✅ DONE]
 **But :** 10 cron jobs avec `cron: "?"` — scheduler ne peut pas les déclencher.
 **Dépend de :** P1 (gateway doit tourner)
 **Domino :** → jobs s'exécutent, alimente adaptive_trigger
@@ -193,7 +193,7 @@ for j in jlist:
 
 ---
 
-## BLOC P7 — ROUTING RULES : configurer keyword → agent [🔴 TODO]
+## BLOC P7 — ROUTING RULES : configurer keyword → agent [✅ DONE]
 **But :** Tous agents à 0 routing rules. OpenClaw ne route pas intelligemment.
 **Dépend de :** P1 + P3
 **Domino :** → adaptive_trigger peut s'appuyer sur routing natif OpenClaw
