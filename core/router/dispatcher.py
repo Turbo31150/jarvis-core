@@ -5,11 +5,12 @@ import shlex
 import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Dict, List
+from typing import Dict, List, Any
 
 import requests
 
 from ..tasks.models import TaskRequest, TaskResult, TaskStatus
+from .openclaw_bridge import build_openclaw_bridge
 
 logger = logging.getLogger("jarvis.dispatcher")
 
@@ -19,6 +20,7 @@ NODES: Dict[str, str] = {
     "M2": "http://192.168.1.26:1234",
     "M3": "http://192.168.1.113:1234",
     "OL1": "http://127.0.0.1:11434",
+    "OpenClaw": "http://127.0.0.1:18789",
 }
 
 # Task type → (primary node, model, fallback chain)
@@ -30,19 +32,25 @@ ROUTING_TABLE: Dict[str, List[dict]] = {
     ],
     "deep": [
         {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
+        {"node": "OpenClaw", "model": "openclaw-master"},
         {"node": "M1", "model": "deepseek-r1"},
-        {"node": "OL1", "model": "deepseek-r1:7b"},
     ],
     "code": [
         {"node": "M2", "model": "deepseek-coder"},
+        {"node": "OpenClaw", "model": "openclaw-master"},
         {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
-        {"node": "M1", "model": "qwen3.5-9b"},
+    ],
+    "openclaw": [
+        {"node": "OpenClaw", "model": "openclaw-master"},
+        {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
     ],
     "generic": [
         {"node": "M1", "model": "gemma-3-4b"},
+        {"node": "OpenClaw", "model": "openclaw-master"},
         {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
     ],
     "analysis": [
+        {"node": "OpenClaw", "model": "openclaw-master"},
         {"node": "M3", "model": "deepseek-r1-qwen3-8b"},
         {"node": "M1", "model": "qwen3.5-9b"},
     ],
@@ -79,14 +87,21 @@ def _call_ollama(model: str, prompt: str, timeout: int) -> str:
     return resp.json()["response"]
 
 
-def _call_node(node: str, model: str, prompt: str, timeout: int) -> str:
-    if node == "OL1":
-        return _call_ollama(model, prompt, timeout)
-    return _call_lmstudio(node, model, prompt, timeout)
-
-
 class TaskDispatcher:
     """Dispatch tasks to cluster nodes with fallback and consensus."""
+
+    def __init__(self):
+        self.openclaw = build_openclaw_bridge()
+
+    def _call_node(self, node: str, model: str, prompt: str, timeout: int) -> str:
+        if node == "OL1":
+            return _call_ollama(model, prompt, timeout)
+        if node == "OpenClaw":
+            res = self.openclaw.run_agent(prompt, agent_id=model, timeout=timeout)
+            if res["success"]:
+                return res["output"]
+            raise Exception(res.get("error", "OpenClaw error"))
+        return _call_lmstudio(node, model, prompt, timeout)
 
     def dispatch(self, task: TaskRequest) -> TaskResult:
         """Route task to the appropriate node(s)."""
@@ -97,6 +112,8 @@ class TaskDispatcher:
             return self._run_local(task, start)
         if task.target_node == "browseros" or task.task_type == "browser":
             return self._run_browser(task, start)
+        if task.target_node == "openclaw" or task.task_type == "openclaw":
+            return self._run_openclaw(task, start)
         if task.task_type == "consensus":
             return self._run_consensus(task, start)
 
@@ -108,7 +125,7 @@ class TaskDispatcher:
 
         for route in chain:
             try:
-                output = _call_node(
+                output = self._call_node(
                     route["node"], route["model"], task.prompt, task.timeout
                 )
                 return TaskResult(
@@ -186,6 +203,19 @@ class TaskDispatcher:
             duration=time.time() - start,
         )
 
+    def _run_openclaw(self, task: TaskRequest, start: float) -> TaskResult:
+        agent_id = task.metadata.get("agent_id", "openclaw-master")
+        sandbox = task.metadata.get("sandbox")
+        res = self.openclaw.run_agent(task.prompt, agent_id=agent_id, sandbox=sandbox, timeout=task.timeout)
+        return TaskResult(
+            request_id=task.id,
+            status=TaskStatus.COMPLETED if res["success"] else TaskStatus.FAILED,
+            output=res.get("output"),
+            error=res.get("error"),
+            node=f"openclaw:{agent_id}",
+            duration=time.time() - start,
+        )
+
     def _run_consensus(self, task: TaskRequest, start: float) -> TaskResult:
         """Query M3 + M1 in parallel, return both answers."""
         routes = [
@@ -196,7 +226,7 @@ class TaskDispatcher:
         with ThreadPoolExecutor(max_workers=2) as pool:
             futures = {
                 pool.submit(
-                    _call_node, r["node"], r["model"], task.prompt, task.timeout
+                    self._call_node, r["node"], r["model"], task.prompt, task.timeout
                 ): r["node"]
                 for r in routes
             }
@@ -216,3 +246,4 @@ class TaskDispatcher:
             confidence=0.8,
             metadata={"nodes_queried": list(results.keys())},
         )
+

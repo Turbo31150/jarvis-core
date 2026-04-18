@@ -11,54 +11,60 @@ r = redis.Redis(decode_responses=True)
 PREFIX = "jarvis:consensus"
 
 BACKENDS = {
-    "m2_35b":    {"url": "http://192.168.1.26:1234/v1/chat/completions", "model": "qwen/qwen3.5-35b-a3b", "weight": 0.5, "timeout": 30},
-    "ol1_gemma3":{"url": "http://127.0.0.1:11434/api/generate",          "model": "gemma3:4b",            "weight": 0.3, "timeout": 20},
+    "ol1_qwen":   {"url": "http://127.0.0.1:11434/api/generate", "model": "qwen2.5:1.5b",    "weight": 0.5, "timeout": 30},
+    "ol1_llama3": {"url": "http://127.0.0.1:11434/api/generate", "model": "llama3.2:latest", "weight": 0.5, "timeout": 30},
 }
-
-CONSENSUS_MODES = {
-    "majority":  "At least 50%+1 backends agree",
-    "unanimous": "All backends must agree",
-    "weighted":  "Weighted score >= threshold",
-}
-
 
 def _query_backend(name: str, prompt: str) -> str | None:
     cfg = BACKENDS[name]
     try:
-        if "11434" in cfg["url"]:
-            resp = requests.post(cfg["url"], json={"model": cfg["model"], "prompt": prompt, "stream": False, "options": {"num_predict": 100}}, timeout=cfg["timeout"])
-            return resp.json().get("response", "").strip()
-        else:
-            resp = requests.post(cfg["url"], json={"model": cfg["model"], "messages": [{"role": "user", "content": prompt}], "max_tokens": 100, "temperature": 0.05}, timeout=cfg["timeout"])
-            msg = resp.json()["choices"][0]["message"]
-            return (msg.get("content") or "").strip()
-    except Exception as e:
+        resp = requests.post(cfg["url"], json={"model": cfg["model"], "prompt": prompt, "stream": False, "options": {"num_predict": 50}}, timeout=cfg["timeout"])
+        return resp.json().get("response", "").strip()
+    except Exception:
         return None
-
 
 def _extract_yes_no(response: str) -> str | None:
     if not response:
         return None
-    lower = response.lower()
-    if any(w in lower[:50] for w in ["yes", "oui", "true", "correct", "affirmative"]):
-        return "yes"
-    if any(w in lower[:50] for w in ["no", "non", "false", "incorrect", "negative"]):
-        return "no"
+    # Remove <think>...</think> if present
+    import re
+    cleaned = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL | re.IGNORECASE).strip()
+    if not cleaned:
+        cleaned = response # Fallback to original if regex failed
+        
+    lower = cleaned.lower()
+    # Check start and end of the cleaned response
+    words = ["yes", "oui", "vrai", "true", "correct", "affirmative", "no", "non", "faux", "false", "incorrect", "negative"]
+    
+    # Priority to the first word that matches a yes/no
+    for token in lower.split():
+        t = token.strip(".,!?:")
+        if t in ["yes", "oui", "vrai", "true", "correct", "affirmative"]: return "yes"
+        if t in ["no", "non", "faux", "false", "incorrect", "negative"]: return "no"
+        
     return None
 
 
+from concurrent.futures import ThreadPoolExecutor
+
 def query_consensus(question: str, mode: str = "weighted", threshold: float = 0.6) -> dict:
     """Ask multiple backends and compute consensus"""
-    prompt = f"""Answer ONLY 'yes' or 'no' (nothing else): {question}"""
+    prompt = f"""Question: {question}\nRépondre par OUI ou NON uniquement (Answer ONLY YES or NO)."""
 
     responses = {}
-    votes = {"yes": 0.0, "no": 0.0, "abstain": 0.0}
-
-    for name, cfg in BACKENDS.items():
+    
+    def _get_resp(name):
         raw = _query_backend(name, prompt)
         answer = _extract_yes_no(raw or "")
-        weight = cfg["weight"]
-        responses[name] = {"raw": (raw or "")[:80], "answer": answer, "weight": weight}
+        return name, raw, answer
+
+    with ThreadPoolExecutor(max_workers=len(BACKENDS)) as executor:
+        results_parallel = list(executor.map(_get_resp, BACKENDS.keys()))
+
+    votes = {"yes": 0.0, "no": 0.0, "abstain": 0.0}
+    for name, raw, answer in results_parallel:
+        weight = BACKENDS[name]["weight"]
+        responses[name] = {"raw": (raw or "")[:150], "answer": answer, "weight": weight}
         if answer in votes:
             votes[answer] += weight
         else:

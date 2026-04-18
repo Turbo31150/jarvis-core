@@ -238,11 +238,11 @@ def dispatch_via_lm_ask(pipeline: str, prompt: str) -> str:
             ["bash", "/home/turbo/jarvis/scripts/lm-ask.sh", prompt],
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=180,
         )
         return result.stdout.strip() or result.stderr.strip()
     except subprocess.TimeoutExpired:
-        return f"[TIMEOUT] lm-ask.sh exceeded 60s for pipeline={pipeline}"
+        return f"[TIMEOUT] lm-ask.sh exceeded 180s for pipeline={pipeline}"
     except Exception as exc:
         return f"[ERROR] lm-ask.sh: {exc}"
 
@@ -251,6 +251,9 @@ def dispatch_via_jpte(pipeline: str) -> str:
     """Dispatch via JPTE task engine."""
     jpte_script = BASE_DIR / "scripts" / "jpte" / "jpte.py"
     if not jpte_script.exists():
+        # Try finding it in current dir if not in BASE_DIR
+        jpte_script = Path(__file__).parent / "jpte.py"
+    if not jpte_script.exists():
         return "[ERROR] jpte.py not found"
     try:
         request = f"[ADAPTIVE-TRIGGER] Auto-pipeline: {pipeline} — {PIPELINE_PROMPTS.get(pipeline, '')}"
@@ -258,11 +261,11 @@ def dispatch_via_jpte(pipeline: str) -> str:
             [sys.executable, str(jpte_script), request],
             capture_output=True,
             text=True,
-            timeout=120,
+            timeout=300,
         )
         return result.stdout.strip() or result.stderr.strip()
     except subprocess.TimeoutExpired:
-        return f"[TIMEOUT] JPTE exceeded 120s for pipeline={pipeline}"
+        return f"[TIMEOUT] JPTE exceeded 300s for pipeline={pipeline}"
     except Exception as exc:
         return f"[ERROR] JPTE: {exc}"
 

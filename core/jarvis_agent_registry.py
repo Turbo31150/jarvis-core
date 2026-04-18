@@ -287,6 +287,15 @@ def build_jarvis_agent_registry() -> AgentRegistry:
 
     # Pre-register known JARVIS agents
     registry.register(
+        "openclaw-master",
+        "local",
+        [AgentCapability.ORCHESTRATION, AgentCapability.REASONING, AgentCapability.SEARCH],
+        max_concurrency=10,
+        priority=10,
+        tags=["openclaw", "master"],
+        metadata={"cli": "openclaw agent"}
+    )
+    registry.register(
         "inference-gateway",
         "m1",
         [AgentCapability.INFERENCE, AgentCapability.ORCHESTRATION],

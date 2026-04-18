@@ -12,8 +12,8 @@ Usage:
 import sys
 import asyncio
 from task_decomposer import decompose
-from task_dispatcher import dispatch_session
-from compiler import compile_session
+from task_dispatcher import dispatch as dispatch_session
+from compiler import compile_results as compile_session
 from todolist_engine import list_session, update_session_status
 
 
