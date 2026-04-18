@@ -6,7 +6,7 @@ from pathlib import Path
 CLUSTER = {
     "M1": {"url": "http://127.0.0.1:1234/v1/chat/completions", "model": "qwen/qwen3.5-9b", "role": "MASTER", "timeout": 15},
     "M2": {"url": "http://192.168.1.26:1234/v1/chat/completions", "model": "qwen/qwen3-8b", "role": "DETECTOR", "timeout": 15},
-    "M3": {"url": "http://192.168.1.113:1234/v1/chat/completions", "model": "deepseek/deepseek-r1-0528-qwen3-8b", "role": "ORCHESTRATEUR", "timeout": 30},
+    "M3": {"url": "http://192.168.1.26:1234/v1/chat/completions", "model": "deepseek/deepseek-r1-0528-qwen3-8b", "role": "ORCHESTRATEUR", "timeout": 30},
 }
 
 # Fast models for quick queries

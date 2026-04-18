@@ -57,6 +57,23 @@ def cmd_dashboard():
     print()
     cmd_tasks()
 
+def cmd_openclaw(args=None):
+    from core.openclaw_bridge import build_openclaw_bridge
+    bridge = build_openclaw_bridge()
+    if not args:
+        print(f"OpenClaw Health: {'✅ OK' if bridge.is_healthy() else '❌ DOWN'}")
+        print("\nAgents:")
+        for a in bridge.list_agents():
+            print(a.get("raw", "n/a"))
+    elif args[0] == "query" and len(args) > 1:
+        res = bridge.run_agent(" ".join(args[1:]))
+        if res["success"]:
+            print(res["output"])
+        else:
+            print(f"Error: {res['error']}")
+    else:
+        print("Usage: jarvis openclaw [query <prompt>]")
+
 COMMANDS = {
     "health": cmd_health,
     "incidents": cmd_incidents,
@@ -65,6 +82,7 @@ COMMANDS = {
     "audit": cmd_audit,
     "tasks": cmd_tasks,
     "dashboard": cmd_dashboard,
+    "openclaw": cmd_openclaw,
 }
 
 if __name__ == "__main__":
@@ -76,7 +94,10 @@ if __name__ == "__main__":
 
     if args.command == "query" and args.args:
         cmd_query(" ".join(args.args))
+    elif args.command == "openclaw":
+        cmd_openclaw(args.args)
     elif args.command in COMMANDS:
         COMMANDS[args.command]()
     else:
         parser.print_help()
+
